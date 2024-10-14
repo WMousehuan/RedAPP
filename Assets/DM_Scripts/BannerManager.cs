@@ -14,9 +14,9 @@ public class BannerManager : MonoSingleton<BannerManager>
 
 	private void Start()
 	{
-		GameObject gameObject = Object.Instantiate(PrefabBannerList);
-		gameObject.transform.SetParent(base.transform);
-		m_BannerList = gameObject.GetComponent<BannerList>();
+		//GameObject gameObject = Object.Instantiate(PrefabBannerList);
+		//gameObject.transform.SetParent(base.transform);
+		//m_BannerList = gameObject.GetComponent<BannerList>();
 	}
 
 	//public Banner Open(BannerType type)

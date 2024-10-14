@@ -2,6 +2,7 @@
 using CodeStage.AntiCheat.ObscuredTypes;
 #endif
 using System;
+using UnityEngine;
 
 public static class PeriodEventData
 {
@@ -65,7 +66,7 @@ public static class PeriodEventData
 #if ENABLE_ANTI_CHEAT
 		return ObscuredPrefs.GetBool("BuyPackage" + p, defaultValue: false);
 #else
-        return CPlayerPrefs.GetBool("BuyPackage" + p, defaultValue: false);
+        return PlayerPrefs.GetInt("BuyPackage" + p, defaultValue: 0)==1;
 #endif
     }
 
@@ -74,7 +75,7 @@ public static class PeriodEventData
 #if ENABLE_ANTI_CHEAT
 		ObscuredPrefs.SetBool("BuyPackage" + p, value: true);
 #else
-		CPlayerPrefs.SetBool("BuyPackage" + p, value: true);
+		PlayerPrefs.SetInt("BuyPackage" + p, value: 1);
 #endif
     }
 }

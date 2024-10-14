@@ -77,9 +77,9 @@ public class SceneLobby : SceneClass
 	public void OnClickWatchAds()
 	{
 		SoundSFX.Play(SFXIndex.ButtonClick);
-		if (APIMobileAds.IsRewardedVideoAvailable())
+		if (API.IsRewardedVideoAvailable())
 		{
-			APIMobileAds.ShowRewardedVideo(CompleteMethod);
+			API.ShowRewardedVideo(CompleteMethod);
 		}
 
 	}

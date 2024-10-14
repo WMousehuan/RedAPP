@@ -23,7 +23,7 @@ public class BannerUpdateNotification : Banner
 		}
 		else if (Application.platform == RuntimePlatform.Android && GlobalSetting.storeMarket == StoreMarket.GooglePlay)
 		{
-			Application.OpenURL(strAndroidURL);
+			//Application.OpenURL(strAndroidURL);
 		}
 	}
 }

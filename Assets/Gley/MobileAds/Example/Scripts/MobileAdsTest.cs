@@ -28,8 +28,8 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         void Awake()
         {
-            APIMobileAds.Initialize();
-            SupportedAdvertisers selectedAdvertiser = APIMobileAds.GetSelectedAdvertiser().advertiser;
+            API.Initialize();
+            SupportedAdvertisers selectedAdvertiser = API.GetSelectedAdvertiser().advertiser;
             advertiser.text = selectedAdvertiser.ToString();
             //hide buttons
             switch (selectedAdvertiser)
@@ -80,7 +80,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShawBanner()
         {
-            APIMobileAds.ShowBanner(BannerPosition.Top, BannerType.Banner);
+            API.ShowBanner(BannerPosition.Top, BannerType.Banner);
         }
 
 
@@ -89,7 +89,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void HideBanner()
         {
-            APIMobileAds.HideBanner();
+            API.HideBanner();
         }
 
 
@@ -98,7 +98,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowMRec()
         {
-            APIMobileAds.ShowMRec(BannerPosition.Top);
+            API.ShowMRec(BannerPosition.Top);
         }
 
 
@@ -107,7 +107,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void HideMRec()
         {
-            APIMobileAds.HideMRec();
+            API.HideMRec();
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowInterstitial()
         {
-            APIMobileAds.ShowInterstitial();
+            API.ShowInterstitial();
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowAppOpen()
         {
-            APIMobileAds.ShowAppOpen();
+            API.ShowAppOpen();
         }
 
         /// <summary>
@@ -131,7 +131,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowRewardedVideo()
         {
-            APIMobileAds.ShowRewardedVideo(CompleteMethod);
+            API.ShowRewardedVideo(CompleteMethod);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowRewardedInterstitial()
         {
-            APIMobileAds.ShowRewardedInterstitial(CompleteMethod);
+            API.ShowRewardedInterstitial(CompleteMethod);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void OpenDebugWindow()
         {
-            APIMobileAds.OpenDebugWindow();
+            API.OpenDebugWindow();
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void OpenConsentWindow()
         {
-            APIMobileAds.ShowBuiltInConsentPopup(ConsentPopupClosed);
+            API.ShowBuiltInConsentPopup(ConsentPopupClosed);
         }
 
 
@@ -186,7 +186,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         void Update()
         {
-            if (APIMobileAds.IsInterstitialAvailable())
+            if (API.IsInterstitialAvailable())
             {
                 intersttialButton.interactable = true;
             }
@@ -195,7 +195,7 @@ namespace Gley.MobileAds.Internal
                 intersttialButton.interactable = false;
             }
 
-            if (APIMobileAds.IsRewardedVideoAvailable())
+            if (API.IsRewardedVideoAvailable())
             {
                 rewardedButton.interactable = true;
             }
@@ -204,7 +204,7 @@ namespace Gley.MobileAds.Internal
                 rewardedButton.interactable = false;
             }
 
-            if (APIMobileAds.IsRewardedInterstitialAvailable())
+            if (API.IsRewardedInterstitialAvailable())
             {
                 rewardedInterstitialButton.interactable = true;
             }
@@ -213,7 +213,7 @@ namespace Gley.MobileAds.Internal
                 rewardedInterstitialButton.interactable = false;
             }
 
-            if (APIMobileAds.IsAppOpenAvailable())
+            if (API.IsAppOpenAvailable())
             {
                 appOpenButton.interactable = true;
             }

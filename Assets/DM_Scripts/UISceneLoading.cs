@@ -50,10 +50,10 @@ public class UISceneLoading : MonoBehaviour
 
 	private void Awake()
 	{
-		for (int i = 0; i < PanelsGroupChangeEffect.Length; i++)
-		{
-			PanelsGroupChangeEffect[i].gameObject.SetActive(value: false);;
-		}
+		//for (int i = 0; i < PanelsGroupChangeEffect.Length; i++)
+		//{
+		//	PanelsGroupChangeEffect[i].gameObject.SetActive(value: false);
+		//}
 	}
 
 	private void Update()

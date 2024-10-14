@@ -51,7 +51,7 @@ public class SceneControlManager : MonoSingleton<SceneControlManager>
             if ((bool)EventSystem.current)
             {
                 MainEventSystem = EventSystem.current;
-                //EventSystem.current.enabled = false;
+                EventSystem.current.enabled = false;
             }
             OldScene = CurrentScene;
             OldSceneType = CurrentSceneType;

@@ -84,36 +84,48 @@ public class PopupSetting : Popup
 			SoundManager.StopSFX();
 		}
 		MonoSingleton<PlayerDataManager>.Instance.SaveOptionSound();
-		SoundSFX.Play(SFXIndex.ButtonClick);
-	}
+        SoundSFX.Play(SFXIndex.ButtonClick);
+    }
 
 
-	public void OnPressTitle()
-	{
-		//Debug.Log("SCENE :" + MonoSingleton<SceneControlManager>.Instance.CurrentSceneType);
-		SoundSFX.Play(SFXIndex.ButtonClick);
-		//Application.Quit();
-		if (MonoSingleton<SceneControlManager>.Instance.CurrentSceneType == SceneType.Title)
-		{
-			//Debug.Log("QUIT");
-			Application.Quit();
+    public void OnPressTitle()
+    {
+        //Debug.Log("SCENE :" + MonoSingleton<SceneControlManager>.Instance.CurrentSceneType);
+        SoundSFX.Play(SFXIndex.ButtonClick);
+        //Application.Quit();
+        if (MonoSingleton<SceneControlManager>.Instance.CurrentSceneType == SceneType.Title)
+        {
+            //Debug.Log("QUIT");
+#if PLATFORM_ANDROID
+        Application.Quit();
+#elif UNITY_EDITOR
+
+#elif UNITY_WEBGL
+
+#endif
         }
-        else 
-		MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
-	}
+        else
+            MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
+    }
 
-	public void OnPressQuit()
-	{
-		//Debug.Log("QUIT");
-		SoundSFX.Play(SFXIndex.ButtonClick);
-		Application.Quit();
-		//MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
-	}
+    public void OnPressQuit()
+    {
+        //Debug.Log("QUIT");
+        SoundSFX.Play(SFXIndex.ButtonClick);
+#if	PLATFORM_ANDROID
+        Application.Quit();
+#elif UNITY_EDITOR
 
-	public void OnPressGameQuit()
-	{
-		
-		SoundSFX.Play(SFXIndex.ButtonClick);
+#elif UNITY_WEBGL
+
+#endif
+        //MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
+    }
+
+    public void OnPressGameQuit()
+    {
+
+        SoundSFX.Play(SFXIndex.ButtonClick);
 		if (!GameMain.main.isFirstBoardSetting && MonoSingleton<SceneControlManager>.Instance.CurrentSceneType == SceneType.Game)
 		{
 			GameMain.main.OnPressButtonExit();

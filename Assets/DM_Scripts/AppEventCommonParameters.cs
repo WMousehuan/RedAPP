@@ -140,7 +140,7 @@ public class AppEventCommonParameters
 #if ENABLE_ANTI_CHEAT
 			    dicParam[key] = Utils.UnixTimeStampToDateTime(ObscuredPrefs.GetInt("WDate", 0)).ToString("yyyyMMdd");
 #else
-                dicParam[key] = Utils.UnixTimeStampToDateTime(CPlayerPrefs.GetInt("WDate", 0)).ToString("yyyyMMdd");
+                dicParam[key] = Utils.UnixTimeStampToDateTime(PlayerPrefs.GetInt("WDate", 0)).ToString("yyyyMMdd");
 #endif
                 break;
 		case ParamType.PLAYER_LEVEL_HIGHEST_PLAYABLE:
@@ -288,7 +288,7 @@ public class AppEventCommonParameters
 #if ENABLE_ANTI_CHEAT
 		int @int = ObscuredPrefs.GetInt("WDate", 0);
 #else
-		int @int = CPlayerPrefs.GetInt("WDate", 0);
+		int @int = PlayerPrefs.GetInt("WDate", 0);
 #endif
         if (@int > 0)
 		{

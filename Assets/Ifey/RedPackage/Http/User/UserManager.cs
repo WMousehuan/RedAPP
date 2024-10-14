@@ -54,6 +54,7 @@ public class GetUserInfoInterface : HttpInterface
         // 实现 Success 方法的逻辑
         RedPackageAuthor.Instance.userBalance = responseData.data.balance;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;
+        EventManager.Instance.DispatchEvent(typeof(GetUserInfoInterface).ToString(), "UpdateData");
         Debug.Log("Success Get User info!");
     }
 

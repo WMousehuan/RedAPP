@@ -482,7 +482,9 @@ public class Utils
 
     public static void StartVibrate()
     {
+#if UNITY_EDITOR || PLATFORM_ANDROID
         Handheld.Vibrate();
+#endif
     }
 
     public static void CompressDirectory(string sInDir, string sOutFile)

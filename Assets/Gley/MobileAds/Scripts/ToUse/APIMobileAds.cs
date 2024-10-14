@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace Gley.MobileAds
 {
-    public static class APIMobileAds
+    public static class API
     {
         #region Basic
         /// <summary>
@@ -28,7 +28,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Display a banner on screen 显示横幅广告
+        /// Display a banner on screen
         /// </summary>
         /// <param name="position">Relative position to the screen.</param>
         /// <param name="bannerType">Type of banner to be displayed.</param>
@@ -39,7 +39,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Hides the active banner. 隐藏横幅广告
+        /// Hides the active banner.
         /// </summary>
         public static void HideBanner()
         {
@@ -48,7 +48,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Check if any interstitial is available to be displayed. 检查是否有可用插页广告
+        /// Check if any interstitial is available to be displayed.
         /// </summary>
         /// <returns>true if interstitial is available</returns>
         public static bool IsInterstitialAvailable()
@@ -58,7 +58,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Display an interstitial if available 显示插页广告
+        /// Display an interstitial if available
         /// </summary>
         /// <param name="interstitialClosed">Callback called when interstitial is closed</param>
         public static void ShowInterstitial(UnityAction interstitialClosed = null)
@@ -68,7 +68,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Check if any app open ad is available to be displayed 检查是否有可用应用打开广告
+        /// Check if any app open ad is available to be displayed
         /// </summary>
         /// <returns>true if app open ad is available</returns>
         public static bool IsAppOpenAvailable()
@@ -78,7 +78,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Display an app open ad if available.显示应用打开广告
+        /// Display an app open ad if available.
         /// </summary>
         /// <param name="appOpenClosed">Callback called when app open is closed.</param>
         public static void ShowAppOpen(UnityAction appOpenClosed = null)
@@ -89,7 +89,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Check if any rewarded video is available to be displayed 检查是否有激励视频广告
+        /// Check if any rewarded video is available to be displayed
         /// </summary>
         /// <returns>true is rewarded video is available</returns>
         public static bool IsRewardedVideoAvailable()
@@ -99,7 +99,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Show a rewarded video ad if available 显示激励视频广告
+        /// Show a rewarded video ad if available 
         /// </summary>
         /// <param name="completeMethod">callback called when a rewarded video ad closes</param>
         public static void ShowRewardedVideo(UnityAction<bool> completeMethod)
@@ -109,7 +109,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Check if any rewarded interstitial is available to be displayed. 检测是否有激励插页广告
+        /// Check if any rewarded interstitial is available to be displayed.
         /// </summary>
         /// <returns>true if rewarded interstitial is available</returns>
         public static bool IsRewardedInterstitialAvailable()
@@ -119,7 +119,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Display a rewarded interstitial ad if available. 显示激励插页广告
+        /// Display a rewarded interstitial ad if available.
         /// </summary>
         /// <param name="completeMethod">Callback called when rewarded interstitial is closed. Use it to reward the user after ad view.</param>
         public static void ShowRewardedInterstitial(UnityAction<bool> completeMethod)
@@ -129,7 +129,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Show a medium rectangle ad if available 显示一个中等矩形广告
+        /// Show a medium rectangle ad if available
         /// </summary>
         /// <param name="position">Relative position to the screen</param>
         public static void ShowMRec(BannerPosition position)
@@ -139,7 +139,7 @@ namespace Gley.MobileAds
 
 
         /// <summary>
-        /// Hide the active MRec 隐藏中等矩形广告
+        /// Hide the active MRec
         /// </summary>
         public static void HideMRec()
         {

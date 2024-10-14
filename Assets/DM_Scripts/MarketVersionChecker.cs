@@ -34,7 +34,7 @@ public class MarketVersionChecker : MonoBehaviour
 	{
 		appBundleId = Application.identifier;
 		currentVersion = GlobalSetting.ConfigData.AppVersion;
-		StartCoroutine(ProcessGettingStoreVersion());
+		//StartCoroutine(ProcessGettingStoreVersion());
 	}
 
 	private IEnumerator ProcessGettingStoreVersion()

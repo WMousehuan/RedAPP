@@ -2,12 +2,12 @@
 #define GleyIAPEnabled
 #endif
 #if !GleyIAPEnabled
-namespace Gley.EasyIAP
-{
-	public enum ShopProductNames
-	{
-		Coins,
-		RemoveAds,
-	}
-}
+//namespace Gley.EasyIAP
+//{
+//	public enum ShopProductNames
+//	{
+//		Coins,
+//		RemoveAds,
+//	}
+//}
 #endif

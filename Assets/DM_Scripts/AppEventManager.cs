@@ -2226,7 +2226,7 @@ public class AppEventManager : MonoSingleton<AppEventManager>
 #if ENABLE_ANTI_CHEAT
 		dictionary["DID_PLAYER_EVER_WATCH_AD"] = ((!ObscuredPrefs.GetBool("DID_PLAYER_EVER_WATCH_AD", defaultValue: false)) ? "NO" : "YES");
 #else
-		dictionary["DID_PLAYER_EVER_WATCH_AD"] = ((!CPlayerPrefs.GetBool("DID_PLAYER_EVER_WATCH_AD", defaultValue: false)) ? "NO" : "YES");
+		dictionary["DID_PLAYER_EVER_WATCH_AD"] = ((PlayerPrefs.GetInt("DID_PLAYER_EVER_WATCH_AD", defaultValue: 0))!=1 ? "NO" : "YES");
 #endif
         dictionary["AD_REWARD_TYPE"] = value;
 		dictionary["AD_REWARD_TYPE_SPECIFIC"] = value2;
@@ -2301,7 +2301,7 @@ public class AppEventManager : MonoSingleton<AppEventManager>
 #if ENABLE_ANTI_CHEAT
 		dictionary["DID_PLAYER_EVER_WATCH_AD"] = ((!ObscuredPrefs.GetBool("DID_PLAYER_EVER_WATCH_AD", defaultValue: false)) ? "NO" : "YES");
 #else
-        dictionary["DID_PLAYER_EVER_WATCH_AD"] = ((!CPlayerPrefs.GetBool("DID_PLAYER_EVER_WATCH_AD", defaultValue: false)) ? "NO" : "YES");
+        dictionary["DID_PLAYER_EVER_WATCH_AD"] = ((PlayerPrefs.GetInt("DID_PLAYER_EVER_WATCH_AD", defaultValue: 0))!=1 ? "NO" : "YES");
 #endif
         dictionary["ACCESSED_BY"] = GetLogTypeString(adAccessedBy.ToString());
 		dictionary["AD_REWARD_TYPE"] = value;

@@ -18,13 +18,13 @@ namespace Gley.MobileAds.Internal
 
         public void Accept()
         {
-            MobileAds.APIMobileAds.SetGDPRConsent(true);
+            MobileAds.API.SetGDPRConsent(true);
             Close();
         }
 
         public void Reject()
         {
-            MobileAds.APIMobileAds.SetGDPRConsent(false);
+            MobileAds.API.SetGDPRConsent(false);
             Close();
         }
 
