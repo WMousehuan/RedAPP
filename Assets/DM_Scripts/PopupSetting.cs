@@ -12,10 +12,11 @@ public class PopupSetting : Popup
 {
 	public GameObject buttonHome;
 
-	public GameObject buttonQuit;
+	public GameObject buttonOut;
 
+    public GameObject buttonQuit;
 
-	public GameObject ObjGroupOption;
+    public GameObject ObjGroupOption;
 
 	public Toggle ToggleSoundBGMButton;
 
@@ -23,33 +24,36 @@ public class PopupSetting : Popup
 
 
 
-	public override void Start()
-	{
-		base.Start();
-	}
+    public override void Start()
+    {
+        base.Start();
+    }
 
-	public void SetPopup(UIOptionButton.OptionMenuType type)
-	{
-	
-        if (type == UIOptionButton.OptionMenuType.Lobby)
-		{
-			
-			buttonHome.SetActive(value: false);
-			buttonQuit.SetActive(value: true);
-			
-			ObjGroupOption.transform.localPosition = Vector3.zero;
-		}
-		else
-		{
-			buttonHome.SetActive(value: true);
-			buttonQuit.SetActive(value: false);
-			
-			ObjGroupOption.transform.localPosition = Vector3.zero;
-        }
-      
-	}
+    public void SetPopup(UIOptionButton.OptionMenuType type)
+    {
+        buttonHome.SetActive(type== UIOptionButton.OptionMenuType.Game);
+        buttonOut.SetActive(type == UIOptionButton.OptionMenuType.Lobby);
+        buttonQuit.SetActive(type == UIOptionButton.OptionMenuType.Menu);
+        ObjGroupOption.transform.localPosition = Vector3.zero;
+        //if (type == UIOptionButton.OptionMenuType.Lobby)
+        //{
 
-	public void Update()
+        //	buttonHome.SetActive(value: false);
+        //	buttonQuit.SetActive(value: true);
+
+        //	ObjGroupOption.transform.localPosition = Vector3.zero;
+        //}
+        //else
+        //{
+        //	buttonHome.SetActive(value: true);
+        //	buttonQuit.SetActive(value: false);
+
+        //	ObjGroupOption.transform.localPosition = Vector3.zero;
+        //}
+
+    }
+
+    public void Update()
 	{
 	}
 
@@ -112,12 +116,13 @@ public class PopupSetting : Popup
     {
         //Debug.Log("QUIT");
         SoundSFX.Play(SFXIndex.ButtonClick);
-#if	PLATFORM_ANDROID
+        PlayerPrefs.DeleteAll();
+#if PLATFORM_ANDROID
         Application.Quit();
 #elif UNITY_EDITOR
-
+        MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
 #elif UNITY_WEBGL
-
+        MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
 #endif
         //MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
     }
