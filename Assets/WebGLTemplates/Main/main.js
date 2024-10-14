@@ -112,8 +112,8 @@ if ("conferenceIndex" in urlSearch_Dictionary) {
 //////////////////////////////////////////////////////////////////////////////
 function CreateUnity(finishAction){
 
-//var buildUrl ="https://chefdigital-exhibition.oss-cn-hongkong.aliyuncs.com/unity/newExhibition_v1_geneva/Build/";
-var buildUrl = "Build/";
+var buildUrl ="https://test-dinosaur-file.s3.ap-east-1.amazonaws.com/webgl/Build/";
+//var buildUrl = "Build/";
 
 
 var canvas = document.querySelector("#unity-canvas");
