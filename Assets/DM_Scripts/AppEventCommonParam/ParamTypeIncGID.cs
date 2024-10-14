@@ -1,0 +1,15 @@
+namespace AppEventCommonParam
+{
+	public enum ParamTypeIncGID
+	{
+		STAGE_NUMBER,
+		LEVEL_NUMBER,
+		STAGE_NUMBER_LAST_PLAYED,
+		LEVEL_NUMBER_LAST_PLAYED,
+		LEVEL_GAME_MODE,
+		LEVEL_PLAY_TYPE,
+		IS_FIRST_CLEAR,
+		IS_THIS_LEVEL_EVER_CLEARED,
+		Max
+	}
+}
