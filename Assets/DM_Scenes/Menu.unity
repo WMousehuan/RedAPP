@@ -2874,6 +2874,11 @@ PrefabInstance:
       propertyPath: m_ChildAlignment
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 826221041528598191, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1730418475928073454, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}
       propertyPath: m_IsActive
@@ -5624,7 +5629,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 229727b4e7cbd57a63d959e227cb018b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  optionMenuType: 0
+  optionMenuType: 2
 --- !u!114 &1398513633
 MonoBehaviour:
   m_ObjectHideFlags: 0

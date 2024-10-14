@@ -5,7 +5,8 @@ public class UIOptionButton : MonoBehaviour
 	public enum OptionMenuType
 	{
 		Lobby,
-		Game
+		Game,
+		Menu,
 	}
 
 	public OptionMenuType optionMenuType;
