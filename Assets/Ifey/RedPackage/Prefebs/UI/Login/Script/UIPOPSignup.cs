@@ -9,6 +9,7 @@ public class UIPOPSignup : Popup
     public TMP_InputField uerId;
     public TMP_InputField loginPsd;
     public TMP_InputField nickname;
+    public TMP_InputField superUser;
     [HideInInspector]
     string userSignUpUrl = "/app-api/member/auth/register";  
     public void openLogin()

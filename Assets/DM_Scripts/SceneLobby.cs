@@ -77,9 +77,9 @@ public class SceneLobby : SceneClass
 	public void OnClickWatchAds()
 	{
 		SoundSFX.Play(SFXIndex.ButtonClick);
-		if (APIMobileAds.IsRewardedVideoAvailable())
+		if (API.IsRewardedVideoAvailable())
 		{
-			APIMobileAds.ShowRewardedVideo(CompleteMethod);
+			API.ShowRewardedVideo(CompleteMethod);
 		}
 
 	}
@@ -183,7 +183,10 @@ public class SceneLobby : SceneClass
 		{
 			//MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupEventDailySpinReward);
             Debug.Log("First Time to login to do!");
-            MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
+			{
+                MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+            }
         }
     }
 

@@ -50,7 +50,9 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     public int maxIndex = 0;
 
     public System.Action scrollOverBottomAction;
-
+    /// <summary>
+    /// realIndex, rowIndex, columnIndex, target
+    /// </summary>
     public System.Action<int, int, int, RectTransform> scrollEnterEvent;
     public System.Action<int, int, int, RectTransform> scrollExitEvent;
     public List<Int2> activeIndexs = new List<Int2>();

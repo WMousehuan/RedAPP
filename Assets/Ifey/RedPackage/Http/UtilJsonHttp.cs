@@ -152,7 +152,6 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
     }
     public void PostFileWithParamAuthorizationToken(string apiUrl, string fileName, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
     {
-        print(apiUrl);
         StartCoroutine(IEPostFileWithParamAndToken(apiUrl,  fileData, httpInterface, successAction, failAction));
     }
     IEnumerator IEPostFileWithParamAndToken(string apiUrl, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)

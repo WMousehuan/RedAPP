@@ -109,6 +109,7 @@ public class PopupManager : MonoSingleton<PopupManager>
 
 	public Popup Open(PopupType type, bool enableBackCloseButton = true, Action actionCloseEvent = null, Action actionEvent = null, Action actionNegativeEvent = null, bool holdEventOK = false, bool holdEventNegative = false, bool isReserve = false, bool enableOverlapPopup = false, bool disableBackKey = false, bool enableBlocking = true)
 	{
+		print(type.ToString());
 		if (type == CurrentPopupType && CurrentPopup != null)
 		{
 			return CurrentPopup;

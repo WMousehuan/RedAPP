@@ -10,7 +10,7 @@ using static RedPackageAuthor;
 public class UserManager : MonoSingleton<UserManager>
 {
     [HideInInspector]
-    public AppMemberUserInfoRespVO appMemberUserInfoRespVO = new AppMemberUserInfoRespVO(); //userInfo
+    public AppMemberUserInfoRespVO appMemberUserInfoRespVO =null; //userInfo
     public Texture2D currentAvatar_Texture;
     [HideInInspector]
     public string userMainInfoUrl = "/app-api/member/user/get"; //get userInfo Url
@@ -54,6 +54,7 @@ public class GetUserInfoInterface : HttpInterface
         // 实现 Success 方法的逻辑
         RedPackageAuthor.Instance.userBalance = responseData.data.balance;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;
+        EventManager.Instance.DispatchEvent(typeof(GetUserInfoInterface).ToString(), "UpdateData");
         Debug.Log("Success Get User info!");
     }
 

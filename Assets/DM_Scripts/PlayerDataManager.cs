@@ -143,7 +143,7 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #if ENABLE_ANTI_CHEAT
 		lastLevelStreakFailCount = ObscuredPrefs.GetInt("lastLevelStreakFailCount", 0);
 #else
-        lastLevelStreakFailCount = CPlayerPrefs.GetInt("lastLevelStreakFailCount", 0);
+        lastLevelStreakFailCount = PlayerPrefs.GetInt("lastLevelStreakFailCount", 0);
 #endif
         if (IsOnSoundBGM)
 		{
@@ -187,7 +187,7 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #if ENABLE_ANTI_CHEAT
 		string @string = ObscuredPrefs.GetString("LastDailyBonus", string.Empty);
 #else
-		string @string = CPlayerPrefs.GetString("LastDailyBonus", string.Empty);
+		string @string = PlayerPrefs.GetString("LastDailyBonus", string.Empty);
 #endif
         if (@string == string.Empty)
 		{
@@ -204,7 +204,7 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #if ENABLE_ANTI_CHEAT
 		ObscuredPrefs.SetString("LastDailyBonus", DateTime.Now.ToString());
 #else
-        CPlayerPrefs.SetString("LastDailyBonus", DateTime.Now.ToString());
+        PlayerPrefs.SetString("LastDailyBonus", DateTime.Now.ToString());
 #endif
         lastRecvDailyBonusDateTime = DateTime.Now;
 	}
@@ -223,7 +223,6 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 			IsFirstSession = false;
 			lastLoginDateTime = Convert.ToDateTime(@string);
 		}
-		PlayerPrefs.SetString("LastLoginDateTime", DateTime.Now.ToString());
 		PlayerPrefs.Save();
 	}
 
@@ -425,8 +424,8 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 		ObscuredPrefs.SetInt(KEY_COIN, Coin);
 		ObscuredPrefs.Save();
 #else
-        CPlayerPrefs.SetInt(KEY_COIN, Coin);
-        CPlayerPrefs.Save();
+        PlayerPrefs.SetInt(KEY_COIN, Coin);
+        PlayerPrefs.Save();
 #endif
     }
 
@@ -435,7 +434,7 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #if ENABLE_ANTI_CHEAT
 		Coin = ObscuredPrefs.GetInt(KEY_COIN, 0);
 #else
-		Coin = CPlayerPrefs.GetInt(KEY_COIN, 0);
+		Coin = PlayerPrefs.GetInt(KEY_COIN, 0);
 #endif
     }
 
@@ -450,9 +449,9 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #else
         for (int i = 0; i < BoosterCount.Length; i++)
         {
-            CPlayerPrefs.SetInt(KEY_HEADER_BOOSTER + i, BoosterCount[i]);
+            PlayerPrefs.SetInt(KEY_HEADER_BOOSTER + i, BoosterCount[i]);
         }
-        CPlayerPrefs.Save();
+        PlayerPrefs.Save();
 #endif
     }
 
@@ -467,7 +466,7 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #else
         for (int i = 0; i < BoosterCount.Length; i++)
         {
-            BoosterCount[i] = CPlayerPrefs.GetInt(KEY_HEADER_BOOSTER + i, 1);
+            BoosterCount[i] = PlayerPrefs.GetInt(KEY_HEADER_BOOSTER + i, 1);
         }
 #endif
     }
@@ -498,10 +497,10 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 		string @string = ObscuredPrefs.GetString(KEY_HEADER_LEVEL_SCORE, "[0]");
 		string string2 = ObscuredPrefs.GetString(KEY_HEADER_LEVEL_STAR, "[0]");
 #else
-        CurrentLevelNo = CPlayerPrefs.GetInt(KEY_LEVEL, 1);
-        AllLevelCleared = CPlayerPrefs.GetBool(KEY_HEADER_ALL_CLEAR_LEVEL_TAG, defaultValue: false);
-        string @string = CPlayerPrefs.GetString(KEY_HEADER_LEVEL_SCORE, "[0]");
-        string string2 = CPlayerPrefs.GetString(KEY_HEADER_LEVEL_STAR, "[0]");
+        CurrentLevelNo = PlayerPrefs.GetInt(KEY_LEVEL, 1);
+        AllLevelCleared = PlayerPrefs.GetInt(KEY_HEADER_ALL_CLEAR_LEVEL_TAG, defaultValue: 0)!=1;
+        string @string = PlayerPrefs.GetString(KEY_HEADER_LEVEL_SCORE, "[0]");
+        string string2 = PlayerPrefs.GetString(KEY_HEADER_LEVEL_STAR, "[0]");
 #endif
         int[] array = JsonConvert.DeserializeObject<int[]>(@string);
 		int[] array2 = JsonConvert.DeserializeObject<int[]>(string2);
@@ -556,14 +555,14 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 #else
         if (!string.IsNullOrEmpty(value))
         {
-            CPlayerPrefs.SetString(KEY_HEADER_LEVEL_SCORE, value);
+            PlayerPrefs.SetString(KEY_HEADER_LEVEL_SCORE, value);
         }
         if (!string.IsNullOrEmpty(value2))
         {
-            CPlayerPrefs.SetString(KEY_HEADER_LEVEL_STAR, value2);
+            PlayerPrefs.SetString(KEY_HEADER_LEVEL_STAR, value2);
         }
         SaveCurrentLevel();
-        CPlayerPrefs.Save();
+        PlayerPrefs.Save();
 #endif
     }
 
@@ -573,8 +572,8 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 		ObscuredPrefs.SetInt(KEY_LEVEL, CurrentLevelNo);
 		ObscuredPrefs.SetBool(KEY_HEADER_ALL_CLEAR_LEVEL_TAG, AllLevelCleared);
 #else
-        CPlayerPrefs.SetInt(KEY_LEVEL, CurrentLevelNo);
-        CPlayerPrefs.SetBool(KEY_HEADER_ALL_CLEAR_LEVEL_TAG, AllLevelCleared);
+        PlayerPrefs.SetInt(KEY_LEVEL, CurrentLevelNo);
+        PlayerPrefs.SetInt(KEY_HEADER_ALL_CLEAR_LEVEL_TAG, AllLevelCleared?1:0);
 #endif
     }
 }
