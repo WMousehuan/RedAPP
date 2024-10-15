@@ -14,7 +14,7 @@ using System.Text;
 using System.Runtime.InteropServices;
 using System;
 using System.Xml.Linq;
-public class Ui_UserInformation : Popup,WebReviceMessage
+public class Ui_UserInformation : Popup
 {
     public enum UserInfoType
     {
