@@ -42,8 +42,9 @@ public class Ui_UserInformation : Popup,WebReviceMessage
     {
       
         base.Start();
-        OnEventSwitchSetNameState(false);
+        
         RefreshUserInformation();
+        OnEventSwitchSetNameState(false);
         EventManager.Instance.Regist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID(), (objects) =>
         {
             string sign = (string)objects[0];
@@ -64,6 +65,12 @@ public class Ui_UserInformation : Popup,WebReviceMessage
     }
     public void RefreshUserInformation()
     {
+        print(UserManager.Instance.appMemberUserInfoRespVO);
+        if (UserManager.Instance.appMemberUserInfoRespVO==null)
+        {
+            MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
+            return;
+        }
         userName_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.nickname;
         if (UserManager.Instance.currentAvatar_Texture!=null)
         {
@@ -121,7 +128,11 @@ public class Ui_UserInformation : Popup,WebReviceMessage
 #endif
         setName_Button.gameObject.SetActive(!isSwitch);
         setNameEidit_Case.gameObject.SetActive(isSwitch);
-        userName_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.nickname;
+        if (UserManager.Instance.appMemberUserInfoRespVO != null)
+        {
+            userName_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.nickname;
+        }
+
     }
 
     /// <summary>

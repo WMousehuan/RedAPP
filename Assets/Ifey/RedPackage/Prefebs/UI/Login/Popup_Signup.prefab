@@ -67,6 +67,7 @@ MonoBehaviour:
   uerId: {fileID: 3789272911967525656}
   loginPsd: {fileID: 3789272912170921679}
   nickname: {fileID: 3789272912264060275}
+  superUser: {fileID: 0}
 --- !u!1 &3789272911773104472
 GameObject:
   m_ObjectHideFlags: 0

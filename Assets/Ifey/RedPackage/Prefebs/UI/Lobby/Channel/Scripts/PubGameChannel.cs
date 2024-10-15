@@ -26,6 +26,6 @@ public class PubGameChannel : MonoBehaviour
         MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Lobby, SceneChangeEffect.Color);
         PlayerTreasureGameData.Instance.entranceChannelId = this.channelRespVO.Id.ToString();
         //Get playList info »ñÈ¡Íæ·¨
-        MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(PlayerTreasureGameData.Instance.entranceChannelId);
+        MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(this.channelRespVO.Id.ToString());
     }
 }

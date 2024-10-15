@@ -10,7 +10,7 @@ using static RedPackageAuthor;
 public class UserManager : MonoSingleton<UserManager>
 {
     [HideInInspector]
-    public AppMemberUserInfoRespVO appMemberUserInfoRespVO = new AppMemberUserInfoRespVO(); //userInfo
+    public AppMemberUserInfoRespVO appMemberUserInfoRespVO =null; //userInfo
     public Texture2D currentAvatar_Texture;
     [HideInInspector]
     public string userMainInfoUrl = "/app-api/member/user/get"; //get userInfo Url
@@ -20,6 +20,7 @@ public class UserManager : MonoSingleton<UserManager>
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo
+        print("=========================");
         UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resualtData) => {
             GeneralTool_Ctrl.DownloadImage(appMemberUserInfoRespVO.avatar, (texture) =>
             {

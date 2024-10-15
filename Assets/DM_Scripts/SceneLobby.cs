@@ -183,7 +183,10 @@ public class SceneLobby : SceneClass
 		{
 			//MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupEventDailySpinReward);
             Debug.Log("First Time to login to do!");
-            MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
+			{
+                MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+            }
         }
     }
 

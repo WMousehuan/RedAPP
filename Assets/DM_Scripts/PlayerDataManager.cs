@@ -223,7 +223,6 @@ public class PlayerDataManager : MonoSingleton<PlayerDataManager>
 			IsFirstSession = false;
 			lastLoginDateTime = Convert.ToDateTime(@string);
 		}
-		PlayerPrefs.SetString("LastLoginDateTime", DateTime.Now.ToString());
 		PlayerPrefs.Save();
 	}
 
