@@ -20,7 +20,6 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
     /// <param name="httpInterface"></param>
     public void GetRequestWithAuthorizationToken(string apiUrl, HttpInterface httpInterface,System.Action<string> successAction =null, System.Action failAction = null)
     {
-        print(11);
         StartCoroutine(IEGetRequestWithAuthorizationToken(apiUrl, httpInterface, successAction, failAction));
     }
     IEnumerator IEGetRequestWithAuthorizationToken(string apiUrl, HttpInterface httpInterface, System.Action<string> finishAction = null, System.Action failAction = null)
@@ -103,7 +102,6 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
 
     public void PostRequestWithParamAuthorizationToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
     {
-        print(1111);
         StartCoroutine(IEPostRequestWithParamAndToken(apiUrl, paramers, httpInterface, successAction, failAction));
     }
     IEnumerator IEPostRequestWithParamAndToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
@@ -154,7 +152,6 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
     }
     public void PostFileWithParamAuthorizationToken(string apiUrl, string fileName, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
     {
-        print(apiUrl);
         StartCoroutine(IEPostFileWithParamAndToken(apiUrl,  fileData, httpInterface, successAction, failAction));
     }
     IEnumerator IEPostFileWithParamAndToken(string apiUrl, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
