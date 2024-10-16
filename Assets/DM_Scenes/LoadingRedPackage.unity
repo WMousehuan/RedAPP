@@ -345,6 +345,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6aabe404ffc19914abfe4fa6e4303b5a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1641001444
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1641001445}
+  - component: {fileID: 1641001446}
+  m_Layer: 0
+  m_Name: WebMessage_Ctrl
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1641001445
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641001444}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -2.712879, y: -24.05139, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1789943994663463664}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1641001446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1641001444}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e775e3f22ab47b4a870ad4a82effa09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!850595691 &1789183674
 LightingSettings:
   m_ObjectHideFlags: 0
@@ -469,8 +513,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee6df7a992d6ce4aac27d7172fca9e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentAvatar_Texture: {fileID: 0}
   userMainInfoUrl: /app-api/member/user/get
+  encryptSuperiorId: 
 --- !u!114 &1918783265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1691,6 +1735,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1641001445}
   - {fileID: 1789943994663463663}
   - {fileID: 1789943994663463658}
   - {fileID: 1789943994663463650}
@@ -8729,6 +8774,7 @@ MonoBehaviour:
     type: 3}
   CurrentPopupType: -1
   CurrentPopup: {fileID: 0}
+  canvasScaler: {fileID: 0}
   PopupCamera: {fileID: 1789943994663463677}
   ObjBackBlocking: {fileID: 1789943994663463618}
   EventTriggerBackBlocking: {fileID: 1789943994663463776}
