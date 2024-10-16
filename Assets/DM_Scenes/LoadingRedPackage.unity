@@ -8774,7 +8774,7 @@ MonoBehaviour:
     type: 3}
   CurrentPopupType: -1
   CurrentPopup: {fileID: 0}
-  canvasScaler: {fileID: 0}
+  canvasScaler: {fileID: 1789943994663463759}
   PopupCamera: {fileID: 1789943994663463677}
   ObjBackBlocking: {fileID: 1789943994663463618}
   EventTriggerBackBlocking: {fileID: 1789943994663463776}
