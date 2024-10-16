@@ -29,6 +29,11 @@ if (url.includes('?')) {
     });
 }
 var realTargetScene="";
+var encryptSuperiorId="";
+if("encryptSuperiorId" in urlSearch_Dictionary)
+{
+    encryptSuperiorId=urlSearch_Dictionary["encryptSuperiorId"];
+}
 // if ("initScene" in urlSearch_Dictionary) {
 //     var _currentSceneName=urlSearch_Dictionary["initScene"];
 //     switch(_currentSceneName){
@@ -192,18 +197,10 @@ createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) 
     unityInstance = unityInstance_Temp;
 
     finishAction();
-    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'InitManager|' + initSceneName+"^"+realTargetScene);
-
-    
-    if(boothId!=null)
-    {
-        unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "ExhibitionSceneManager|InitBooth^"+boothId);
-    }                                        
-    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'MainUI|GetWebPlatform^' + navigator.userAgent);
-    if(conferenceIndex!=null)
-    {
-        unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'GameManager|conferenceIndex^' + conferenceIndex);
-    }
+    //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'InitManager|' + initSceneName+"^"+realTargetScene);
+    console.log("++++++++++++++++++" + encryptSuperiorId);
+    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserManager|encryptSuperiorId^"+encryptSuperiorId);                                   
+    //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'MainUI|GetWebPlatform^' + navigator.userAgent);
 });
 }
 document.body.appendChild(script);
@@ -212,13 +209,13 @@ document.body.appendChild(script);
 if(userId==""||token=="")
 {
     CreateUnity(()=>{
-        unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserInit_Ctrl|InitUserData^" + "" + "^" + "" + "^" + lang);
+        //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserInit_Ctrl|InitUserData^" + "" + "^" + "" + "^" + lang);
     });
 }
 else
 {
     CreateUnity(()=>{
-        unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserInit_Ctrl|InitUserData^" + token + "^" + userId + "^" + lang + "^" + JSON.stringify(responseData["data"]));
+        //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserInit_Ctrl|InitUserData^" + token + "^" + userId + "^" + lang + "^" + JSON.stringify(responseData["data"]));
     });
      
     // if (haveToken) 

@@ -27,6 +27,7 @@ public class PopupManager : MonoSingleton<PopupManager>
 
 	public Popup CurrentPopup;
 
+	public CanvasScaler canvasScaler;
 	public Camera PopupCamera;
 
 	public GameObject ObjBackBlocking;
@@ -54,15 +55,17 @@ public class PopupManager : MonoSingleton<PopupManager>
 	private void Start()
 	{
 		ObjBackBlocking.SetActive(value: false);
-	}
+    }
 
-	private void Update()
-	{
-	}
+    private void Update()
+    {
+        canvasScaler.matchWidthOrHeight = Mathf.Lerp(1, 0, ((Screen.height / (float)Screen.width) - (4 / 3f)) / ((16 / 9f) - (4 / 3f)));
 
-	public void CloseAllPopup(bool UseCloseEvent = false)
-	{
-		for (int num = listOpenedPopupObject.Count - 1; num >= 0; num--)
+    }
+
+    public void CloseAllPopup(bool UseCloseEvent = false)
+    {
+        for (int num = listOpenedPopupObject.Count - 1; num >= 0; num--)
 		{
 			try
 			{
@@ -165,13 +168,18 @@ public class PopupManager : MonoSingleton<PopupManager>
 			if ((bool)component)
 			{
 				component.PlayTweenListOpen();
-			}
-		}
-		return popup;
-	}
+            }
+        }
+        return popup;
+    }
+    public T Open<T>(PopupType type) where T : Popup
+    {
+        Popup popup = Open(type);
+        return (T)popup;
+    }
 
-	public void Close()
-	{
+    public void Close()
+    {
 		bool flag = true;
 		bool flag2 = false;
 		if ((bool)CurrentPopup)

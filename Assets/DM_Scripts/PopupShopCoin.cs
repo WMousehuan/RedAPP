@@ -11,11 +11,18 @@ using UnityEngine;
 using UnityEngine.UI;
 using Gley.EasyIAP;
 using EasyUI.Toast;
+using Newtonsoft.Json;
+using Gley.DailyRewards.Internal;
+using static UnityEngine.GraphicsBuffer;
+using System.Reflection;
 
 
 public class PopupShopCoin : Popup
 {
+    public enum GoodsType
+    {
 
+    }
 
     public class DM_StoreProducts
     {
@@ -29,21 +36,28 @@ public class PopupShopCoin : Popup
         }
     }
 
-    
+    private string getCoinShopDataUrl = "/app-api/red/recharge-award/page";
+
+
     private bool purchaseInProgress;
     private bool initializationInProgress;
     private List<DM_StoreProducts> consumableProducts = new List<DM_StoreProducts>();
 
     public static bool isNewUser;
 
+    public UipopupTreasureShopApi uipopupTreasureShopApi;
 
+    public GameObject goods_Prefab;
+
+    public ObjectGroup<string, Sprite> sprite_Group;
 
 	public Button WatchAds;
 
-	
-
 	public Image ImageBackBlocking;
 
+    public GridLoopScroll_Ctrl loopScroll_Ctrl;
+
+    public List<CoinShopDataVO> coinShopDataVOs=new List<CoinShopDataVO>();
     private void Awake()
     {
       //  Debug.Log("INIT :" + API.IsInitialized());
@@ -61,21 +75,72 @@ public class PopupShopCoin : Popup
 
     public override void Start()
 	{
-		//if ((bool)ImageBackBlocking)
-		//{
-		//	ImageBackBlocking.gameObject.SetActive(value: true);
-		//	ImageBackBlocking.color = new Color(0f, 0f, 0f, 0f);
-		//	//ImageBackBlocking.DOFade(0.5f, 0.5f);
-		//}
-		base.Start();
+        //if ((bool)ImageBackBlocking)
+        //{
+        //	ImageBackBlocking.gameObject.SetActive(value: true);
+        //	ImageBackBlocking.color = new Color(0f, 0f, 0f, 0f);
+        //	//ImageBackBlocking.DOFade(0.5f, 0.5f);
+        //}
+        base.Start();
 
-       
+        loopScroll_Ctrl.scrollEnterEvent = (realIndex, rowIndex, columnIndex, target) => {
+            CoinShopDataVO coinShopData = coinShopDataVOs[realIndex];
+            GameObject goods_Case = target.gameObject;// Instantiate(goods_Prefab, goods_Prefab.transform.parent);
 
-       
-		
-	}
+            goods_Case.gameObject.SetActive(true);
+            Sprite frame_Sprite = sprite_Group["Frame_Default"];
+            Sprite banner_Sprite = null;
+            string banner_Text = "";
+            Image banner_Image = goods_Case.transform.GetChild<Image>("Banner_Image");
+            if (realIndex == 1)
+            {
+                frame_Sprite = sprite_Group["Frame_Blue"];
+                banner_Sprite = sprite_Group["Banner_Blue"];
+                banner_Text = "Most\r\nPopular";
+                banner_Image.gameObject.SetActive(true);
+            }
+            else if (realIndex >= coinShopDataVOs.Count - 1)
+            {
+                frame_Sprite = sprite_Group["Frame_Pink"];
+                banner_Sprite = sprite_Group["Banner_Pink"];
+                banner_Text = "Best\r\nValue";
+                banner_Image.gameObject.SetActive(true);
+            }
+            else
+            {
+                banner_Image.gameObject.SetActive(false);
+            }
+            goods_Case.GetComponent<Image>().sprite = frame_Sprite;
+            banner_Image.sprite = banner_Sprite;
+            goods_Case.transform.GetChild<Text>("Banner_Text").text = banner_Text;
+            goods_Case.transform.GetChild<Button>("Buy_Button").onClick.AddListener(() => {
+                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopData.rechargeAmount);
+            });
+            goods_Case.transform.GetChild<Text>("Buy_Button/Text").text = "$" + coinShopData.rechargeAmount.ToString();
+            goods_Case.transform.GetChild<Text>("Price_Text").text = coinShopData.rechargeAmount.ToString() + "+" + coinShopData.awardAmount.ToString();
+            Button button = target.transform.GetChild<Button>("Buy_Button");
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(() => {
+                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopDataVOs[realIndex].rechargeAmount);
+            });
+        };
+        loopScroll_Ctrl.Init(0,0);
+        goods_Prefab.gameObject.SetActive(false);
+        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getCoinShopDataUrl, null, (resultData) =>
+        {
+            ReturnData<PageResultPacketSendRespVO<CoinShopDataVO>> result = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<CoinShopDataVO>>>(resultData);
+            coinShopDataVOs.Clear();
+            coinShopDataVOs.AddRange(result.data.list);
+            loopScroll_Ctrl.Refresh(coinShopDataVOs.Count);
+        }, () =>
+        {
+            coinShopDataVOs.Clear();
+            loopScroll_Ctrl.Refresh(coinShopDataVOs.Count);
+            PopupManager.Instance.Close();
+        });
+    }
 
-	private void InitializeResult(IAPOperationStatus status, string message, List<StoreProduct> shopProducts)
+    private void InitializeResult(IAPOperationStatus status, string message, List<StoreProduct> shopProducts)
 	{
        // Debug.Log("Chay vao day");
         initializationInProgress = false;
@@ -221,9 +286,6 @@ public class PopupShopCoin : Popup
                 Gley.MobileAds.API.RemoveAds(true);
                 Toast.Show("Successful remove ads !", 3f, ToastColor.Green);
             }
-
-            
-
         }
         else
         {
@@ -288,4 +350,12 @@ public class PopupShopCoin : Popup
     private void OnDestroy()
 	{
 	}
+
+    public class CoinShopDataVO
+    {
+        public int id;
+        public float rechargeAmount;//³äÖµ½ð¶î
+        public float awardAmount;//½±Àø½ð¶î
+        public string createTime;
+    }
 }

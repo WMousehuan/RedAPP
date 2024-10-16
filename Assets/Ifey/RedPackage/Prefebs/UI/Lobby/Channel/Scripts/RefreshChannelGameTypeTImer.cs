@@ -25,7 +25,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public Text title_Text;
         private System.Timers.Timer timer;
         private int interval = 60000; // 定时器间隔时间（单位：毫秒） fresh every 1 min
-        string freshUrl = "/app-api/red/channel/page";
+        private string freshUrl = "/app-api/red/channel/page";
         bool ifNeedToRunRefresh = true;
         List<PubGameChannel> packetSendRespVOList = new List<PubGameChannel>(); // pkg item list
         List<ChannelRespVO> channelRespVOList = new List<ChannelRespVO>();

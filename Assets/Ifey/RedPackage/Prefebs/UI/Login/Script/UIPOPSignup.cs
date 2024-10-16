@@ -9,9 +9,15 @@ public class UIPOPSignup : Popup
     public TMP_InputField uerId;
     public TMP_InputField loginPsd;
     public TMP_InputField nickname;
-    public TMP_InputField superUser;
+    public TMP_InputField superiorId;
     [HideInInspector]
-    string userSignUpUrl = "/app-api/member/auth/register";  
+    string userSignUpUrl = "/app-api/member/auth/register";
+
+    public override void OnEnable()
+    {
+        base.OnEnable();
+        superiorId.text = UserManager.Instance.encryptSuperiorId;
+    }
     public void openLogin()
     {
         MonoSingleton<PopupManager>.Instance.CloseAllPopup();
@@ -25,6 +31,7 @@ public class UIPOPSignup : Popup
         appAuthRegistReqVO.password = loginPsd.text;
         appAuthRegistReqVO.payPassword = loginPsd.text;
         appAuthRegistReqVO.nickname = nickname.text;
+        appAuthRegistReqVO.encryptSuperiorId = superiorId.text;
         if (appAuthRegistReqVO.password.Length < 6)
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Minimum 6 digits for Passward");

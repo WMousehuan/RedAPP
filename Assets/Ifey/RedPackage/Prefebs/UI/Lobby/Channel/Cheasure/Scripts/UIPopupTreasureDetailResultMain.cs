@@ -42,7 +42,7 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
         {
             avatarOfPlayer.StartToGetUrlImage(packetSendRespVO.Avatar);
         }
-        string usernameToShow = string.IsNullOrEmpty(packetSendRespVO.username) ? "noname" : packetSendRespVO.username;
+        string usernameToShow = string.IsNullOrEmpty(packetSendRespVO.nickName) ? "noname" : packetSendRespVO.nickName;
         //Debug.Log("usernameToShow" + usernameToShow);
         this.userName.text = usernameToShow;
         this.redAmount.text = packetSendRespVO.redAmount.ToString();
@@ -98,13 +98,13 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
                 int code = json["code"].Value<int>();
                 if (code == 1004001004)
                 {
-                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Not enough coin to sent!");
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
                     Debug.Log("Not enough coin to sent!!");
                     return;
                 }
                 else
                 {
-                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Get Treasure grab detail fail!");
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Get Treasure grab detail fail!");
                 }
             }
         }

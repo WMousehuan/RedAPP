@@ -22,7 +22,7 @@ public class UiUserAmountDetails : Popup
         Withdrawal,//Ã·œ÷
         Give,//‘˘ÀÕ
     }
-    string url = "/app-api/member/account-statement/page";
+    private string url = "/app-api/member/account-statement/page";
 
     public Dropdown amountStateGroup_Dropdown;
     public GridLoopScroll_Ctrl amountDetail_LoopScroll;
