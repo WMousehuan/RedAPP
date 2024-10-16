@@ -29,11 +29,12 @@ public class UiWaitMask : Popup
         }
         return target;
     }
-    public void ShowResultCase(string content,float closeTime)
+    public void ShowResultCase(string content,float closeTime,System.Action finishAction=null)
     {
         ShowCase("Result_Case").GetChild<Text>().text = content;
         IEPool_Manager.instance.WaitTimeToDo("", closeTime,null, () => {
             PopupManager.Instance.Close();
+            finishAction?.Invoke();
         });
     }
 }

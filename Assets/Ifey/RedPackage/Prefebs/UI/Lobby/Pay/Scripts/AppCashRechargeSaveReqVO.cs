@@ -7,6 +7,6 @@ using UnityEngine;
 /// </summary>
 public class AppCashRechargeSaveReqVO
 {
-    public long? optCash { get; set; }
+    public double? optCash { get; set; }
 }
  

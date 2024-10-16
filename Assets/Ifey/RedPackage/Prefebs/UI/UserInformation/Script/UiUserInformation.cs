@@ -30,8 +30,8 @@ public class Ui_UserInformation : Popup
     public Button setName_Button;
     public Transform setNameEidit_Case;
 
-    public string uploadUserDataUrl = "/app-api/member/user/update";
-    public string updateFileUrl = "/app-api/infra/file/upload";
+    private string uploadUserDataUrl = "/app-api/member/user/update";
+    private string updateFileUrl = "/app-api/infra/file/upload";
 
     public string receiveWebFileBase64Data;
     public string receiveWebFileName;
@@ -65,7 +65,6 @@ public class Ui_UserInformation : Popup
     }
     public void RefreshUserInformation()
     {
-        print(UserManager.Instance.appMemberUserInfoRespVO);
         if (UserManager.Instance.appMemberUserInfoRespVO==null)
         {
             MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
@@ -200,6 +199,7 @@ public class Ui_UserInformation : Popup
                 texture.name = path;
                 texture.LoadImage(imageData);
                 UserManager.Instance.currentAvatar_Texture = texture;
+
                 avatar_RawImage.texture = texture;
                 waitMask_Ui.ShowResultCase("Success", 1);
             }, () =>
@@ -243,10 +243,6 @@ public class Ui_UserInformation : Popup
     }
 
 
-    public void ReciveMessage(string msg)
-    {
-        
-    }
 #endif
 }
 

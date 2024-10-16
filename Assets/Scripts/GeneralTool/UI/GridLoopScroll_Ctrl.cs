@@ -70,7 +70,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         Init(15, 0);
     }
 
-    public void Init(int count, int currentRow,System.Action<Transform> itemAction=null)
+    public void Init(int count, int currentRow,System.Action<Transform,int> itemAction=null)
     {
         item_Prefab.gameObject.SetActive(false);
         this.count = count;
@@ -113,7 +113,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 items.Add(item);
                 item.gameObject.SetActive(true);
-                itemAction?.Invoke(item);
+                itemAction?.Invoke(item,index);
             }
             else
             {

@@ -11,7 +11,14 @@ using System;
 using System.Runtime.CompilerServices;
 public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
 {
+    //测试
     string mainDomain = "http://43.198.88.230:48090";
+
+    //本地
+    //string mainDomain = "http://192.168.1.31:48090"; 
+
+    //线上
+    //string mainDomain = "http://192.168.1.31:48090"; 
 
     /// <summary>
     /// GetRequset
@@ -38,25 +45,25 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(www.error);
-                httpInterface.UnknowError(www.error);
+                httpInterface?.UnknowError(www.error);
                 failAction?.Invoke();
             }
             else
             {
                 string result = www.downloadHandler.text;
-                Debug.Log(result+"\r\n"+ httpInterface.GetType().ToString());
+                Debug.Log(result+"\r\n"+ httpInterface?.GetType().ToString());
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
                 if (code == 0)
                 {
-                    httpInterface.Success(result);
+                    httpInterface?.Success(result);
                     finishAction?.Invoke(result);
                     //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
                 }
                 else
                 {
-                    httpInterface.Fail(json);
+                    httpInterface?.Fail(json);
                     failAction?.Invoke();
                 }
             }
@@ -79,7 +86,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
         if (www.result != UnityWebRequest.Result.Success)
         {
             Debug.Log(www.error);
-            httpInterface.UnknowError(www.error);
+            httpInterface?.UnknowError(www.error);
         }
         else
         {
@@ -90,12 +97,12 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             int code = json["code"].Value<int>();
             if (code == 0)
             {
-                httpInterface.Success(result);
+                httpInterface?.Success(result);
                 //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
             }
             else
             {
-                httpInterface.Fail(json);
+                httpInterface?.Fail(json);
             }
         }
     }
@@ -138,13 +145,13 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 int code = json["code"].Value<int>();
                 if (code == 0)
                 {
-                    httpInterface.Success(result);
+                    httpInterface?.Success(result);
                     successAction?.Invoke(result);
                     //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
                 }
                 else
                 {
-                    httpInterface.Fail(json);
+                    httpInterface?.Fail(json);
                     failAction?.Invoke();
                 }
             }
@@ -184,13 +191,13 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 int code = json["code"].Value<int>();
                 if (code == 0)
                 {
-                    httpInterface.Success(result);
+                    httpInterface?.Success(result);
                     successAction?.Invoke(result);
                     //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
                 }
                 else
                 {
-                    httpInterface.Fail(json);
+                    httpInterface?.Fail(json);
                     failAction?.Invoke();
                 }
             }
@@ -237,18 +244,69 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 int code = json["code"].Value<int>();
                 if (code == 0)
                 {
-                    httpInterface.Success(result);
+                    httpInterface?.Success(result);
                     successAction?.Invoke(result);
                     //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
                 }
                 else
                 {
-                    httpInterface.Fail(json);
+                    httpInterface?.Fail(json);
                     failAction?.Invoke();
                 }
             }
         }
     }
+
+    //public void PutFromWithParamAuthorizationToken(string apiUrl, (string, string) keyAndValue, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    //{
+    //    StartCoroutine(IEPutFormWithParamAndToken(apiUrl, keyAndValue, httpInterface, successAction, failAction));
+    //}
+    //IEnumerator IEPutFormWithParamAndToken(string apiUrl, (string,string) keyAndValue, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    //{
+    //    string url = mainDomain + apiUrl;
+
+    //    WWWForm wWWForm = new WWWForm();
+    //    //wWWForm.AddField
+    //    wWWForm.AddBinaryData(keyAndValue.Item1, Encoding.UTF8.GetBytes(keyAndValue.Item2));
+    //    // Create UnityWebRequest Object
+    //    using (UnityWebRequest www = new UnityWebRequest(url, "PUT"))
+    //    {
+    //        //byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonParam);
+    //        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
+    //        www.downloadHandler = new DownloadHandlerBuffer();
+
+    //        www.SetRequestHeader("Content-Type", "application/json");
+    //        www.SetRequestHeader("Authorization", RedPackageAuthor.Instance.authorizationValue); //token
+
+    //        // Send request
+    //        yield return www.SendWebRequest();
+
+    //        if (www.result != UnityWebRequest.Result.Success)
+    //        {
+    //            Debug.Log(www.error);
+    //            failAction?.Invoke();
+    //        }
+    //        else
+    //        {
+    //            string result = www.downloadHandler.text;
+    //            Debug.Log(result);
+    //            // Use Json.NET to JSON the result to JObject type
+    //            JObject json = JObject.Parse(result);
+    //            int code = json["code"].Value<int>();
+    //            if (code == 0)
+    //            {
+    //                httpInterface?.Success(result);
+    //                successAction?.Invoke(result);
+    //                //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
+    //            }
+    //            else
+    //            {
+    //                httpInterface?.Fail(json);
+    //                failAction?.Invoke();
+    //            }
+    //        }
+    //    }
+    //}
 }
 public static class MethodExpand
 {

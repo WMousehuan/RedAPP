@@ -2697,7 +2697,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct
         m_Mode: 3
@@ -5820,7 +5820,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct
         m_Mode: 3
@@ -8228,7 +8228,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct
         m_Mode: 3
@@ -9038,7 +9038,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct
         m_Mode: 3
@@ -10460,7 +10460,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct
         m_Mode: 3
@@ -12078,7 +12078,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnClickWatchAds
         m_Mode: 1
@@ -13142,8 +13142,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
-        m_TargetAssemblyTypeName: 
+      - m_Target: {fileID: 940262897850169031}
+        m_TargetAssemblyTypeName: Popup, Assembly-CSharp
         m_MethodName: OnEventClose
         m_Mode: 1
         m_Arguments:
@@ -13246,7 +13246,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6711785316797247005}
   - component: {fileID: 6711785316797246398}
-  - component: {fileID: 6711785316797246203}
   - component: {fileID: 940262897850169031}
   m_Layer: 8
   m_Name: UIPopupPutCoinInIt
@@ -13288,55 +13287,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6711785316797246203
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6711785316797249172}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13cdbb0eff25b21078331506d762f078, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CloseTweeningButtons:
-  - {fileID: 0}
-  DefaultTweeningButtons:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  DoBackBlur: 1
-  UseClosingByBlocker: 1
-  DontDestroy: 0
-  enableBackBlockingClose: 0
-  EnableOverlapPopup: 0
-  layoutObjects: []
-  ListTweenObjects: []
-  listTweenObjectsDelay: 0
-  m_PopupType: -1
-  ShowOpenCloseTweenEffect: 1
-  tweeningObjects:
-  - delay: 0.25
-    duration: 0.26
-    obj: {fileID: 0}
-  - delay: 0.35
-    duration: 0.26
-    obj: {fileID: 0}
-  - delay: 0.45
-    duration: 0.26
-    obj: {fileID: 0}
-  - delay: 0.55
-    duration: 0.26
-    obj: {fileID: 0}
-  - delay: 0.65
-    duration: 0.26
-    obj: {fileID: 0}
-  DisableBackKey: 0
-  WatchAds: {fileID: 0}
-  ImageBackBlocking: {fileID: 6711785316797244461}
 --- !u!114 &940262897850169031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15575,7 +15525,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct1
         m_Mode: 1
@@ -15708,7 +15658,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6711785316797246203}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: PopupShopCoin, Assembly-CSharp
         m_MethodName: MakeBuyProduct
         m_Mode: 3
@@ -16244,6 +16194,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2173684548889767011}
     m_Modifications:
+    - target: {fileID: 610420133794392641, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 809156590292138873, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}
       propertyPath: m_Spacing.x
@@ -16332,7 +16287,12 @@ PrefabInstance:
     - target: {fileID: 3882050271276299722, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 60
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 4115383057620957076, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.7093247
       objectReference: {fileID: 0}
     - target: {fileID: 4672780538353878284, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}
@@ -16519,6 +16479,16 @@ PrefabInstance:
       propertyPath: m_Spacing
       value: 70
       objectReference: {fileID: 0}
+    - target: {fileID: 7226537358621292705, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7226537358621292705, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7300187356793893487, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}
       propertyPath: m_SortingLayer
@@ -16603,6 +16573,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 141
+      objectReference: {fileID: 0}
+    - target: {fileID: 9214348010178536503, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_SortingLayer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9191040832979736428, guid: 479e0274f9277aa4fbb8431f9529eb9f, type: 3}
@@ -16778,6 +16753,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -9
+      objectReference: {fileID: 0}
+    - target: {fileID: 4115383057620957076, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_Size
+      value: 0.7093246
       objectReference: {fileID: 0}
     - target: {fileID: 4672780538353878284, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}
@@ -17013,6 +16993,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_ChildForceExpandHeight
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7226537358621292705, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7226537358621292705, guid: 479e0274f9277aa4fbb8431f9529eb9f,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7300187356793893487, guid: 479e0274f9277aa4fbb8431f9529eb9f,
         type: 3}

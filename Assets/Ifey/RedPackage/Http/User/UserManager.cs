@@ -5,34 +5,58 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using static RedPackageAuthor;
 
-public class UserManager : MonoSingleton<UserManager>
+public class UserManager : MonoSingleton<UserManager>,WebReviceMessage
 {
     [HideInInspector]
     public AppMemberUserInfoRespVO appMemberUserInfoRespVO =null; //userInfo
-    public Texture2D currentAvatar_Texture;
+    private Texture2D _currentAvatar_Texture;
+    public Texture2D currentAvatar_Texture
+    {
+        get
+        {
+            return _currentAvatar_Texture;
+        }
+        set
+        {
+            _currentAvatar_Texture = value;
+            EventManager.Instance.DispatchEvent(typeof(GetUserInfoInterface).ToString(), "GetAvatar");
+        }
+    }
     [HideInInspector]
     public string userMainInfoUrl = "/app-api/member/user/get"; //get userInfo Url
-
+    public string encryptSuperiorId = "";
+    private void OnEnable()
+    {
+        WebMessage_Ctrl.instance.Regist(this.gameObject);
+    }
+    private void OnDisable()
+    {
+        WebMessage_Ctrl.instance.UnRegist(this.gameObject);
+    }
     public void GetUserMainInfo()
     {
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo
-        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resualtData) => {
+        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resultData) => {
             GeneralTool_Ctrl.DownloadImage(appMemberUserInfoRespVO.avatar, (texture) =>
             {
                 currentAvatar_Texture = texture;
-                EventManager.Instance.DispatchEvent(typeof(GetUserInfoInterface).ToString(),"GetAvatar");
             });
         });
     }
-    private void Update()
+
+    public void ReciveMessage(string msg)
     {
-        if (Input.GetKeyDown(KeyCode.F1))
+        string[] msgStages = msg.Split("^");
+        switch (msgStages[0])
         {
-            PlayerPrefs.DeleteAll();
+            case "encryptSuperiorId":
+                encryptSuperiorId = msgStages[1];
+                break;
         }
     }
 }
@@ -99,6 +123,7 @@ public class AppMemberUserInfoRespVO
     public int point { get; set; }
     public float balance {  get; set; }
     public int experience { get; set; }
+    public int userType { get; set; }
     public Level level { get; set; }
     public bool? brokerageEnabled { get; set; }
 }

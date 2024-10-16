@@ -12,7 +12,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
     [HideInInspector]
     string createOrderApi = "/app-api/red/cash-recharge/create";
 
-    public void BuyCoinHttp(long coinNumber)
+    public void BuyCoinHttp(double coinNumber)
     {
         try
         {
@@ -28,7 +28,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
             // Handle the exception, for example display an error message or log the exception
         }
     }
-    public void MakeBuyProductThrillGame(int indexProduct)
+    public void MakeBuyProductThrillGame(double indexProduct)
     {
 
         BuyCoinHttp(indexProduct);
@@ -51,7 +51,8 @@ public class UipopupTreasureShopApiRespond : HttpInterface
     {
         //refresh ammount
         ReturnData<string> responseData = JsonConvert.DeserializeObject<ReturnData<string>>(result);
-        MonoSingleton<UIManager>.Instance.ShowGetCoinEffect(uipopupTreasureShopApi.transform.parent, new Vector2(0f, 100f), Coins, 10); //show coin effect
+        if (uipopupTreasureShopApi != null)
+            MonoSingleton<UIManager>.Instance.ShowGetCoinEffect(uipopupTreasureShopApi.transform.parent, new Vector2(0f, 100f), Coins, 10); //show coin effect
         // 实现 Success 方法的逻辑
         Debug.Log("Success TreasureGrabRespond=" + responseData.code.ToString());
         MonoSingleton<PopupManager>.Instance.CloseAllPopup();

@@ -20,16 +20,17 @@ public class UiPutCoinInIt : Popup
     [HideInInspector]
     //submit the 
     string sendRedPacketUrl = "/app-api/red/packet-send/sendRedPacket";
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         numberOfPlayerHorizontal = GetComponentInChildren<NumberOfPlayerHorizontal>();
         numberOfPlayerHorizontal.startInitPlayersNumberCHeckbox();
 
-        bombNumberHorizontal= GetComponentInChildren<BombNumberHorizontal>();
+        bombNumberHorizontal = GetComponentInChildren<BombNumberHorizontal>();
         bombNumberHorizontal.startInitPlayersNumberCHeckbox();
 
         inputFieldAmount.onValueChanged.AddListener(OnInputValueChanged);
-        Debug.Log($"UiPutCoinInIt on Start!") ;
+        Debug.Log($"UiPutCoinInIt on Start!");
     }
     // Start is called before the first frame update
     public void OnInputValueChanged(string value)
@@ -45,18 +46,18 @@ public class UiPutCoinInIt : Popup
     {
         if(inputFieldAmount.text == null || inputFieldAmount.text.Length == 0)
         {
-            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Plz input the accmout£¡");
+            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Plz input the accmout£¡");
             return;
         }
 
         if (inputFieldPassward.text == null || inputFieldPassward.text.Length == 0)
         {
-            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Plz input the passward£¡");
+            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Plz input the passward£¡");
         }
 
         if (inputFieldPassward.text.Length < 6)
         {
-            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Minimum 6 digits for Passward");
+            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Minimum 6 digits for Passward");
             return;
         }
         AppPacketSendSaveReqVO appPacketSendSaveReqVO = new AppPacketSendSaveReqVO();
@@ -91,6 +92,7 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
         SoundSFX.Play(SFXIndex.DailyBonusGet);
         MonoSingleton<UIOverlayEffectManager>.Instance.ShowEffectRibbonFireworks();
         Toast.Show("Successful send chest! ", 3f, ToastColor.Yellow);
+        EventManager.Instance.DispatchEvent(typeof(submitPutCoinInItHttpCallBack).ToString(), "Refresh");
     }
 
     public void Fail(JObject json)
@@ -100,13 +102,13 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
             int code = json["code"].Value<int>();
             if (code == 1004001004)
             {
-                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Not enough coin to sent!");
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
                 Debug.Log("Not enough coin to sent!!");
                 return;           
             }
             else if (code == 1022001001)
             {
-                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", json["msg"].Value<string>());
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", json["msg"].Value<string>());
                 Debug.Log("submitPutCoinInItHttpCallBack "+ json["msg"].Value<string>());
                 return;
             }
@@ -114,6 +116,7 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
             { 
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Send coin Fail!");
             }
+
         }
     }
 

@@ -23,8 +23,8 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public GameObject packageItemParent; //pkgitem parent transfer
         public GameObject packageItemOri;    //One pkg item
         private System.Timers.Timer timer;
-        private int interval = 5000; // 定时器间隔时间（单位：毫秒）
-        string freshUrl = "/app-api/red/packet-send/page";
+        public int interval = 5000; // 定时器间隔时间（单位：毫秒）
+        private string freshUrl = "/app-api/red/packet-send/page";
         bool ifNeedToRunRefresh = true;
       
         List<PackageItem> packetSendRespVOList = new List<PackageItem>(); // pkg item list
@@ -32,6 +32,17 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         List<PacketSendRespVO> PacketSendResp_List=new List<PacketSendRespVO>();
         private void Start()
         {
+            EventManager.Instance.Regist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID(), (objects) => {
+
+                string sign= (string)objects[0];
+                switch (sign)
+                {
+                    case "Refresh":
+                        refreshFromRequest();
+                        break;
+                }
+            });
+
             loopScroll.scrollEnterEvent = (realIndex, rowIndex, cloumIndex, target) =>
             {
                 if (realIndex >= 0 && realIndex < PacketSendResp_List.Count)
@@ -42,7 +53,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             };
             loopScroll.Init(0, 0);
         }
-
+        private void OnDestroy()
+        {
+            EventManager.Instance.UnRegist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID());
+        }
         public void addPacketSendRespVOList(PackageItem packageItem)
         {
             packetSendRespVOList.Add(packageItem);
@@ -99,21 +113,23 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
         private void Update()
         {
-            refreshFromRequest();
+            if (ifNeedToRunRefresh)
+            {
+                refreshFromRequest();
+            }
         }
         public void refreshFromRequest()
         {
-            if (ifNeedToRunRefresh) {
-                Debug.Log("refreshFromRequest定时器任务执行");
-                ifNeedToRunRefresh = false;
-                string memberId = "";
-                string pageNo = "1";
-                string pageSize = "50";
-                string paramsUrl = freshUrl + "?channelId=" + PlayerTreasureGameData.Instance.entranceChannelId +
-                    "&memberId=" + memberId +
-                    "&pageNo=1&pageSize=50";
-                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl, new RefreshChannelRespond(this));
-            }
+            Debug.Log("refreshFromRequest定时器任务执行");
+            ifNeedToRunRefresh = false;
+            string memberId = "";
+            string pageNo = "1";
+            string pageSize = "50";
+            string paramsUrl = freshUrl + "?channelId=" + PlayerTreasureGameData.Instance.entranceChannelId +
+                "&memberId=" + memberId +
+                "&pageNo=1&pageSize=50";
+            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl, new RefreshChannelRespond(this));
+            
         }
         public class RefreshChannelRespond : HttpInterface
         {

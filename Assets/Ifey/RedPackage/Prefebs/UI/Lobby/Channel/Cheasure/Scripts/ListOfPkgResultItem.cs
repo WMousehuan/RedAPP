@@ -20,7 +20,7 @@ public class ListOfPkgResultItem : MonoBehaviour
         userName.text = pkgDetailItem.NickName;
         grabCoin.text = pkgDetailItem.GetAmount.ToString();
         createTime.text = pkgDetailItem.CreateTimeDateTime.ToString();
-        Debug.Log("(pkgDetailItem.CompensateAmount========"+ pkgDetailItem.CompensateAmount);
+        //Debug.Log("(pkgDetailItem.CompensateAmount========"+ pkgDetailItem.CompensateAmount);
         //SHow bomb
         if (pkgDetailItem.CompensateAmount != null&& pkgDetailItem.CompensateAmount < 0)
         {

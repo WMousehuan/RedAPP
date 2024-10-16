@@ -113,4 +113,8 @@ public enum PopupType
 	PopupUserInformation,
 	PopupUserAmountDetial,
 	PopupWaitMask,
+	PopupAgreeCase,
+    PopupSuperiorUser,
+    PopupSuperiorOwnLowerUserDetail,
+    CreateChannelPanel,
 }
