@@ -4,7 +4,7 @@ using UnityEngine.Events;
 
 namespace Gley.MobileAds
 {
-    public static class API
+    public static class APIMobileAds
     {
         #region Basic
         /// <summary>

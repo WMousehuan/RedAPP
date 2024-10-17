@@ -2243,7 +2243,7 @@ public class GameMain : MonoBehaviour
 		{
 			if (isSuccess)
 			{
-				API.ShowInterstitial();
+				APIMobileAds.ShowInterstitial();
 				OpenClearPopup();
 			}
 			else
@@ -2455,7 +2455,7 @@ public class GameMain : MonoBehaviour
 	private void PopupFiveMoveMore(GameFailResultReason reason)
 	{
 		//DebugColor.LogCJE("Chay vaod day");
-		API.ShowInterstitial();
+		APIMobileAds.ShowInterstitial();
 		failReason = reason;
 		MonoSingleton<PopupManager>.Instance.Open(GetGameOverPoupupType(), enableBackCloseButton: false, PopupOpenLose);
 	}

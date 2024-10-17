@@ -135,7 +135,7 @@ public class PopupRewardItems : Popup
 	public void OnPressDoubleRewardForWatchAD()
 	{
 		
-		API.ShowRewardedVideo(CompleteMethod);
+		APIMobileAds.ShowRewardedVideo(CompleteMethod);
     }
 
 

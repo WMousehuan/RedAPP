@@ -17,11 +17,11 @@ public class AdManager : MonoBehaviour
 
     private void OnInitialized()
     {
-        API.ShowBanner(BannerPosition.Bottom, BannerType.Adaptive);
+        APIMobileAds.ShowBanner(BannerPosition.Bottom, BannerType.Adaptive);
 
-        if (!API.GDPRConsentWasSet())
+        if (!APIMobileAds.GDPRConsentWasSet())
         {
-            API.ShowBuiltInConsentPopup(PopupCloseds);
+            APIMobileAds.ShowBuiltInConsentPopup(PopupCloseds);
         }
     }
 
