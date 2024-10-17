@@ -283,7 +283,7 @@ public class PopupShopCoin : Popup
 
             else if(product.productType == ProductType.NonConsumable)
             {
-                Gley.MobileAds.API.RemoveAds(true);
+                Gley.MobileAds.APIMobileAds.RemoveAds(true);
                 Toast.Show("Successful remove ads !", 3f, ToastColor.Green);
             }
         }
@@ -302,9 +302,9 @@ public class PopupShopCoin : Popup
 
     public void OnClickWatchAds()
     {
-        if (Gley.MobileAds.API.IsRewardedVideoAvailable())
+        if (Gley.MobileAds.APIMobileAds.IsRewardedVideoAvailable())
         {
-			Gley.MobileAds.API.ShowRewardedVideo(CompleteMethod);
+			Gley.MobileAds.APIMobileAds.ShowRewardedVideo(CompleteMethod);
 		}
 		
 	}

@@ -2205,7 +2205,7 @@ public class GameMain : MonoBehaviour
 #if ENABLE_ANTI_CHEAT
 				ObscuredPrefs.SetInt("lastLevelStreakFailCount", 0);
 #else
-                CPlayerPrefs.SetInt("lastLevelStreakFailCount", 0);
+                PlayerPrefs.SetInt("lastLevelStreakFailCount", 0);
 #endif
             }
 		}
@@ -2230,7 +2230,7 @@ public class GameMain : MonoBehaviour
 #if ENABLE_ANTI_CHEAT
 				ObscuredPrefs.SetInt("lastLevelStreakFailCount", MonoSingleton<PlayerDataManager>.Instance.lastLevelStreakFailCount);
 #else
-				CPlayerPrefs.SetInt("lastLevelStreakFailCount", MonoSingleton<PlayerDataManager>.Instance.lastLevelStreakFailCount);
+				PlayerPrefs.SetInt("lastLevelStreakFailCount", MonoSingleton<PlayerDataManager>.Instance.lastLevelStreakFailCount);
 #endif
             }
 		}
