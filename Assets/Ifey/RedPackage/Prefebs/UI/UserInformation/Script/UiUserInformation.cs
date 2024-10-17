@@ -35,9 +35,11 @@ public class Ui_UserInformation : Popup
 
     public string receiveWebFileBase64Data;
     public string receiveWebFileName;
-
+#if UNITY_WEBGL            
     [DllImport("__Internal")]
     public static extern void clickSelectFileBtn(string name);
+#endif
+
     public override void Start()
     {
       
