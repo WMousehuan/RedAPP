@@ -15,7 +15,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         void Awake()
         {
-            Gley.MobileAds.API.Initialize();
+            Gley.MobileAds.APIMobileAds.Initialize();
         }
 
         void Start()
@@ -28,7 +28,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShawBanner()
         {
-            Gley.MobileAds.API.ShowBanner(BannerPosition.Bottom, BannerType.Banner);
+            Gley.MobileAds.APIMobileAds.ShowBanner(BannerPosition.Bottom, BannerType.Banner);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void HideBanner()
         {
-            Gley.MobileAds.API.HideBanner();
+            Gley.MobileAds.APIMobileAds.HideBanner();
         }
 
 
@@ -45,7 +45,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowInterstitial()
         {
-            Gley.MobileAds.API.ShowInterstitial();
+            Gley.MobileAds.APIMobileAds.ShowInterstitial();
         }
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         public void ShowRewardedVideo()
         {
-            Gley.MobileAds.API.ShowRewardedVideo(CompleteMethod);
+            Gley.MobileAds.APIMobileAds.ShowRewardedVideo(CompleteMethod);
         }
 
 
@@ -62,7 +62,7 @@ namespace Gley.MobileAds.Internal
         /// </summary>
         void Update()
         {
-            if (Gley.MobileAds.API.IsInterstitialAvailable())
+            if (Gley.MobileAds.APIMobileAds.IsInterstitialAvailable())
             {
                 intersttialButton.interactable = true;
             }
@@ -71,7 +71,7 @@ namespace Gley.MobileAds.Internal
                 intersttialButton.interactable = false;
             }
 
-            if (Gley.MobileAds.API.IsRewardedVideoAvailable())
+            if (Gley.MobileAds.APIMobileAds.IsRewardedVideoAvailable())
             {
                 rewardedButton.interactable = true;
             }
