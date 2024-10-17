@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -103,40 +104,18 @@ public class UiCreateChannelPanel : Popup
 
     public void OnEventCreateChannel()
     {
+        SoundSFX.Play(SFXIndex.ButtonClick);
         if (string.IsNullOrEmpty(channelName_TextField.text))
         {
+            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Channel name cannot be empty!");
+            //PopupManager.Instance.
             print("频道名称不能为空");
-            return;
-        }
-        if (string.IsNullOrEmpty(minValue_TextField.text))
-        {
-            print("最小值不能为空");
-            return;
-        }
-        if (string.IsNullOrEmpty(maxValue_TextField.text))
-        {
-            print("最大值不能为空");
-            return;
-        }
-        if (string.IsNullOrEmpty(durationTime_TextField.text))
-        {
-            print("红包持续时间不能为空");
             return;
         }
         float min_Value =float.Parse( minValue_TextField.text);
         float max_Value = float.Parse(maxValue_TextField.text);
-        if (min_Value>=1000|| max_Value >= 1000)
-        {
-            print("数值不能大于1000");
-            return;
-        }
-        if (min_Value > max_Value)
-        {
-            print("最小值不能大于最大值");
-            return;
-        }
         int durationTime = int.Parse(durationTime_TextField.text);
-        var _object = new
+        var dataObject = new
         {
             id = UserManager.Instance.appMemberUserInfoRespVO.id,
             channelName = channelName_TextField.text,
@@ -144,20 +123,16 @@ public class UiCreateChannelPanel : Popup
             redMaxMoney = max_Value,
             redExpirationTime = durationTime,
         };
-        print(JsonConvert.SerializeObject(_object));
-        //UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(url, GetUploadDataString((UserInfoType.avatar, url)), new PostAvatarFileInterface(this), (requestData) =>
-        //{
-        //    // 创建Texture2D并加载图片数据
-        //    Texture2D texture = new Texture2D(2, 2, TextureFormat.ASTC_8x8, false);
-        //    texture.name = path;
-        //    texture.LoadImage(imageData);
-        //    UserManager.Instance.currentAvatar_Texture = texture;
-
-        //    avatar_RawImage.texture = texture;
-        //    waitMask_Ui.ShowResultCase("Success", 1);
-        //}, () =>
-        //{
-        //    waitMask_Ui.ShowResultCase("Fail", 1);
-        //});
+        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(url, dataObject, new CommonHttpInterface(), (requestData) =>
+        {
+            EventManager.Instance.DispatchEvent(typeof(UiCreateChannelPanel).ToString(), "CreateChannel");
+            waitMask_Ui.ShowResultCase("Success", 1, () => {
+                PopupManager.Instance.Close();
+            });
+        }, () =>
+        {
+            waitMask_Ui.ShowResultCase("Fail", 1);
+        });
     }
 }

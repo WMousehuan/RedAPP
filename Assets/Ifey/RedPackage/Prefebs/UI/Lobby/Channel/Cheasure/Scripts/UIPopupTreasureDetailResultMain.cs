@@ -44,7 +44,7 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
         }
         string usernameToShow = string.IsNullOrEmpty(packetSendRespVO.nickName) ? "noname" : packetSendRespVO.nickName;
         //Debug.Log("usernameToShow" + usernameToShow);
-        this.userName.text = usernameToShow;
+        this.userName.text = usernameToShow + (packetSendRespVO.id == UserManager.Instance.appMemberUserInfoRespVO.id ? "(Me)" : "");
         this.redAmount.text = packetSendRespVO.redAmount.ToString();
         this.thunderNo.setNumber(packetSendRespVO.thunderNo);
         this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString() + "X";
@@ -66,7 +66,7 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
             Debug.Log("Success UIPopupTreasureDetailResultMainCallBack!And now show item!data=" + responseData.data.ToString());
             if (responseData.data.list.Length > 0)
             {
-                for (int i = responseData.data.list.Length - 1; i >= 0; i--)
+                for (int i = 0; i < responseData.data.list.Length ; i++)
                 {
                     AppPacketReceiveRespVO pkgDetailItem = responseData.data.list[i];
                     //add new pkg

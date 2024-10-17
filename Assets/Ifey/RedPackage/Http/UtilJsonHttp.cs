@@ -257,56 +257,50 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
         }
     }
 
-    //public void PutFromWithParamAuthorizationToken(string apiUrl, (string, string) keyAndValue, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
-    //{
-    //    StartCoroutine(IEPutFormWithParamAndToken(apiUrl, keyAndValue, httpInterface, successAction, failAction));
-    //}
-    //IEnumerator IEPutFormWithParamAndToken(string apiUrl, (string,string) keyAndValue, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
-    //{
-    //    string url = mainDomain + apiUrl;
+    public void DeleteParamAuthorizationToken(string apiUrl, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    {
+        StartCoroutine(IEDeleteFormWithParamAndToken(apiUrl, httpInterface, successAction, failAction));
+    }
+    IEnumerator IEDeleteFormWithParamAndToken(string apiUrl, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    {
+        string url = mainDomain + apiUrl;
+        // Create UnityWebRequest Object
+        using (UnityWebRequest www = new UnityWebRequest(url, "DELETE"))
+        {
+            www.downloadHandler = new DownloadHandlerBuffer();
 
-    //    WWWForm wWWForm = new WWWForm();
-    //    //wWWForm.AddField
-    //    wWWForm.AddBinaryData(keyAndValue.Item1, Encoding.UTF8.GetBytes(keyAndValue.Item2));
-    //    // Create UnityWebRequest Object
-    //    using (UnityWebRequest www = new UnityWebRequest(url, "PUT"))
-    //    {
-    //        //byte[] bodyRaw = Encoding.UTF8.GetBytes(jsonParam);
-    //        www.uploadHandler = new UploadHandlerRaw(bodyRaw);
-    //        www.downloadHandler = new DownloadHandlerBuffer();
+            www.SetRequestHeader("Content-Type", "application/json");
+            www.SetRequestHeader("Authorization", RedPackageAuthor.Instance.authorizationValue); //token
 
-    //        www.SetRequestHeader("Content-Type", "application/json");
-    //        www.SetRequestHeader("Authorization", RedPackageAuthor.Instance.authorizationValue); //token
+            // Send request
+            yield return www.SendWebRequest();
 
-    //        // Send request
-    //        yield return www.SendWebRequest();
-
-    //        if (www.result != UnityWebRequest.Result.Success)
-    //        {
-    //            Debug.Log(www.error);
-    //            failAction?.Invoke();
-    //        }
-    //        else
-    //        {
-    //            string result = www.downloadHandler.text;
-    //            Debug.Log(result);
-    //            // Use Json.NET to JSON the result to JObject type
-    //            JObject json = JObject.Parse(result);
-    //            int code = json["code"].Value<int>();
-    //            if (code == 0)
-    //            {
-    //                httpInterface?.Success(result);
-    //                successAction?.Invoke(result);
-    //                //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
-    //            }
-    //            else
-    //            {
-    //                httpInterface?.Fail(json);
-    //                failAction?.Invoke();
-    //            }
-    //        }
-    //    }
-    //}
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+                failAction?.Invoke();
+            }
+            else
+            {
+                string result = www.downloadHandler.text;
+                Debug.Log(result);
+                // Use Json.NET to JSON the result to JObject type
+                JObject json = JObject.Parse(result);
+                int code = json["code"].Value<int>();
+                if (code == 0)
+                {
+                    httpInterface?.Success(result);
+                    successAction?.Invoke(result);
+                    //responseData = JsonConvert.DeserializeObject<ReturnData<Object>>(result);
+                }
+                else
+                {
+                    httpInterface?.Fail(json);
+                    failAction?.Invoke();
+                }
+            }
+        }
+    }
 }
 public static class MethodExpand
 {

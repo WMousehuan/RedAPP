@@ -126,7 +126,11 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     }
     public void Refresh(int count)
     {
-        item_Prefab.gameObject.SetActive(false);
+        if (item_Prefab != null)
+        {
+            item_Prefab?.gameObject?.SetActive(false);
+        }
+
         this.count = count;
         int rowCount = Mathf.CeilToInt(count / (float)column);
         SetContentSizeByItemCount(rowCount);

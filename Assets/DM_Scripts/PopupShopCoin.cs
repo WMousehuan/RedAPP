@@ -131,11 +131,11 @@ public class PopupShopCoin : Popup
             ReturnData<PageResultPacketSendRespVO<CoinShopDataVO>> result = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<CoinShopDataVO>>>(resultData);
             coinShopDataVOs.Clear();
             coinShopDataVOs.AddRange(result.data.list);
-            loopScroll_Ctrl.Refresh(coinShopDataVOs.Count);
+            loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
         }, () =>
         {
             coinShopDataVOs.Clear();
-            loopScroll_Ctrl.Refresh(coinShopDataVOs.Count);
+            loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
             PopupManager.Instance.Close();
         });
     }
@@ -283,7 +283,7 @@ public class PopupShopCoin : Popup
 
             else if(product.productType == ProductType.NonConsumable)
             {
-                Gley.MobileAds.APIMobileAds.RemoveAds(true);
+                Gley.MobileAds.API.RemoveAds(true);
                 Toast.Show("Successful remove ads !", 3f, ToastColor.Green);
             }
         }
@@ -302,9 +302,9 @@ public class PopupShopCoin : Popup
 
     public void OnClickWatchAds()
     {
-        if (Gley.MobileAds.APIMobileAds.IsRewardedVideoAvailable())
+        if (Gley.MobileAds.API.IsRewardedVideoAvailable())
         {
-			Gley.MobileAds.APIMobileAds.ShowRewardedVideo(CompleteMethod);
+			Gley.MobileAds.API.ShowRewardedVideo(CompleteMethod);
 		}
 		
 	}

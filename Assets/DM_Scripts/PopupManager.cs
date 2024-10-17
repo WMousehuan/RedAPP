@@ -117,7 +117,8 @@ public class PopupManager : MonoSingleton<PopupManager>
 		{
 			return CurrentPopup;
 		}
-		Popup popup = null;
+
+        Popup popup = null;
 		GameObject popup2 = m_PopupList.GetPopup(type);
 		if (popup2 == null)
 		{
@@ -136,8 +137,8 @@ public class PopupManager : MonoSingleton<PopupManager>
 		popupCanvasScaler.enabled = false;
 		popupCanvasScaler.enabled = true;
 		if ((bool)popup)
-		{
-			popup.EnableOverlapPopup = enableOverlapPopup;
+        {
+            popup.EnableOverlapPopup = enableOverlapPopup;
 			popup.DisableBackKey = disableBackKey;
 			popup.transform.SetParent(ParentPopupGroup, worldPositionStays: false);
 			popup.transform.localPosition = Vector3.zero;

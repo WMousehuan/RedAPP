@@ -8,10 +8,11 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using static RedPackageAuthor;
 
-public class UserManager : MonoSingleton<UserManager>,WebReviceMessage
+public class UserManager : MonoSingleton<UserManager>
 {
     [HideInInspector]
     public AppMemberUserInfoRespVO appMemberUserInfoRespVO =null; //userInfo
+    [SerializeField]
     private Texture2D _currentAvatar_Texture;
     public Texture2D currentAvatar_Texture
     {
@@ -27,21 +28,15 @@ public class UserManager : MonoSingleton<UserManager>,WebReviceMessage
     }
     [HideInInspector]
     public string userMainInfoUrl = "/app-api/member/user/get"; //get userInfo Url
-    public string encryptSuperiorId = "";
-    private void OnEnable()
-    {
-        WebMessage_Ctrl.instance.Regist(this.gameObject);
-    }
-    private void OnDisable()
-    {
-        WebMessage_Ctrl.instance.UnRegist(this.gameObject);
-    }
+    public static string encryptSuperiorId = "";
+  
     public void GetUserMainInfo()
     {
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo
         UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resultData) => {
+            EventManager.Instance.DispatchEvent(typeof(UserManager).ToString(), "LoginIn");
             GeneralTool_Ctrl.DownloadImage(appMemberUserInfoRespVO.avatar, (texture) =>
             {
                 currentAvatar_Texture = texture;
@@ -49,16 +44,7 @@ public class UserManager : MonoSingleton<UserManager>,WebReviceMessage
         });
     }
 
-    public void ReciveMessage(string msg)
-    {
-        string[] msgStages = msg.Split("^");
-        switch (msgStages[0])
-        {
-            case "encryptSuperiorId":
-                encryptSuperiorId = msgStages[1];
-                break;
-        }
-    }
+    
 }
 
  

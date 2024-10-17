@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using System;
-
+[System.Serializable]
 public class ChannelRespVO
 {
     public long? Id { get; set; }

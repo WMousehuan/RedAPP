@@ -10,7 +10,7 @@ public class UiUserAvatar_Ctrl : MonoBehaviour
     void Start()
     {
         avatar_RawImage.texture = UserManager.Instance.currentAvatar_Texture;
-        avatar_RawImage.color=(avatar_RawImage.texture != null)?Color.white:Color.clear;
+        avatar_RawImage.color = (avatar_RawImage.texture != null) ? Color.white : Color.clear;
         EventManager.Instance.Regist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID(), (objects) =>
         {
             string sign = (string)objects[0];
@@ -28,7 +28,7 @@ public class UiUserAvatar_Ctrl : MonoBehaviour
     }
     private void OnDestroy()
     {
-        EventManager.Instance.UnRegist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID());
     }
     // Update is called once per frame
     void Update()

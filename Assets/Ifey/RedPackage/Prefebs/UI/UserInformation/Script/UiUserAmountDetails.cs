@@ -119,10 +119,10 @@ public class UiUserAmountDetails : Popup
 }
 public class GetUserAmountDetailInterface : HttpInterface
 {
-    UiUserAmountDetails userAmountDetails;
+    UiUserAmountDetails source_Ctrl;
     public GetUserAmountDetailInterface(UiUserAmountDetails source)
     {
-        userAmountDetails = source;
+        source_Ctrl = source;
     }
     public void Success(string result)
     {
@@ -130,8 +130,8 @@ public class GetUserAmountDetailInterface : HttpInterface
 
         if (responseData.data.list.Length > 0)
         {
-            userAmountDetails.amountDetail_List.AddRange(responseData.data.list);
-            userAmountDetails.amountDetail_LoopScroll.Refresh(userAmountDetails.amountDetail_List.Count);
+            source_Ctrl?.amountDetail_List?.AddRange(responseData.data.list);
+            source_Ctrl?.amountDetail_LoopScroll?.Refresh(source_Ctrl.amountDetail_List.Count);
         }
         Debug.Log("Success GetUserAmountDetail!");
     }

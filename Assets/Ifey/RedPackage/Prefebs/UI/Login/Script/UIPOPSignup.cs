@@ -16,7 +16,7 @@ public class UIPOPSignup : Popup
     public override void OnEnable()
     {
         base.OnEnable();
-        superiorId.text = UserManager.Instance.encryptSuperiorId;
+        superiorId.text = UserManager.encryptSuperiorId;
     }
     public void openLogin()
     {

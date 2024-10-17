@@ -35,11 +35,9 @@ public class Ui_UserInformation : Popup
 
     public string receiveWebFileBase64Data;
     public string receiveWebFileName;
-#if UNITY_WEBGL            
+
     [DllImport("__Internal")]
     public static extern void clickSelectFileBtn(string name);
-#endif
-
     public override void Start()
     {
       
@@ -63,7 +61,7 @@ public class Ui_UserInformation : Popup
     }
     private void OnDestroy()
     {
-        EventManager.Instance.UnRegist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID());
     }
     public void RefreshUserInformation()
     {
@@ -262,26 +260,9 @@ public class PutUserInformationInterface : HttpInterface
     public void Fail(JObject json)
     {
         // 实现 Fail 方法的逻辑
-        int code = json["code"].Value<int>();
-        //not login
-        if (code == 401)
+        if (!(new FailPubDo()).failPubdo(json))
         {
-            MonoSingleton<PopupManager>.Instance.CloseAllPopup();
-            Debug.Log("User notLogin Show Login UI!");
-            MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
-            //MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupCommonYesNo);
-        }
-        else if (code == 407)
-        {
-            //user name exits!
-            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "user name exits,Plz choose another");
-        }
 
-        else if (code == 406 || code == 1004003000 || code == 400)
-        {
-            Debug.Log("Login name or psd error!");
-            //user name exits!
-            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Login name or psd error!");
         }
 
     }
