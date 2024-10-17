@@ -14,8 +14,8 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
     {
         public enum ChannelType
         {
-            Public,
             Private,
+            Public,
             Hot,
         }
         public GridLoopScroll_Ctrl loopScroll;
@@ -24,16 +24,31 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public GameObject packageItemOri;    //One pkg item
         public Text title_Text;
         private System.Timers.Timer timer;
-        private int interval = 60000; // 定时器间隔时间（单位：毫秒） fresh every 1 min
+        public int interval = 60000; // 定时器间隔时间（单位：毫秒） fresh every 1 min
         private string freshUrl = "/app-api/red/channel/page";
         bool ifNeedToRunRefresh = true;
         List<PubGameChannel> packetSendRespVOList = new List<PubGameChannel>(); // pkg item list
-        List<ChannelRespVO> channelRespVOList = new List<ChannelRespVO>();
+        public List<ChannelRespVO> channelRespVOList = new List<ChannelRespVO>();
         public void addPacketSendRespVOList(PubGameChannel pubGameChannel)
         {
             packetSendRespVOList.Add(pubGameChannel);
         }
-
+        private void Start()
+        {
+            EventManager.Instance.Regist(typeof(UserManager).ToString(), this.GetInstanceID(), (objects) => {
+                string sign = (string)objects[0];
+                switch (sign)
+                {
+                    case "LoginIn":
+                        refreshFromRequest();
+                        break;
+                }
+            });
+        }
+        private void OnDestroy()
+        {
+            EventManager.Instance.UnRegist(typeof(UserManager).ToString(), this.GetInstanceID());
+        }
         void OnEnable()
         {
             timer = new System.Timers.Timer(interval);
@@ -79,29 +94,28 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
         private void Update()
         {
-            refreshFromRequest();
+            if (ifNeedToRunRefresh)
+            {
+                refreshFromRequest();
+            }
         }
         public void refreshFromRequest()
         {
-            if (ifNeedToRunRefresh)
-            {
-                Debug.Log("RefreshChannelGameTypeTImer定时器任务执行");
-                ifNeedToRunRefresh = false;
-                //string memberId = "";
-                string pageNo = "1";
-                string pageSize = "50";
-                string paramsUrl = freshUrl + string.Format("?pageNo={0}&pageSize={1}&channelType={2}", pageNo, pageSize, (int)channelType) ;
-                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl, new RefreshChannelGameTypeTImerRespond(this));
-            }
+            Debug.Log("RefreshChannelGameTypeTImer定时器任务执行");
+            ifNeedToRunRefresh = false;
+            //string memberId = "";
+            string pageNo = "1";
+            string pageSize = "50";
+            string paramsUrl = freshUrl + string.Format("?pageNo={0}&pageSize={1}&channelType={2}", pageNo, pageSize, (int)channelType);
+            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl, new RefreshChannelGameTypeTImerRespond(this));
         }
         public class RefreshChannelGameTypeTImerRespond : HttpInterface
         {
-            public FailPubDo failPubDo = new FailPubDo();
-            RefreshChannelGameTypeTImer refreshChannelTimer;
+            RefreshChannelGameTypeTImer source_Ctrl;
             // 构造方法
             public RefreshChannelGameTypeTImerRespond(RefreshChannelGameTypeTImer refreshChannelTimer)
             {
-                this.refreshChannelTimer = refreshChannelTimer;
+                this.source_Ctrl = refreshChannelTimer;
             }
             public void Success(string result)
             {
@@ -111,7 +125,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                 Debug.Log("Success RefreshChannelGameTypeTImerRespond!And now create pkg item!count=" + responseData.data.list.Length);
                 if (responseData.data.list.Length > 0)
                 {
-                    refreshChannelTimer.channelRespVOList.Clear();
+                    source_Ctrl?.channelRespVOList?.Clear();
                     for (int i = responseData.data.list.Length - 1; i >= 0; i--)
                     {
                         ChannelRespVO pkgItem = responseData.data.list[i];
@@ -130,9 +144,9 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                         //    oldPackageItem.SetData(pkgItem);
                         //}
                         //this.refreshChannelTimer.addPacketSendRespVOList(packageItem);
-                        refreshChannelTimer.channelRespVOList.Add(pkgItem);
+                        source_Ctrl?.channelRespVOList?.Add(pkgItem);
                     }
-                    refreshChannelTimer.loopScroll.Refresh(refreshChannelTimer.channelRespVOList.Count);
+                    source_Ctrl?.loopScroll?.Refresh(source_Ctrl.channelRespVOList.Count);
                 }
                 else
                 {
@@ -141,7 +155,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             }
             public void Fail(JObject json)
             {
-                if (!failPubDo.failPubdo(json))
+                if (!(new FailPubDo()).failPubdo(json))
                 {
                     MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "RefreshChannelRespond Fail!");
                 }

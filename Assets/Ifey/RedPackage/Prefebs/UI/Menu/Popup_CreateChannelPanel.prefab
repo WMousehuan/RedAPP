@@ -1729,7 +1729,7 @@ GameObject:
   - component: {fileID: 7601577661616139159}
   - component: {fileID: 7842281683873553611}
   m_Layer: 8
-  m_Name: MaxMoney_Image
+  m_Name: DurationTime_Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

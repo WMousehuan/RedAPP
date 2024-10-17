@@ -213,7 +213,8 @@ public class Popup : MonoBehaviour
 	}
     public virtual void OnEventOpenOtherPopup(string popupType)
     {
-		 PopupManager.Instance.Open(Enum.Parse<PopupType>(popupType));
+        SoundSFX.Play(SFXIndex.ButtonClick);
+        PopupManager.Instance.Open(Enum.Parse<PopupType>(popupType));
     }
     public virtual void SoundPlayShow()
 	{

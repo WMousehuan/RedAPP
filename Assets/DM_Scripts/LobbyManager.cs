@@ -5,6 +5,7 @@
  * Copyright (c) 2023 dotmobstudio
  * Support : dotmobstudio@gmail.com
  */
+using Newtonsoft.Json;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,8 +19,12 @@ public class LobbyManager : MonoSingleton<LobbyManager>
 	public static bool afterFailed;
 
 	//public Text currentLevel;
+	public CanvasScaler canvasScaler;
 
-	public override void Awake()
+	private string getChannelUrl = "/app-api/red/channel/get";
+
+    public ChannelDataVO currnetChannelData;
+    public override void Awake()
 	{
         isFirstLoad = false;
         base.Awake();
@@ -27,12 +32,18 @@ public class LobbyManager : MonoSingleton<LobbyManager>
 
 	private void Start()
 	{
-		//currentLevel.text = "Level " +MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo.ToString();
-		//if (!PlayerPrefs.HasKey("FirstInstalledVersion"))
-		//{
-		//	PlayerPrefs.SetString("FirstInstalledVersion", GlobalSetting.ConfigData.AppVersion);
-		//}
-	}
+        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getChannelUrl + "?id=" + PlayerTreasureGameData.Instance.entranceChannelId, new CommonHttpInterface(), (resultData) =>
+        {
+            ReturnData<ChannelDataVO> result = JsonConvert.DeserializeObject<ReturnData<ChannelDataVO>>(resultData);
+            currnetChannelData = result.data;
+            waitMask_Ui.ShowResultCase("Success", 1);
+        }, () => {
+            waitMask_Ui.ShowResultCase("Fail", 1, () => {
+                //MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
+            });
+        });
+    }
 
 	private void OnDisable()
 	{
@@ -47,7 +58,6 @@ public class LobbyManager : MonoSingleton<LobbyManager>
 	public void OnEventRecvLevelData()
 	{
 	}
-
 	private void OnDestroy()
 	{
 	}
@@ -73,11 +83,26 @@ public class LobbyManager : MonoSingleton<LobbyManager>
 		if (isInit)
 		{
 		}
-	}
+        canvasScaler.matchWidthOrHeight = Mathf.Lerp(1, 0, ((Screen.height / (float)Screen.width) - (4 / 3f)) / ((16 / 9f) - (4 / 3f)));
 
-	private IEnumerator processStageClearEffect()
+    }
+
+    private IEnumerator processStageClearEffect()
 	{
 		yield return null;
 		yield return null;
 	}
+}
+public class ChannelDataVO
+{
+	public int id;//频道id
+	public int channelCateId;//游戏分类id
+	public int channelType;//游戏属性
+	public string channelName;//游戏名称
+	public string channelCategory;//游戏分类
+	public double redMaxMoney;//最大红包大小
+	public double redMinMoney;//最小红包大小
+	public int redExpirationTime;//红包持续时间
+	public int memberId;//房主id
+    public string createTime;//创建时间
 }

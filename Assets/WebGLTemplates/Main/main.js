@@ -34,43 +34,11 @@ if("encryptSuperiorId" in urlSearch_Dictionary)
 {
     encryptSuperiorId=urlSearch_Dictionary["encryptSuperiorId"];
 }
-// if ("initScene" in urlSearch_Dictionary) {
-//     var _currentSceneName=urlSearch_Dictionary["initScene"];
-//     switch(_currentSceneName){
-//         case "HallLobby":
-//         _currentSceneName="Lobby";
-//             break;
-//             case "HallConference":
-//         _currentSceneName="ConferenceHall";
-//             break;
-//     }
-//     if(_currentSceneName!=initSceneName)
-//     {
-//         realTargetScene=_currentSceneName;
-//     }    
-//     initSceneName = _currentSceneName;
-   
-// }
-// if ("scene" in urlSearch_Dictionary) {
-//     var _currentSceneName=urlSearch_Dictionary["scene"];
-//     switch(_currentSceneName){
-//         case "HallLobby":
-//         _currentSceneName="Lobby";
-//             break;
-//             case "HallConference":
-//         _currentSceneName="ConferenceHall";
-//             break;
-//         case "Lobby":
-//         case "ExhibitionHall":
-//         case "ConferenceHall":     
-//         break;
-//     }
-//     if(_currentSceneName!=initSceneName)
-//     {
-//         realTargetScene=_currentSceneName;
-//     }    
-//     initSceneName = _currentSceneName;
-// }
+var channelId="";
+if("channelId" in urlSearch_Dictionary)
+{
+    channelId=urlSearch_Dictionary["channelId"];
+}
  var xhr = null;
 // var haveToken = false;
 // var token = "";
@@ -199,7 +167,7 @@ createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) 
     finishAction();
     //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'InitManager|' + initSceneName+"^"+realTargetScene);
     console.log("++++++++++++++++++" + encryptSuperiorId);
-    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserManager|encryptSuperiorId^"+encryptSuperiorId);                                   
+    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "InitManager|WebInitData^"+encryptSuperiorId+"^"+channelId);                                   
     //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'MainUI|GetWebPlatform^' + navigator.userAgent);
 });
 }
@@ -316,35 +284,13 @@ function receiveMessageFromUnity(s) {
                         break;
                 }
                 break;
+            case "clipbord":
+                ClipboardJS.copy(receiveMessageStages[1]);
+                break;
         }
     }
     else {
         switch (s) {
-            case "CreateAvatarFinish":
-                finish();
-                break;
-            case "closeMeeting":
-                closeMeeting();
-                break;
-            case "showInput":
-                showInput();
-                break;
-            case "hideInput":
-                hideInput();
-                break;
-            case "hideChat":
-                talkjs_container.style.display = "none";
-                talkjs_container.style.opacity = 0;
-                talkjs_container.style.pointerEvents = "none";
-                //talkjs_container.style.display="none";
-                if (chatCloseImg != null) {
-                    if (talkjs_container.contains(chatCloseImg)) {
-                        talkjs_container.removeChild(chatCloseImg);
-                    }
-                    chatCloseImg = null;
-                }
-                CreateChat("");
-                break;
             case "GC":
                 break;
             case "Refresh":

@@ -116,8 +116,8 @@ public class UiSuperiorOwnLowerUserDetail : Popup
 
             if (responseData.data.list.Length > 0)
             {
-                source_Ctrl.lowerAgentUserDetail_List.AddRange(responseData.data.list);
-                source_Ctrl.loopScroll.Refresh(source_Ctrl.lowerAgentUserDetail_List.Count);
+                source_Ctrl?.lowerAgentUserDetail_List?.AddRange(responseData.data.list);
+                source_Ctrl?.loopScroll?.Refresh(source_Ctrl.lowerAgentUserDetail_List.Count);
             }
             Debug.Log("Success GetUserAmountDetail!");
         }

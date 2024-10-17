@@ -131,11 +131,11 @@ public class PopupShopCoin : Popup
             ReturnData<PageResultPacketSendRespVO<CoinShopDataVO>> result = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<CoinShopDataVO>>>(resultData);
             coinShopDataVOs.Clear();
             coinShopDataVOs.AddRange(result.data.list);
-            loopScroll_Ctrl.Refresh(coinShopDataVOs.Count);
+            loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
         }, () =>
         {
             coinShopDataVOs.Clear();
-            loopScroll_Ctrl.Refresh(coinShopDataVOs.Count);
+            loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
             PopupManager.Instance.Close();
         });
     }

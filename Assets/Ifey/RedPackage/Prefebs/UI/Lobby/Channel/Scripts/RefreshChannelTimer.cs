@@ -55,7 +55,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         }
         private void OnDestroy()
         {
-            EventManager.Instance.UnRegist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID());
+            EventManager.Instance?.UnRegist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID());
         }
         public void addPacketSendRespVOList(PackageItem packageItem)
         {
@@ -134,21 +134,21 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public class RefreshChannelRespond : HttpInterface
         {
             public FailPubDo failPubDo = new FailPubDo();
-            RefreshChannelTimer refreshChannelTimer;
+            RefreshChannelTimer source_Ctrl;
             // 构造方法
             public RefreshChannelRespond(RefreshChannelTimer refreshChannelTimer)
             {
-                this.refreshChannelTimer = refreshChannelTimer;
+                this.source_Ctrl = refreshChannelTimer;
             }
             public void Success(string result)
             {
                 //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
                 ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>>>(result);
-                refreshChannelTimer.PacketSendResp_List.Clear();
+                source_Ctrl?.PacketSendResp_List?.Clear();
                 if (responseData.data.list.Length > 0)
                 {
-                    refreshChannelTimer.PacketSendResp_List.AddRange(responseData.data.list);
-                    refreshChannelTimer.loopScroll.Refresh(refreshChannelTimer.PacketSendResp_List.Count);
+                    source_Ctrl?.PacketSendResp_List?.AddRange(responseData.data.list);
+                    source_Ctrl?.loopScroll?.Refresh(source_Ctrl.PacketSendResp_List.Count);
                 }
                 // 实现 Success 方法的逻辑
                 Debug.Log("Success RefreshChannelRespond!And now create pkg item!count="+responseData.data.list.Length);

@@ -116,5 +116,6 @@ public enum PopupType
 	PopupAgreeCase,
     PopupSuperiorUser,
     PopupSuperiorOwnLowerUserDetail,
-    CreateChannelPanel,
+    PopupCreateChannelPanel,
+	PopupChannelInformation,
 }

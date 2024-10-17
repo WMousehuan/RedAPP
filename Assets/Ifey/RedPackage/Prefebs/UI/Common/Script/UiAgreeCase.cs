@@ -29,6 +29,7 @@ public class UiAgreeCase : Popup
     }
     public void OnEventAgree()
     {
+        SoundSFX.Play(SFXIndex.ButtonClick);
         OnEventClose();
         agreeAction?.Invoke();
     }
