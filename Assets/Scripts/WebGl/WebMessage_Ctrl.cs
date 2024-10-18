@@ -6,11 +6,13 @@ using UnityEngine;
 public class WebMessage_Ctrl : Singleton_Base<WebMessage_Ctrl>
 {
     public override bool isDontDestroy => true;
+#if UNITY_WEBGL
     [DllImport("__Internal")]
     public static extern void receiveMessageFromUnity(string content);
+#endif
     //private System.Action<string> ReciveMessageEvent;
-    private Dictionary<string, WebReviceMessage> targets_Dictionary=new Dictionary<string, WebReviceMessage>();
-    private Dictionary<string, List<string>> waitMessages_Dictionary=new Dictionary<string, List<string>>();
+    private Dictionary<string, WebReviceMessage> targets_Dictionary = new Dictionary<string, WebReviceMessage>();
+    private Dictionary<string, List<string>> waitMessages_Dictionary = new Dictionary<string, List<string>>();
     public void ReciveMessage(string msg)
     {
         string[] data = msg.Split('|');
