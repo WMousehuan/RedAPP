@@ -167,7 +167,8 @@ createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) 
     finishAction();
     //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'InitManager|' + initSceneName+"^"+realTargetScene);
     console.log("++++++++++++++++++" + encryptSuperiorId);
-    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "InitManager|WebInitData^"+encryptSuperiorId+"^"+channelId);                                   
+    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "InitManager|WebInitData^"+encryptSuperiorId+"^"+channelId);
+    history.pushState({ key: 'value' }, 'Title', mainUrl)
     //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'MainUI|GetWebPlatform^' + navigator.userAgent);
 });
 }

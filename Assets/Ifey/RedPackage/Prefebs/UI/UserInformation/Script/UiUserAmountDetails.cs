@@ -21,6 +21,7 @@ public class UiUserAmountDetails : Popup
         Refund,//ÕÀøÓ
         Withdrawal,//Ã·œ÷
         Give,//‘˘ÀÕ
+        CompensateAward,//≈‚∏∂Ω±¿¯
     }
     private string url = "/app-api/member/account-statement/page";
 
@@ -34,6 +35,8 @@ public class UiUserAmountDetails : Popup
     public HashSet<int> loadedPageIndex_HashSet = new HashSet<int>();
     public List<AmountDetailVO> amountDetail_List = new List<AmountDetailVO>();
 
+    public ObjectGroup<AmountStateType, string> amountStateContents;
+
     public AmountStateType currentAmountStateType = AmountStateType.All;
 
     public override void Start()
@@ -42,7 +45,7 @@ public class UiUserAmountDetails : Popup
         amountStateGroup_Dropdown.options.Clear();
         foreach(string amountStateType in Enum.GetNames(typeof(AmountStateType)))
         {
-            amountStateGroup_Dropdown.options.Add(new Dropdown.OptionData(amountStateType));
+            amountStateGroup_Dropdown.options.Add(new Dropdown.OptionData((amountStateContents.ContainsKey(Enum.Parse<AmountStateType>(amountStateType)) ? amountStateContents[Enum.Parse<AmountStateType>(amountStateType)].ToString() : "")));
         }
         
     }
@@ -69,7 +72,8 @@ public class UiUserAmountDetails : Popup
                 double amount = amountDetail_List[realIndex].Amount;
                 target.transform.GetChild<Text>("DealAmount_Text").text = (amount > 0 ? "+" : "") + amountDetail_List[realIndex].Amount.ToString();
                 target.transform.GetChild<TMP_Text>("DealID_Text").text = "No." + amountDetail_List[realIndex].Id.ToString();
-                target.transform.GetChild<TMP_Text>("DealState_Text").text = ((AmountStateType)(amountDetail_List[realIndex].TradeType + 1)).ToString();
+                AmountStateType currentAmountStateType = ((AmountStateType)(amountDetail_List[realIndex].TradeType + 1));
+                target.transform.GetChild<TMP_Text>("DealState_Text").text = amountStateContents.ContainsKey(currentAmountStateType) ? amountStateContents[currentAmountStateType].ToString():"";
             }
         };
 
