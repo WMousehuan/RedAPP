@@ -37,7 +37,7 @@ public class LobbyManager : MonoSingleton<LobbyManager>
         {
             ReturnData<ChannelDataVO> result = JsonConvert.DeserializeObject<ReturnData<ChannelDataVO>>(resultData);
             currnetChannelData = result.data;
-            waitMask_Ui.ShowResultCase("Success", 1);
+            waitMask_Ui.ShowResultCase("Success", 0);
         }, () => {
             waitMask_Ui.ShowResultCase("Fail", 1, () => {
                 //MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);

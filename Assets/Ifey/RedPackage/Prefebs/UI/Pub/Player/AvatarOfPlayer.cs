@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -54,6 +55,10 @@ public class AvatarOfPlayer : MonoBehaviour
             if (avatar_Dictionary.ContainsKey(imageUrl))
             {
                 avatar_Dictionary[imageUrl] = sprite;
+            }
+            else
+            {
+                avatar_Dictionary.Add(imageUrl, sprite);
             }
             rawImage.sprite = sprite;
         }
