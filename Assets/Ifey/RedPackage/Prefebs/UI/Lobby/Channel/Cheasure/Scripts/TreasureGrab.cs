@@ -26,7 +26,8 @@ public class TreasureGrab : MonoBehaviour
             appPacketReceiveSaveReqVO.redPacketSendId = packageItem.packetSendRespVO.id; //红包ID
             //appPacketReceiveSaveReqVO.channelId = packageItem.packetSendRespVO.channelId;//校验抢包资格
             //when start the game,get the userInfo
-            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(grabUrl, appPacketReceiveSaveReqVO, new TreasureGrabRespond(this));
+            UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(grabUrl, appPacketReceiveSaveReqVO, new TreasureGrabRespond(this, waitMask_Ui));
         }
         catch (Exception e)
         {
@@ -42,13 +43,19 @@ public class TreasureGrabRespond : HttpInterface
 {
     public FailPubDo failPubDo = new FailPubDo();
     TreasureGrab source_Ctrl;
+    UiWaitMask uiWaitMask;
     // 构造方法
-    public TreasureGrabRespond(TreasureGrab treasureGrab)
+    public TreasureGrabRespond(TreasureGrab treasureGrab, UiWaitMask uiWaitMask)
     {
         this.source_Ctrl = treasureGrab;
+        this.uiWaitMask = uiWaitMask;
     }
     public void Success(string result)
     {
+        if (uiWaitMask != null)
+        {
+            uiWaitMask.ShowResultCase("", 0);
+        }
         if (source_Ctrl == null)
         {
             return;
@@ -60,6 +67,7 @@ public class TreasureGrabRespond : HttpInterface
         //显示明细
         source_Ctrl.packageItem.openPackageDetailResultClick();
         MonoSingleton<UIManager>.Instance.ShowGetCoinEffect(this.source_Ctrl.transform.parent, new Vector2(0f, 100f), Coins, 10); //show coin effect
+        
     }
     void Coins()
     {
@@ -67,6 +75,10 @@ public class TreasureGrabRespond : HttpInterface
     }
     public void Fail(JObject json)
     {
+        if (uiWaitMask != null)
+        {
+            uiWaitMask.ShowResultCase("", 0);
+        }
         if (!failPubDo.failPubdo(json))
         {
             int code = json["code"].Value<int>();
