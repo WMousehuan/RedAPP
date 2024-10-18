@@ -56,6 +56,10 @@ public class AvatarOfPlayer : MonoBehaviour
             {
                 avatar_Dictionary[imageUrl] = sprite;
             }
+            else
+            {
+                avatar_Dictionary.Add(imageUrl, sprite);
+            }
             rawImage.sprite = sprite;
         }
     }
