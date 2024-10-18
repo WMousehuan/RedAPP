@@ -51,16 +51,20 @@ public class UserManager : MonoSingleton<UserManager>
 //get userInfo
 public class GetUserInfoInterface : HttpInterface
 {
-    UserManager userManager;
+    UserManager source_Ctrl;
     public GetUserInfoInterface(UserManager source)
     {
-        userManager = source;
+        source_Ctrl = source;
     } 
     public void Success(string result)
     {
+        if (source_Ctrl == null)
+        {
+            return;
+        }
         // 实现 Success 方法的逻辑
         ReturnData<AppMemberUserInfoRespVO> responseData = JsonConvert.DeserializeObject<ReturnData<AppMemberUserInfoRespVO>>(result);
-        userManager.appMemberUserInfoRespVO = responseData.data;
+        source_Ctrl.appMemberUserInfoRespVO = responseData.data;
         // 实现 Success 方法的逻辑
         RedPackageAuthor.Instance.userBalance = responseData.data.balance;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;

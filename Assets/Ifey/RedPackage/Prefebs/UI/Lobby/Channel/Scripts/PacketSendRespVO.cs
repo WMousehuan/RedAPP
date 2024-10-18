@@ -3,9 +3,10 @@ using UnityEngine;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 {
+    [System.Serializable]
     public class PacketSendRespVO
     {
-        public long id { get; set; } // 主键  红包ID
+        public long id; // 主键  红包ID
         public long memberId { get; set; } // 用户id
         public string? username { get; set; } // 用户名称
         public double redAmount { get; set; } // 发包总金额

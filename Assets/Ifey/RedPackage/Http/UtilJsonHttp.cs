@@ -38,7 +38,6 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             www.downloadHandler = new DownloadHandlerBuffer();
             www.SetRequestHeader("Content-Type", "application/json");
             www.SetRequestHeader("Authorization", RedPackageAuthor.Instance.authorizationValue); //token
-            Debug.Log("IESendRequestWithAuthorizationToken Authorization="+ RedPackageAuthor.Instance.authorizationValue);
             // ∑¢ÀÕ«Î«Û
             yield return www.SendWebRequest();
 
@@ -51,7 +50,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             else
             {
                 string result = www.downloadHandler.text;
-                Debug.Log(result+"\r\n"+ httpInterface?.GetType().ToString());
+                Debug.LogWarning(result+"\r\n"+ httpInterface?.GetType().ToString());
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
@@ -139,7 +138,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             else
             {
                 string result = www.downloadHandler.text;
-                Debug.Log(result);
+                Debug.LogWarning(result);
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
@@ -185,7 +184,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             else
             {
                 string result = www.downloadHandler.text;
-                Debug.Log(result);
+                Debug.LogWarning(result);
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
@@ -238,7 +237,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             else
             {
                 string result = www.downloadHandler.text;
-                Debug.Log(result);
+                Debug.LogWarning(result);
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
@@ -283,7 +282,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             else
             {
                 string result = www.downloadHandler.text;
-                Debug.Log(result);
+                Debug.LogWarning(result);
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();

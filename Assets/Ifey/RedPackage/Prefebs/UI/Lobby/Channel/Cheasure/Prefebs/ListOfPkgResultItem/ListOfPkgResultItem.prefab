@@ -150,16 +150,16 @@ RectTransform:
   m_GameObject: {fileID: 5650511748674197691}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.3749995, y: 2.3749995, z: 1.0016026}
+  m_LocalScale: {x: 1, y: 1, z: 1.0016026}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3391649245148487025}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 283.34985, y: 9.9999695}
-  m_SizeDelta: {x: 221, y: 60}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &5412317593924666293
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -190,12 +190,12 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: e631c47376497481bbce070c81be042b, type: 3}
-    m_FontSize: 15
+    m_FontSize: 24
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 1
-    m_MaxSize: 35
-    m_Alignment: 3
+    m_MaxSize: 64
+    m_Alignment: 5
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
@@ -414,9 +414,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3391649245148487025}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -29.15001, y: -0.000061035156}
+  m_AnchorMin: {x: 1, y: 0.5}
+  m_AnchorMax: {x: 1, y: 0.5}
+  m_AnchoredPosition: {x: 59, y: -0.000061035156}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3862701263618710391
@@ -738,7 +738,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3051708529813223897
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1003,7 +1003,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -10, y: 26}
+  m_AnchoredPosition: {x: -54, y: 26}
   m_SizeDelta: {x: 352.2, y: 100}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1001 &8947460023591988177
@@ -1112,7 +1112,7 @@ PrefabInstance:
     - target: {fileID: 4412224000018889578, guid: 3002ce8232ed2f74ab85630aed3d56a3,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 46.3
+      value: 46.300003
       objectReference: {fileID: 0}
     - target: {fileID: 4412224000018889578, guid: 3002ce8232ed2f74ab85630aed3d56a3,
         type: 3}

@@ -48,7 +48,7 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
         }
         string usernameToShow = string.IsNullOrEmpty(packetSendRespVO.nickName) ? "noname" : packetSendRespVO.nickName;
         //Debug.Log("usernameToShow" + usernameToShow);
-        this.userName.text = usernameToShow + (packetSendRespVO.id == UserManager.Instance.appMemberUserInfoRespVO.id ? "(Me)" : "");
+        this.userName.text = usernameToShow + (packetSendRespVO.memberId == UserManager.Instance.appMemberUserInfoRespVO.id ? "[ME]" : "");
         this.redAmount.text = packetSendRespVO.redAmount.ToString();
         this.thunderNo.setNumber(packetSendRespVO.thunderNo);
         this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString() + "X";
@@ -57,18 +57,21 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
     public class UIPopupTreasureDetailResultMainCallBack : HttpInterface
     {
         public FailPubDo failPubDo = new FailPubDo();
-        UIPopupTreasureDetailResultMain uIPopupTreasureDetailResultMain;
+        UIPopupTreasureDetailResultMain source_Ctrl;
         public UIPopupTreasureDetailResultMainCallBack(UIPopupTreasureDetailResultMain uIPopupTreasureDetailResultMain)
         {
-            this.uIPopupTreasureDetailResultMain = uIPopupTreasureDetailResultMain;
+            this.source_Ctrl = uIPopupTreasureDetailResultMain;
         }
         public void Success(string result)
         {
-            //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
+            if (source_Ctrl == null)
+            {
+                return;
+            }
             ReturnData<PageResultPacketSendRespVO<AppPacketReceiveRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<AppPacketReceiveRespVO>>>(result);
             // 实现 Success 方法的逻辑
             Debug.Log("Success UIPopupTreasureDetailResultMainCallBack!And now show item!data=" + responseData.data.ToString());
-            if (responseData.data.list.Length > 0)
+            if ( responseData.data.list.Length > 0)
             {
                 for (int i = 0; i < responseData.data.list.Length ; i++)
                 {
@@ -76,7 +79,8 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
                     //add new pkg
                     if (pkgDetailItem != null)
                     {
-                        GameObject createPkgItem = Instantiate(this.uIPopupTreasureDetailResultMain.listItemOfGrabDetails, this.uIPopupTreasureDetailResultMain.transformParentOflistItemOfGrabDetails);
+                        GameObject createPkgItem = Instantiate(this.source_Ctrl.listItemOfGrabDetails, this.source_Ctrl.transformParentOflistItemOfGrabDetails);
+                        createPkgItem.gameObject.SetActive(true);
                         ListOfPkgResultItem listOfPkgResultItem = createPkgItem.GetComponent<ListOfPkgResultItem>();
                         listOfPkgResultItem.SetResultItemDetailValue(pkgDetailItem);
                         //packageItem.setPacketSendRespVOInfo(pkgItem);
