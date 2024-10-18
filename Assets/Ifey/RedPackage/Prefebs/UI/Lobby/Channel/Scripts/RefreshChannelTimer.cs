@@ -6,7 +6,6 @@ using static UIServer;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
-using System.Drawing.Printing;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 {
