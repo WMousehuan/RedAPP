@@ -15,8 +15,6 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
     public class RefreshChannelTimer : MonoBehaviour
     {
         public GridLoopScroll_Ctrl loopScroll;
-        [SerializeField]
-        public ScrollRect scrollRect; //scroll of the pkg
         public VerticalLayoutGroup verticalLayoutGroup;
         public ContentSizeFitter contentSizeFitter;
 
@@ -29,11 +27,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
       
         List<PackageItem> packetSendRespVOList = new List<PackageItem>(); // pkg item list
 
-        List<PacketSendRespVO> PacketSendResp_List=new List<PacketSendRespVO>();
+        PacketSendRespVO[] PacketSendResp_List = null;
         private void Start()
         {
             EventManager.Instance.Regist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID(), (objects) => {
-
                 string sign= (string)objects[0];
                 switch (sign)
                 {
@@ -45,7 +42,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
             loopScroll.scrollEnterEvent = (realIndex, rowIndex, cloumIndex, target) =>
             {
-                if (realIndex >= 0 && realIndex < PacketSendResp_List.Count)
+                if (realIndex >= 0 && PacketSendResp_List != null && realIndex < PacketSendResp_List.Length)
                 {
                     PackageItem packageItem = target.GetComponent<PackageItem>();
                     packageItem.setPacketSendRespVOInfo(PacketSendResp_List[realIndex]);
@@ -74,7 +71,6 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             //LayoutRebuilder.ForceRebuildLayoutImmediate(verticalLayoutGroup.GetComponent<RectTransform>());
             //LayoutRebuilder.ForceRebuildLayoutImmediate(contentSizeFitter.GetComponent<RectTransform>());
             Canvas.ForceUpdateCanvases();
-            scrollRect.verticalNormalizedPosition = 0f; // 滚动到底部
         }
         void OnEnable()
         {
@@ -122,59 +118,59 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         {
             Debug.Log("refreshFromRequest定时器任务执行");
             ifNeedToRunRefresh = false;
-            string memberId = "";
-            string pageNo = "1";
-            string pageSize = "50";
-            string paramsUrl = freshUrl + "?channelId=" + PlayerTreasureGameData.Instance.entranceChannelId +
-                "&memberId=" + memberId +
-                "&pageNo=1&pageSize=50";
-            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl, new RefreshChannelRespond(this));
-            
+            //string memberId = "";
+            int pageNo = Mathf.Clamp(Mathf.RoundToInt((loopScroll.currentRow + loopScroll.itemCount*0.5f ) / 10f), 0, int.MaxValue);
+
+            int pageSize = 10;
+            ObjectPack<int> valuaPack = new ObjectPack<int>("", 0);
+            if (pageNo - 1 >= 0)
+            {
+                string paramsUrl_0 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo, pageSize);
+                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_0, new RefreshChannelRespond(this, pageNo - 1, pageSize, valuaPack));
+            }
+            string paramsUrl_1 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo + 1, pageSize);
+            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_1, new RefreshChannelRespond(this, pageNo, pageSize, valuaPack));
+
         }
         public class RefreshChannelRespond : HttpInterface
         {
             public FailPubDo failPubDo = new FailPubDo();
             RefreshChannelTimer source_Ctrl;
+            int currentPage = 1;
+            int pageSize = 10;
+            ObjectPack<int> rankObject;
             // 构造方法
-            public RefreshChannelRespond(RefreshChannelTimer refreshChannelTimer)
+            public RefreshChannelRespond(RefreshChannelTimer refreshChannelTimer,int currentPage,int pageSize, ObjectPack<int> rankObject)
             {
                 this.source_Ctrl = refreshChannelTimer;
+                this.currentPage = currentPage;
+                this.pageSize = pageSize;
+                this.rankObject = rankObject;
             }
             public void Success(string result)
             {
                 //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
                 ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>>>(result);
-                source_Ctrl?.PacketSendResp_List?.Clear();
-                if (responseData.data.list.Length > 0)
+                if (source_Ctrl != null)
                 {
-                    source_Ctrl?.PacketSendResp_List?.AddRange(responseData.data.list);
-                    source_Ctrl?.loopScroll?.Refresh(source_Ctrl.PacketSendResp_List.Count);
+                    if (rankObject .target==0&& (source_Ctrl.PacketSendResp_List == null || source_Ctrl?.PacketSendResp_List.Length != responseData.data.total))
+                    {
+                        rankObject.target++;
+                        source_Ctrl.PacketSendResp_List = new PacketSendRespVO[responseData.data.total];
+                    }
+
+                    if (responseData.data.list.Length > 0)
+                    {
+                        for (int i = 0; i < responseData.data.list.Length; i++)
+                        {
+                            source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = responseData.data.list[i];
+                        }
+
+                        source_Ctrl?.loopScroll?.Refresh(responseData.data.total);
+                    }
                 }
                 // 实现 Success 方法的逻辑
                 Debug.Log("Success RefreshChannelRespond!And now create pkg item!count="+responseData.data.list.Length);
-                //if (responseData.data.list.Length > 0) {
-                //    for(int i= responseData.data.list.Length-1; i>=0;i--){
-                //       PacketSendRespVO pkgItem = responseData.data.list[i];
-                //        PackageItem oldPackageItem = this.refreshChannelTimer.ifExitsPkgReturn(pkgItem.id);
-                //        //add new pkg
-                //        if (oldPackageItem==null)
-                //        {
-                //            GameObject createPkgItem = Instantiate(this.refreshChannelTimer.packageItemOri, this.refreshChannelTimer.packageItemParent.transform);
-                //            PackageItem packageItem = createPkgItem.GetComponent<PackageItem>();
-                //            packageItem.setPacketSendRespVOInfo(pkgItem);
-                //            this.refreshChannelTimer.addPacketSendRespVOList(packageItem);
-                //        }
-                //        //update old pkg
-                //        else {
-                //            oldPackageItem.setPacketSendRespVOInfo(pkgItem);
-                //            oldPackageItem.setBackgroundWithPacketSendRespVO();
-                //        }
-                //    }
-                //}
-                //else
-                //{
-                //    Debug.Log("This channel did not have pkg item!");
-                //}
             }
 
             public void Fail(JObject json)
