@@ -88,7 +88,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                 timer.Stop();
                 timer.Dispose();
                 ifNeedToRunRefresh = false;
-                Debug.Log("RefreshChannelGameTypeTImer On Disable");
+                Debug.LogWarning("RefreshChannelGameTypeTImer On Disable");
             }
         }
 
@@ -101,7 +101,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         }
         public void refreshFromRequest()
         {
-            Debug.Log("RefreshChannelGameTypeTImer定时器任务执行");
+            //Debug.Log("RefreshChannelGameTypeTImer定时器任务执行");
             ifNeedToRunRefresh = false;
             //string memberId = "";
             string pageNo = "1";
@@ -119,31 +119,20 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             }
             public void Success(string result)
             {
+                if (source_Ctrl == null)
+                {
+                    return;
+                }
                 //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
                 ReturnData<PageResultPacketSendRespVO<ChannelRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<ChannelRespVO>>>(result);
                 // 实现 Success 方法的逻辑
-                Debug.Log("Success RefreshChannelGameTypeTImerRespond!And now create pkg item!count=" + responseData.data.list.Length);
+                //Debug.Log("Success RefreshChannelGameTypeTImerRespond!And now create pkg item!count=" + responseData.data.list.Length);
                 if (responseData.data.list.Length > 0)
                 {
                     source_Ctrl?.channelRespVOList?.Clear();
                     for (int i = responseData.data.list.Length - 1; i >= 0; i--)
                     {
                         ChannelRespVO pkgItem = responseData.data.list[i];
-                        //PubGameChannel oldPackageItem = this.refreshChannelTimer.ifExitsPkgReturn((long)pkgItem.Id);
-                        ////add new pkg
-                        //if (oldPackageItem == null)
-                        //{
-                        //    GameObject createPkgItem = Instantiate(this.refreshChannelTimer.packageItemOri, this.refreshChannelTimer.packageItemParent.transform);
-                        //    PubGameChannel packageItem = createPkgItem.GetComponent<PubGameChannel>();
-                        //    packageItem.SetData(pkgItem);
-                        //    this.refreshChannelTimer.addPacketSendRespVOList(packageItem);
-                        //}
-                        ////update old pkg
-                        //else
-                        //{
-                        //    oldPackageItem.SetData(pkgItem);
-                        //}
-                        //this.refreshChannelTimer.addPacketSendRespVOList(packageItem);
                         source_Ctrl?.channelRespVOList?.Add(pkgItem);
                     }
                     source_Ctrl?.loopScroll?.Refresh(source_Ctrl.channelRespVOList.Count);

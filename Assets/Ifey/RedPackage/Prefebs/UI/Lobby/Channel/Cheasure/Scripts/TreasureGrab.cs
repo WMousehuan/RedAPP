@@ -41,21 +41,25 @@ public class TreasureGrab : MonoBehaviour
 public class TreasureGrabRespond : HttpInterface
 {
     public FailPubDo failPubDo = new FailPubDo();
-    TreasureGrab treasureGrab;
+    TreasureGrab source_Ctrl;
     // 构造方法
     public TreasureGrabRespond(TreasureGrab treasureGrab)
     {
-        this.treasureGrab = treasureGrab;
+        this.source_Ctrl = treasureGrab;
     }
     public void Success(string result)
     {
+        if (source_Ctrl == null)
+        {
+            return;
+        }
         //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
         ReturnData<AppPacketReceiveRespVO> responseData = JsonConvert.DeserializeObject<ReturnData<AppPacketReceiveRespVO>>(result);
         // 实现 Success 方法的逻辑
         Debug.Log("Success TreasureGrabRespond=" + responseData.code.ToString());
         //显示明细
-        treasureGrab.packageItem.openPackageDetailResultClick();
-        MonoSingleton<UIManager>.Instance.ShowGetCoinEffect(this.treasureGrab.transform.parent, new Vector2(0f, 100f), Coins, 10); //show coin effect
+        source_Ctrl.packageItem.openPackageDetailResultClick();
+        MonoSingleton<UIManager>.Instance.ShowGetCoinEffect(this.source_Ctrl.transform.parent, new Vector2(0f, 100f), Coins, 10); //show coin effect
     }
     void Coins()
     {
@@ -69,14 +73,17 @@ public class TreasureGrabRespond : HttpInterface
             string msg = json["msg"].Value<string>();
             if (code == 1022000003)
             {
-                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "U already Grabed!");
+                source_Ctrl.packageItem.openPackageDetailResultClick();
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "U already Grabed!");
             }
             else if (code == 1)
             {
-                MonoSingleton<PopupManager>.Instance.CloseAllPopup();
-                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "All coin have been Grab.");
+                //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
+                source_Ctrl.packageItem.openPackageDetailResultClick();
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "All coin have been Grab.");
             }
             else {
+                source_Ctrl.packageItem.openPackageDetailResultClick();
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", msg);
             }
         }

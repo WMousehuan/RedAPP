@@ -112,6 +112,10 @@ public class UiSuperiorOwnLowerUserDetail : Popup
         }
         public void Success(string result)
         {
+            if (source_Ctrl==null)
+            {
+                return;
+            }
             ReturnData<PageResultPacketSendRespVO<LowerAgentUserDataVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<LowerAgentUserDataVO>>>(result);
 
             if (responseData.data.list.Length > 0)

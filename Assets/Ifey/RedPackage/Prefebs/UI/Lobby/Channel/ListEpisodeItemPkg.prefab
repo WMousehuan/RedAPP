@@ -6183,6 +6183,8 @@ MonoBehaviour:
   hammerGameobject: {fileID: 0}
   avatarOfPlayer: {fileID: 6691456126940147201}
   redStatus: 
+  packetSendRespVO:
+    id: 0
   currentButton: {fileID: 3454388412693646788}
 --- !u!1 &7865093243459427664
 GameObject:
@@ -6332,6 +6334,7 @@ GameObject:
   - component: {fileID: 330712289159214769}
   - component: {fileID: 3950333547931101956}
   - component: {fileID: 3454388412693646788}
+  - component: {fileID: 8831459377881399773}
   m_Layer: 5
   m_Name: BGClickDeal
   m_TagString: 
@@ -6440,9 +6443,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 5553218412860635273}
-        m_TargetAssemblyTypeName: PackageItem, Assembly-CSharp
-        m_MethodName: openPackageClick
+      - m_Target: {fileID: 8831459377881399773}
+        m_TargetAssemblyTypeName: TreasureGrab, Assembly-CSharp
+        m_MethodName: grabPkg
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6452,6 +6455,19 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8831459377881399773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8485286107208607663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3258b5dcb07965409d8501b91f76220, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packageItem: {fileID: 5553218412860635273}
 --- !u!1001 &511570874926624874
 PrefabInstance:
   m_ObjectHideFlags: 0

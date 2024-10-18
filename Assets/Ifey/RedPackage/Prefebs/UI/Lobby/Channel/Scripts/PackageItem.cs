@@ -83,7 +83,8 @@ public class PackageItem : MonoBehaviour
                 currentButton.interactable = false;
             }
             avatarOfPlayer.SetDefaultAvatar();
-            backageImage.color = new Color(0.8f, 0.8f, 0.8f, 0.8f);
+            backageImage.color = new Color(1, 1, 1, 1);
+            this.transform.GetChild("Fx_Star").gameObject?.SetActive(false);
             setBackground(0);
             return;
         }
@@ -107,11 +108,14 @@ public class PackageItem : MonoBehaviour
         //Set the package color
         if (packetSendRespVO.redStatus == 0)
         {
+            this.transform.GetChild("Fx_Star").gameObject?.SetActive(true);
+            backageImage.color = Color.white;
             setBackground(0);
         }
         else
         {
-            backageImage.color = Color.white;
+            this.transform.GetChild("Fx_Star").gameObject?.SetActive(false);
+            backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
             setBackground(1);
         }
         setHammerVisi();

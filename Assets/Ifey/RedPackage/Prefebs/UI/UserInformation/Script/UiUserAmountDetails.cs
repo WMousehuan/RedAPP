@@ -130,6 +130,10 @@ public class GetUserAmountDetailInterface : HttpInterface
     }
     public void Success(string result)
     {
+        if (source_Ctrl == null)
+        {
+            return;
+        }
         ReturnData<PageResultPacketSendRespVO<AmountDetailVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<AmountDetailVO>>>(result);
 
         if (responseData.data.list.Length > 0)

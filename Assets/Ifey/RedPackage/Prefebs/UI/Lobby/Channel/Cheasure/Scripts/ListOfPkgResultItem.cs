@@ -17,7 +17,7 @@ public class ListOfPkgResultItem : MonoBehaviour
     // Start is called before the first frame update
     public void SetResultItemDetailValue(AppPacketReceiveRespVO pkgDetailItem)
     {
-        userName.text = pkgDetailItem.NickName;
+        userName.text = pkgDetailItem.NickName + (pkgDetailItem.MemberId == UserManager.Instance.appMemberUserInfoRespVO.id ? "[ME]" : "");
         grabCoin.text = pkgDetailItem.GetAmount.ToString();
         createTime.text = pkgDetailItem.CreateTimeDateTime.ToString();
         //Debug.Log("(pkgDetailItem.CompensateAmount========"+ pkgDetailItem.CompensateAmount);

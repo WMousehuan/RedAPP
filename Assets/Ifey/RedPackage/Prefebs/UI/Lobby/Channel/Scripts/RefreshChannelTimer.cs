@@ -6,6 +6,7 @@ using static UIServer;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
+using System.Drawing.Printing;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 {
@@ -27,7 +28,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
       
         List<PackageItem> packetSendRespVOList = new List<PackageItem>(); // pkg item list
 
-        PacketSendRespVO[] PacketSendResp_List = null;
+        public PacketSendRespVO[] PacketSendResp_List = null;
         private void Start()
         {
             EventManager.Instance.Regist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID(), (objects) => {
@@ -119,24 +120,28 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             Debug.Log("refreshFromRequest定时器任务执行");
             ifNeedToRunRefresh = false;
             //string memberId = "";
-            int pageNo = Mathf.Clamp(Mathf.RoundToInt((loopScroll.currentRow + loopScroll.itemCount*0.5f ) / 10f), 0, int.MaxValue);
+            int pageNo = Mathf.RoundToInt((loopScroll.currentRow + loopScroll.itemCount * 0.5f) / 10f);
 
-            int pageSize = 10;
+            int pageSize = 6;
             ObjectPack<int> valuaPack = new ObjectPack<int>("", 0);
-            if (pageNo - 1 >= 0)
+            if (pageNo >= 0)
             {
-                string paramsUrl_0 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo, pageSize);
-                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_0, new RefreshChannelRespond(this, pageNo - 1, pageSize, valuaPack));
+                string paramsUrl_0 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo + 1, pageSize);
+                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_0, new RefreshChannelRespond(this, pageNo, pageSize, valuaPack));
             }
-            string paramsUrl_1 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo + 1, pageSize);
-            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_1, new RefreshChannelRespond(this, pageNo, pageSize, valuaPack));
+            int pageNo_1 = pageNo + 1;
+            if (pageNo_1 >= 0)
+            {
+                string paramsUrl_1 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo_1 + 1, pageSize);
+                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_1, new RefreshChannelRespond(this, pageNo_1, pageSize, valuaPack));
+            }
 
         }
         public class RefreshChannelRespond : HttpInterface
         {
             public FailPubDo failPubDo = new FailPubDo();
             RefreshChannelTimer source_Ctrl;
-            int currentPage = 1;
+            int currentPage = 0;
             int pageSize = 10;
             ObjectPack<int> rankObject;
             // 构造方法
@@ -149,28 +154,33 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             }
             public void Success(string result)
             {
+                if (source_Ctrl == null)
+                {
+                    return;
+                }
                 //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
                 ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>>>(result);
                 if (source_Ctrl != null)
                 {
-                    if (rankObject .target==0&& (source_Ctrl.PacketSendResp_List == null || source_Ctrl?.PacketSendResp_List.Length != responseData.data.total))
+                    if (rankObject.target == 0 && (source_Ctrl.PacketSendResp_List == null || source_Ctrl?.PacketSendResp_List.Length != responseData.data.total))
                     {
                         rankObject.target++;
                         source_Ctrl.PacketSendResp_List = new PacketSendRespVO[responseData.data.total];
                     }
-
                     if (responseData.data.list.Length > 0)
                     {
                         for (int i = 0; i < responseData.data.list.Length; i++)
                         {
-                            source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = responseData.data.list[i];
+                            if(((currentPage) * pageSize + i)< source_Ctrl.PacketSendResp_List.Length)
+                            {
+                                source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = responseData.data.list[i];
+                            }
                         }
-
                         source_Ctrl?.loopScroll?.Refresh(responseData.data.total);
                     }
                 }
                 // 实现 Success 方法的逻辑
-                Debug.Log("Success RefreshChannelRespond!And now create pkg item!count="+responseData.data.list.Length);
+                Debug.Log("Success RefreshChannelRespond!And now create pkg item!count=" + responseData.data.list.Length);
             }
 
             public void Fail(JObject json)
