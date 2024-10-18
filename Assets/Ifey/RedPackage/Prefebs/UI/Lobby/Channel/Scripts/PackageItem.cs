@@ -21,6 +21,8 @@ public class PackageItem : MonoBehaviour
     public string redStatus;  //redStatus 0 normal,1 over,2 timeout
     [HideInInspector]
     public PacketSendRespVO packetSendRespVO;
+
+    public Button currentButton;
     // Start is called before the first frame update
     public void setBackground(int backageInt)
     {
@@ -70,6 +72,26 @@ public class PackageItem : MonoBehaviour
     }
     public void setPacketSendRespVOInfo(PacketSendRespVO packetSendRespVO)
     {
+        if (packetSendRespVO == null)
+        {
+            this.packetSendRespVO = null;
+            this.userName.text = "Loading..";
+            this.redAmount.text = "Loading..";
+            this.compensateRatio.text = "Loading..";
+            if (currentButton != null)
+            {
+                currentButton.interactable = false;
+            }
+            avatarOfPlayer.SetDefaultAvatar();
+            backageImage.color = new Color(0.8f, 0.8f, 0.8f, 0.8f);
+            setBackground(0);
+            return;
+        }
+        if (currentButton != null)
+        {
+            currentButton.interactable = true;
+        }
+
         if (!string.IsNullOrEmpty(packetSendRespVO.Avatar))
         {
             avatarOfPlayer.StartToGetUrlImage(packetSendRespVO.Avatar);
@@ -89,6 +111,7 @@ public class PackageItem : MonoBehaviour
         }
         else
         {
+            backageImage.color = Color.white;
             setBackground(1);
         }
         setHammerVisi();

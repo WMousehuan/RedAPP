@@ -157,6 +157,10 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     }
     public void SetContentSizeByItemCount(int itemCount)
     {
+        if (item_Prefab == null)
+        {
+            return;
+        }
         float itemSize = 0;
         switch (directionType)
         {

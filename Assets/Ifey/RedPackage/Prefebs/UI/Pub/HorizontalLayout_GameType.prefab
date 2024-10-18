@@ -815,6 +815,8 @@ MonoBehaviour:
   packageItemOri: {fileID: 7455361681973744292, guid: 88769ec999532ff48b568ca9da43ea76,
     type: 3}
   title_Text: {fileID: 7843736292593065768}
+  interval: 60000
+  channelRespVOList: []
 --- !u!1 &5680847144032041286
 GameObject:
   m_ObjectHideFlags: 0
@@ -1136,8 +1138,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 756490648772916261}
   m_HandleRect: {fileID: 4102817161895477153}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.99999994
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:

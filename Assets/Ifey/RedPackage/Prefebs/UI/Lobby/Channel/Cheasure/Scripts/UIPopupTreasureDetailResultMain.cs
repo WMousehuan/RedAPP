@@ -38,6 +38,10 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
 
     public void setPacketInfor(PacketSendRespVO packetSendRespVO)
     {
+        if (packetSendRespVO == null)
+        {
+            return;
+        }
         if (!string.IsNullOrEmpty(packetSendRespVO.Avatar))
         {
             avatarOfPlayer.StartToGetUrlImage(packetSendRespVO.Avatar);
