@@ -50,11 +50,11 @@ public class UiSuperiorUser : Popup
             promotionLink = data["promotionLink"].Value<string>();
             promotionDescribe = data["promotionDescribe"].Value<string>();
             UpdateState();
-            waitMask_Ui.ShowResultCase("GetData", 1);
+            waitMask_Ui?.ShowResultCase("GetData", 1);
 
         }, () =>
         {
-            waitMask_Ui.ShowResultCase("Fail", 1, () =>
+            waitMask_Ui?.ShowResultCase("Fail", 1, () =>
             {
                 PopupManager.Instance.Close();
             });
@@ -80,12 +80,12 @@ public class UiSuperiorUser : Popup
             UtilJsonHttp.Instance.PutContentWithParamAuthorizationToken(setUserTypeUrl + content, "", null, (requestData) =>
             {
                 UserManager.Instance.appMemberUserInfoRespVO.userType = (int)userType;
-                waitMask_Ui.ShowResultCase("Success", 1, () => {
+                waitMask_Ui?.ShowResultCase("Success", 1, () => {
                     WebRequestPromotionUrl();
                 });
             }, () =>
             {
-                waitMask_Ui.ShowResultCase("Fail", 1);
+                waitMask_Ui?.ShowResultCase("Fail", 1);
             });
         });
     }

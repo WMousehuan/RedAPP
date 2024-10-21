@@ -6,7 +6,6 @@ using static UIServer;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.UI;
-using System.Drawing.Printing;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 {
@@ -46,7 +45,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                 if (realIndex >= 0 && PacketSendResp_List != null && realIndex < PacketSendResp_List.Length)
                 {
                     PackageItem packageItem = target.GetComponent<PackageItem>();
-                    packageItem.setPacketSendRespVOInfo(PacketSendResp_List[realIndex]);
+                    packageItem.SetPacketSendRespVOInfo(PacketSendResp_List[realIndex]);
                 }
             };
             loopScroll.Init(0, 0);
@@ -120,9 +119,9 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             Debug.Log("refreshFromRequest定时器任务执行");
             ifNeedToRunRefresh = false;
             //string memberId = "";
-            int pageNo = Mathf.RoundToInt((loopScroll.currentRow + loopScroll.itemCount * 0.5f) / 10f);
+            int pageNo = Mathf.FloorToInt((loopScroll.currentRow ) / loopScroll.itemCount);
 
-            int pageSize = 6;
+            int pageSize = loopScroll.itemCount;
             ObjectPack<int> valuaPack = new ObjectPack<int>("", 0);
             if (pageNo >= 0)
             {
@@ -158,8 +157,9 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                 {
                     return;
                 }
-                //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
+
                 ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>>>(result);
+                print(result);
                 if (source_Ctrl != null)
                 {
                     if (rankObject.target == 0 && (source_Ctrl.PacketSendResp_List == null || source_Ctrl?.PacketSendResp_List.Length != responseData.data.total))

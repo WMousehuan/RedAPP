@@ -379,9 +379,9 @@ public class UIManager : MonoSingleton<UIManager>
 		float elapse_time = 0f;
 		Vector3 startPos = objCoinEffect.transform.localPosition;
 		Vector3 targetPos = new Vector3(-108f, 4f, 0f);
-		while (elapse_time < 1f)
+        Vector3 pointPos = new Vector3(-108f, startPos.y - 50f, 0f);
+        while (elapse_time < 1f)
 		{
-			Vector3 pointPos = new Vector3(-108f, startPos.y - 50f, 0f);
 			objCoinEffect.transform.localPosition = Utils.Bezier(elapse_time, startPos, pointPos, targetPos);
 			elapse_time += Time.deltaTime;
 			yield return null;

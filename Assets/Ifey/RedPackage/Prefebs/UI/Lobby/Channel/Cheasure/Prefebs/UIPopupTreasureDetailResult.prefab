@@ -4611,6 +4611,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: ListOfPkgResultItem
       objectReference: {fileID: 0}
+    - target: {fileID: 8384825573709558889, guid: 2dca3d4f50ee2584594f0e74fe93589d,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
