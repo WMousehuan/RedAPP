@@ -4,14 +4,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class UiCreateChannelPanel : Popup
 {
     private string url = "/app-api/red/channel/create";
 
-    public InputField channelName_TextField;
-    public InputField minValue_TextField;
-    public InputField maxValue_TextField;
-    public InputField durationTime_TextField;
+    //public InputField channelName_TextField;
+    //public InputField minValue_TextField;
+    //public InputField maxValue_TextField;
+    //public InputField durationTime_TextField;
+    public TMP_InputField channelName_TextField;
+    public TMP_InputField minValue_TextField;
+    public TMP_InputField maxValue_TextField;
+    public TMP_InputField durationTime_TextField;
 
     public override void Start()
     {
@@ -95,12 +100,12 @@ public class UiCreateChannelPanel : Popup
         UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(url, dataObject, new CommonHttpInterface(), (requestData) =>
         {
             EventManager.Instance.DispatchEvent(typeof(UiCreateChannelPanel).ToString(), "CreateChannel");
-            waitMask_Ui.ShowResultCase("Success", 1, () => {
+            waitMask_Ui?.ShowResultCase("Success", 1, () => {
                 PopupManager.Instance.Close();
             });
         }, () =>
         {
-            waitMask_Ui.ShowResultCase("Fail", 1);
+            waitMask_Ui?.ShowResultCase("Fail", 1);
         });
     }
 }

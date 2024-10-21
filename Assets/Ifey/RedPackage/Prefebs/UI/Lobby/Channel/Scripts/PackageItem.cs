@@ -22,23 +22,20 @@ public class PackageItem : MonoBehaviour
     [HideInInspector]
     public PacketSendRespVO packetSendRespVO;
 
+    public Text getIt_Text;
     public Button currentButton;
     // Start is called before the first frame update
+
+    private void Update()
+    {
+        if (getIt_Text && getIt_Text.gameObject.activeSelf)
+        {
+            getIt_Text.transform.localScale = Vector3.one + Vector3.one * Mathf.Sin(Time.time*6) * 0.1f;
+        }
+    }
     public void setBackground(int backageInt)
     {
         backageImage.sprite = backgroundSprites[backageInt];
-    }
-
-    public void setBackgroundWithPacketSendRespVO()
-    {
-        if (this.packetSendRespVO !=null && this.packetSendRespVO.redStatus==0)
-        {
-            setBackground(0);
-        }
-        else
-        {
-            setBackground(1);
-        }
     }
 
     public void setHammerVisi()
@@ -57,20 +54,32 @@ public class PackageItem : MonoBehaviour
         }
     }
 
-    public void openPackageClick()
+    public void OnEventOpenPackageClick()
     {
-        Popup popup = MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTreasureOpen);
-        PackageItem pkgItemPackageItem = popup.GetComponent<PackageItem>();
-        pkgItemPackageItem.setPacketSendRespVOInfo(this.packetSendRespVO) ;
+        if (packetSendRespVO.isGrabed || packetSendRespVO.redStatus != 0)
+        {
+            OpenPackageDetailResultClick();
+        }
+        else
+        {
+            Popup popup = MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTreasureOpen);
+            PackageItem pkgItemPackageItem = popup.GetComponent<PackageItem>();
+            pkgItemPackageItem.SetPacketSendRespVOInfo(this.packetSendRespVO);
+        }
+
     }
-    public void openPackageDetailResultClick()
+    public void OpenPackageDetailResultClick()
     {
         Popup popup = MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTreasureResultDetailOpen);
         UIPopupTreasureDetailResultMain uIPopupTreasureDetailResultMain = popup.GetComponent<UIPopupTreasureDetailResultMain>();
         uIPopupTreasureDetailResultMain.myPackageItem = this;
         uIPopupTreasureDetailResultMain.setPacketInfor(this.packetSendRespVO);
     }
-    public void setPacketSendRespVOInfo(PacketSendRespVO packetSendRespVO)
+    public void SetPacketSendRespVOInfo()
+    {
+        SetPacketSendRespVOInfo(packetSendRespVO);
+    }
+    public void SetPacketSendRespVOInfo(PacketSendRespVO packetSendRespVO)
     {
         if (packetSendRespVO == null)
         {
@@ -81,6 +90,10 @@ public class PackageItem : MonoBehaviour
             if (currentButton != null)
             {
                 currentButton.interactable = false;
+            }
+            if (getIt_Text != null)
+            {
+                getIt_Text.gameObject.SetActive(false);
             }
             avatarOfPlayer.SetDefaultAvatar();
             backageImage.color = new Color(1, 1, 1, 1);
@@ -102,11 +115,16 @@ public class PackageItem : MonoBehaviour
         //Debug.Log("usernameToShow" + usernameToShow);
         this.userName.text = nickNameToShow;
         this.redAmount.text = packetSendRespVO.redAmount.ToString();
-        this.thunderNo.setNumber(packetSendRespVO.thunderNo); 
-        this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString()+"X";
+        this.thunderNo.setNumber(packetSendRespVO.thunderNo);
+        this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString() + "X";
         redStatus = packetSendRespVO.redStatus.ToString();
-        //Set the package color
-        if (packetSendRespVO.redStatus == 0)
+
+        bool canGrab = packetSendRespVO.redStatus == 0 && !packetSendRespVO.isGrabed;
+        if (getIt_Text != null)
+        {
+            getIt_Text.gameObject.SetActive(canGrab);
+        }
+        if (canGrab)
         {
             this.transform.GetChild("Fx_Star").gameObject?.SetActive(true);
             backageImage.color = Color.white;
@@ -118,6 +136,8 @@ public class PackageItem : MonoBehaviour
             backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
             setBackground(1);
         }
+        
+       
         setHammerVisi();
     }
 

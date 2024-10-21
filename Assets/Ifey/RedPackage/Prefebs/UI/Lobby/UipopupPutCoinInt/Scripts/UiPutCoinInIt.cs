@@ -102,6 +102,7 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
             int code = json["code"].Value<int>();
             if (code == 1004001004)
             {
+                MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupShopCoin, enableBackCloseButton: true);
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
                 Debug.Log("Not enough coin to sent!!");
                 return;           

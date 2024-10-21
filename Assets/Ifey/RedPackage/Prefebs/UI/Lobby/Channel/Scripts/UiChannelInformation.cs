@@ -1,6 +1,7 @@
 using Newtonsoft.Json.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class UiChannelInformation : Popup
@@ -8,10 +9,15 @@ public class UiChannelInformation : Popup
     private string deleteUrl = "/app-api/red/channel/delete";
     private string updateDataUrl = "/app-api/red/channel/update";
     private string getPromotionUrl = "/app-api/red/promotion-setting/getActiveSetting";//获得推广链接Url
-    public InputField channelName_TextField;
-    public InputField minValue_TextField;
-    public InputField maxValue_TextField;
-    public InputField durationTime_TextField;
+    //public InputField channelName_TextField;
+    //public InputField minValue_TextField;
+    //public InputField maxValue_TextField;
+    //public InputField durationTime_TextField;
+    public TMP_InputField channelName_TextField;
+    public TMP_InputField minValue_TextField;
+    public TMP_InputField maxValue_TextField;
+    public TMP_InputField durationTime_TextField;
+
     public GameObject roomEditor_Case;
 
     public InputField promotionLink_InputField;

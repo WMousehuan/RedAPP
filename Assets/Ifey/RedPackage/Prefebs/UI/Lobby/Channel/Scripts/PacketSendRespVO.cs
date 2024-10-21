@@ -24,6 +24,28 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public int redStatus { get; set; } // 红包状态 0-正常 1-已抢完 2-已过期
         public string? Avatar { get; set; }
 
+        public string receiveMemberIds;//抢过此红包的用户
+
+        public bool isGrabed
+        {
+            get
+            {
+                bool _isGrabed = false;
+                if (receiveMemberIds != null)
+                {
+                    string[] receiveMemberIds = this.receiveMemberIds.Split(",");
+                    for (int i = 0; i < receiveMemberIds.Length; i++)
+                    {
+                        if (receiveMemberIds[i] == UserManager.Instance.appMemberUserInfoRespVO.id.ToString())
+                        {
+                            _isGrabed = true;
+                            break;
+                        }
+                    }
+                }
+                return _isGrabed;
+            }
+        }
         public override string ToString()
         {
             return $"PacketSendRespVO: [id={id}, memberId={memberId}, username={username}, redAmount={redAmount}, redCount={redCount}, thunderNo={thunderNo}, compensateAmount={compensateAmount}, compensateRatio={compensateRatio}, channelId={channelId}, redPacketData={redPacketData}, redPassword={redPassword}, expiration={expiration}, redQuota={redQuota}, createTime={createTime}, redStatus={redStatus}]";

@@ -13,7 +13,7 @@ using UnityEngine.Networking;
 using System.Text;
 using System.Runtime.InteropServices;
 using System;
-using System.Xml.Linq;
+using TMPro;
 public class Ui_UserInformation : Popup
 {
     public enum UserInfoType
@@ -25,8 +25,8 @@ public class Ui_UserInformation : Popup
 
     public RawImage avatar_RawImage;
     public Texture2D defaultAvatar_Texture;
-    public InputField userName_InputField;
-
+    //public InputField userName_InputField;
+    public TMP_InputField userName_InputField;
     public Button setName_Button;
     public Transform setNameEidit_Case;
 
@@ -106,11 +106,11 @@ public class Ui_UserInformation : Popup
         {
             UserManager.Instance.appMemberUserInfoRespVO.nickname = userName_InputField.text;
             OnEventSwitchSetNameState(false);
-            waitMask_Ui.ShowResultCase("Success", 1);
+            waitMask_Ui?.ShowResultCase("Success", 1);
         }, () =>
         {
             OnEventSwitchSetNameState(false);
-            waitMask_Ui.ShowResultCase("Fail", 1);
+            waitMask_Ui?.ShowResultCase("Fail", 1);
         });
     }
     /// <summary>
@@ -202,10 +202,10 @@ public class Ui_UserInformation : Popup
                 UserManager.Instance.currentAvatar_Texture = texture;
 
                 avatar_RawImage.texture = texture;
-                waitMask_Ui.ShowResultCase("Success", 1);
+                waitMask_Ui?.ShowResultCase("Success", 1);
             }, () =>
             {
-                waitMask_Ui.ShowResultCase("Fail", 1);
+                waitMask_Ui?.ShowResultCase("Fail", 1);
             });
 
         }, () =>

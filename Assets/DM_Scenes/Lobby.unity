@@ -203,6 +203,7 @@ MonoBehaviour:
   BaseEpisodeListItem: {fileID: 357440365}
   ObjNoAdsButton: {fileID: 0}
   RTLevelBallScrollPanel: {fileID: 1010037330}
+  refreshChannelGameTypeTImers: []
 --- !u!4 &59741538
 Transform:
   m_ObjectHideFlags: 0
@@ -1179,13 +1180,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   loopScroll: {fileID: 1266938419}
-  scrollRect: {fileID: 1266938418}
   verticalLayoutGroup: {fileID: 70634866}
   contentSizeFitter: {fileID: 70634865}
   packageItemParent: {fileID: 70634863}
   packageItemOri: {fileID: 7813700155698811708, guid: 18088f4cac346ab44bad02b39966f275,
     type: 3}
   interval: 2000
+  PacketSendResp_List: []
 --- !u!1 &1110749197
 GameObject:
   m_ObjectHideFlags: 0
@@ -2106,20 +2107,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6650012894349670399, guid: 18088f4cac346ab44bad02b39966f275,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.7749634
-      objectReference: {fileID: 0}
     - target: {fileID: 7813700155698811708, guid: 18088f4cac346ab44bad02b39966f275,
         type: 3}
       propertyPath: m_Name
       value: ListEpisodeItemPkg
-      objectReference: {fileID: 0}
-    - target: {fileID: 7813700155698811708, guid: 18088f4cac346ab44bad02b39966f275,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
