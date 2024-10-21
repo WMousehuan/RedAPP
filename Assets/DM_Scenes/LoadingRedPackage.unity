@@ -557,8 +557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ee6df7a992d6ce4aac27d7172fca9e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentAvatar_Texture: {fileID: 2800000, guid: feb0a2464644648448eb4e07ea18be5b,
-    type: 3}
+  defaultTexture: {fileID: 2800000, guid: feb0a2464644648448eb4e07ea18be5b, type: 3}
   userMainInfoUrl: /app-api/member/user/get
 --- !u!114 &1918783265
 MonoBehaviour:

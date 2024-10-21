@@ -29,7 +29,7 @@ public class AvatarOfPlayer : MonoBehaviour
         }
         else
         {
-            rawImage.sprite = avatar_Dictionary[imageUrl]==null? oriSprite: avatar_Dictionary[imageUrl];
+            rawImage.sprite = avatar_Dictionary[imageUrl] == null ? oriSprite : avatar_Dictionary[imageUrl];
         }
     }
     public void SetDefaultAvatar()

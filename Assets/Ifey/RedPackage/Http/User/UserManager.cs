@@ -12,7 +12,9 @@ public class UserManager : MonoSingleton<UserManager>
 {
     [HideInInspector]
     public AppMemberUserInfoRespVO appMemberUserInfoRespVO =null; //userInfo
-    [SerializeField]
+
+    public Texture2D defaultTexture;
+
     private Texture2D _currentAvatar_Texture;
     public Texture2D currentAvatar_Texture
     {
@@ -29,9 +31,13 @@ public class UserManager : MonoSingleton<UserManager>
     [HideInInspector]
     public string userMainInfoUrl = "/app-api/member/user/get"; //get userInfo Url
     public static string encryptSuperiorId = "";
-  
+    private void Start()
+    {
+        currentAvatar_Texture = defaultTexture;
+    }
     public void GetUserMainInfo()
     {
+       
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo
@@ -39,6 +45,15 @@ public class UserManager : MonoSingleton<UserManager>
             EventManager.Instance.DispatchEvent(typeof(UserManager).ToString(), "LoginIn");
             GeneralTool_Ctrl.DownloadImage(appMemberUserInfoRespVO.avatar, (texture) =>
             {
+                if (currentAvatar_Texture != null&& currentAvatar_Texture!= defaultTexture)
+                {
+                    Destroy(currentAvatar_Texture);
+                }
+                if (this == null)
+                {
+                    Destroy(texture);
+                    return;
+                }
                 currentAvatar_Texture = texture;
             });
         });

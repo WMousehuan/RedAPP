@@ -44,8 +44,12 @@ public class UiSuperiorOwnLowerUserDetail : Popup
             if (realIndex >= 0 && realIndex < lowerAgentUserDetail_List.Count)
             {
                 LowerAgentUserDataVO lowerAgentUserData = lowerAgentUserDetail_List[realIndex];
+                Button button = target.GetComponent<Button>();
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() => {
+                    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
+                });
                 target.GetChild<Text>("NickName_Text").text = lowerAgentUserData.nickname;
-                print(lowerAgentUserData.createTime);
                 target.GetChild<TMPro.TextMeshProUGUI>("CreateTime_Text").text = ConvertFormat.TimeStampToDataTime(long.Parse(lowerAgentUserData.createTime)).ToString();
             }
         };
