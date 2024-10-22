@@ -89,8 +89,16 @@ public class TreasureGrabRespond : HttpInterface
         source_Ctrl.packageItem.SetPacketSendRespVOInfo(source_Ctrl.packageItem.packetSendRespVO);
         //ÏÔÊ¾Ã÷Ï¸
         Transform parent = this.source_Ctrl.transform.parent;
-        UIManager.Instance.ShowGetCoinEffect(parent, new Vector2(0f, 100f), EffectFinishEvent, 10); //show coin effect
-        UIManager.Instance.ShowBomb(parent, EffectFinishEvent);
+        Debug.Log(responseData.data.CompensateAmount + "===========================");
+        if (responseData.data.CompensateAmount == null || responseData.data.CompensateAmount == 0)
+        {
+            UIManager.Instance.ShowGetCoinEffect(parent, new Vector2(0f, 100f), EffectFinishEvent, 10); //show coin effect
+        }
+        else
+        {
+            UIManager.Instance.ShowBomb(parent, EffectFinishEvent);
+        }
+    
     }
     void EffectFinishEvent()
     {

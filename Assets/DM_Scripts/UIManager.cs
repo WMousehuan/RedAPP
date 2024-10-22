@@ -5,6 +5,7 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class UIManager : MonoSingleton<UIManager>
 {
@@ -152,7 +153,12 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void Update()
 	{
-		if (Application.platform != RuntimePlatform.Android || !Input.GetKeyUp(KeyCode.Escape) || IsModalLoading)
+		//if (Input.GetKeyDown(KeyCode.A))
+		//{
+		//	ShowBomb(PopupManager.Instance.ParentPopupGroup);
+
+  //      }
+        if (Application.platform != RuntimePlatform.Android || !Input.GetKeyUp(KeyCode.Escape) || IsModalLoading)
 		{
 			return;
 		}
@@ -174,10 +180,12 @@ public class UIManager : MonoSingleton<UIManager>
 				GameMain.main.OnPressButtonExit();
 			}
 		}
-	}
+        
+    }
 
 	public void FixedUpdate()
 	{
+		
 	}
 
 	private void UpdateStoreVersionCheck()
@@ -397,23 +405,37 @@ public class UIManager : MonoSingleton<UIManager>
 		yield return new WaitForSeconds(0.5f);
 		UnityEngine.Object.Destroy(objCoinEndEffect);
 	}
-	public void ShowBomb(Transform parentTransform, System.Action finishAction)
+	public void ShowBomb(Transform parentTransform, System.Action finishAction=null)
 	{
-		//GameObject bombEffect = Instantiate(BombEffect_Prefab, parentTransform);
-		//bombEffect.transform.GetChild<RectTransform>("Bomb");
-		//IEPool_Manager.instance.KeepTimeToDo("", 1, null, (_time) => {
-		//	bombEffect.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, 1 - _time / 1f);
+		GameObject bombEffect = Instantiate(BombEffect_Prefab_0, parentTransform);
+		Image bombEffect_Image = bombEffect.transform.GetChild<Image>("Bomb_Image");
 
-		//	return true;
-		//}, () => {
-  //          IEPool_Manager.instance.KeepTimeToDo("", 1, null, (_time) => {
-
-  //              return true;
-  //          }, () => {
-
-
-  //          });
-
-  //      });
+        Transform particle= bombEffect.transform.GetChild("Particle");
+		particle.gameObject.SetActive(false);
+		float time_0 = 0;
+		Vector3 initPos = bombEffect_Image.rectTransform.anchoredPosition3D;
+		float posOffsetRange = 8;
+		Vector3 targetLocalPos = new Vector3(Random.Range(-posOffsetRange, posOffsetRange), Random.Range(-posOffsetRange, posOffsetRange));
+        IEPool_Manager.instance.KeepTimeToDo("", 1, null, (_time) =>
+		{
+			bombEffect.transform.localScale = Vector3.Lerp(Vector3.one*0.5f, Vector3.one, 1 - _time / 1f);
+            bombEffect_Image.rectTransform.anchoredPosition3D = initPos + targetLocalPos;
+			time_0 += Time.deltaTime;
+            if (time_0 > 0.04f)
+			{
+				time_0 = 0;
+                targetLocalPos = new Vector3(Random.Range(-posOffsetRange, posOffsetRange), Random.Range(-posOffsetRange, posOffsetRange));
+            }
+            return true;
+        }, () =>
+        {
+            bombEffect_Image.enabled = false;
+            particle.gameObject.SetActive(true); 
+            IEPool_Manager.instance.WaitTimeToDo("", 1, null, () =>
+            {
+				Destroy(bombEffect);
+                finishAction?.Invoke();
+            });
+        });
     }
 }
