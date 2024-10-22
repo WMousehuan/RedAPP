@@ -57,6 +57,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     public System.Action<int, int, int, RectTransform> scrollExitEvent;
     public List<Int2> activeIndexs = new List<Int2>();
     public List<int> realIndex = new List<int>();
+    public float overedOffset = 20;
     public bool isOvered = false;
     private void Awake()
     {
@@ -178,11 +179,11 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         {
             case DirectionType.Up:
             case DirectionType.Down:
-                scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, offset.top + offset.bottom + itemSize* itemCount);
+                scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, Mathf.Clamp(offset.top + offset.bottom + itemSize * itemCount,scrollRect.viewport.rect.size.y,float.MaxValue));
                 break;
             case DirectionType.Left:
             case DirectionType.Right:
-                scrollRect.content.sizeDelta = new Vector2(offset.left + offset.right + itemSize * itemCount , scrollRect.content.sizeDelta.y);
+                scrollRect.content.sizeDelta = new Vector2(Mathf.Clamp(offset.left + offset.right + itemSize * itemCount, scrollRect.viewport.rect.size.x, float.MaxValue) , scrollRect.content.sizeDelta.y);
                 break;
         }
     }
@@ -291,10 +292,10 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
             }
         }
 
-        switch (directionType) 
+        switch (directionType)
         {
             case DirectionType.Up:
-                if ((scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y) > -scrollRect.viewport.rect.size.y)
+                if ((scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y - overedOffset) > -scrollRect.viewport.rect.size.y)
                 {
                     if (!isOvered)
                     {
@@ -308,7 +309,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 break;
             case DirectionType.Down:
-                if ((-scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y) > scrollRect.viewport.rect.size.y)
+                if ((-scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y - overedOffset) > scrollRect.viewport.rect.size.y)
                 {
                     if (!isOvered)
                     {
@@ -322,7 +323,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 break;
             case DirectionType.Left:
-                if ((-scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x) > scrollRect.viewport.rect.size.x)
+                if ((-scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x - overedOffset) > scrollRect.viewport.rect.size.x)
                 {
                     if (!isOvered)
                     {
@@ -332,12 +333,12 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 else
                 {
-                  
+
                     isOvered = false;
                 }
                 break;
             case DirectionType.Right:
-                if ((scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x) > -scrollRect.viewport.rect.size.x)
+                if ((scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x - overedOffset) > -scrollRect.viewport.rect.size.x)
                 {
                     if (!isOvered)
                     {

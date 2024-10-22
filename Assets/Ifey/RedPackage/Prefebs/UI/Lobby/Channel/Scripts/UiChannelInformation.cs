@@ -187,5 +187,6 @@ public class UiChannelInformation : Popup
     {
         GUIUtility.systemCopyBuffer = promotionLink_InputField.text;
         WebMessage_Ctrl.SendMessageToWeb("clipbord^" + promotionLink_InputField.text);
+        UiHintCase.instance.Show("Copied link");
     }
 }

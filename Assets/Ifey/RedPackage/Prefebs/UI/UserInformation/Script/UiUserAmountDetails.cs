@@ -141,7 +141,7 @@ public class GetUserAmountDetailInterface : HttpInterface
             source_Ctrl?.amountDetail_List?.AddRange(responseData.data.list);
             source_Ctrl?.amountDetail_LoopScroll?.Refresh(source_Ctrl.amountDetail_List.Count);
         }
-        Debug.Log("Success GetUserAmountDetail!");
+        //Debug.Log("Success GetUserAmountDetail!");
     }
 
     public void Fail(JObject json)

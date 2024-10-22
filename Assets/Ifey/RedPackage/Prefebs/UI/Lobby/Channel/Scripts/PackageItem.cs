@@ -24,7 +24,7 @@ public class PackageItem : MonoBehaviour
 
     public Text getIt_Text;
     public Button currentButton;
-    // Start is called before the first frame update
+    public Text me_Text;
 
     private void Update()
     {
@@ -83,6 +83,7 @@ public class PackageItem : MonoBehaviour
     {
         if (packetSendRespVO == null)
         {
+            this.me_Text?.gameObject?.SetActive(false);
             this.packetSendRespVO = null;
             this.userName.text = "Loading..";
             this.redAmount.text = "Loading..";
@@ -96,16 +97,17 @@ public class PackageItem : MonoBehaviour
                 getIt_Text.gameObject.SetActive(false);
             }
             avatarOfPlayer.SetDefaultAvatar();
-            backageImage.color = new Color(1, 1, 1, 1);
+            backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
+            setBackground(1);
             this.transform.GetChild("Fx_Star").gameObject?.SetActive(false);
-            setBackground(0);
+            //setBackground(0);
             return;
         }
         if (currentButton != null)
         {
             currentButton.interactable = true;
         }
-
+        this.me_Text?.gameObject?.SetActive(packetSendRespVO.memberId==UserManager.Instance.appMemberUserInfoRespVO.id);
         if (!string.IsNullOrEmpty(packetSendRespVO.Avatar))
         {
             avatarOfPlayer.StartToGetUrlImage(packetSendRespVO.Avatar);

@@ -3045,6 +3045,7 @@ MonoBehaviour:
   maxIndex: 0
   activeIndexs: []
   realIndex: 
+  overedOffset: 20
   isOvered: 0
 --- !u!1 &6791346803215450840
 GameObject:
@@ -3505,8 +3506,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 23.999989, y: 1}
-  m_SizeDelta: {x: -80.00002, y: 18}
+  m_AnchoredPosition: {x: 30.8563, y: 0.000030517578}
+  m_SizeDelta: {x: -62.3424, y: -26.6144}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1992344528965002186
 CanvasRenderer:
@@ -3538,11 +3539,11 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: e631c47376497481bbce070c81be042b, type: 3}
-    m_FontSize: 50
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 1
     m_MinSize: 0
-    m_MaxSize: 50
+    m_MaxSize: 40
     m_Alignment: 4
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -4605,6 +4606,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3760790111878979970, guid: 2dca3d4f50ee2584594f0e74fe93589d,
+        type: 3}
+      propertyPath: m_PixelsPerUnitMultiplier
+      value: 0.01
       objectReference: {fileID: 0}
     - target: {fileID: 8384825573709558889, guid: 2dca3d4f50ee2584594f0e74fe93589d,
         type: 3}

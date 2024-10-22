@@ -93,5 +93,6 @@ public class UiSuperiorUser : Popup
     {
         GUIUtility.systemCopyBuffer = promotionLink;
         WebMessage_Ctrl.SendMessageToWeb("clipbord^" + promotionLink);
+        UiHintCase.instance.Show("Copied link");
     }
 }

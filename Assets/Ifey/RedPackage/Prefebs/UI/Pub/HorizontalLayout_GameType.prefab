@@ -407,6 +407,7 @@ MonoBehaviour:
   maxIndex: 0
   activeIndexs: []
   realIndex: 
+  overedOffset: 20
   isOvered: 0
 --- !u!1 &1730418475928073454
 GameObject:
@@ -539,7 +540,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1979408646832838697}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -605,8 +606,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 925269997822769698}
   m_HandleRect: {fileID: 7226537358621292705}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: -0.0000060952716
+  m_Size: 0.963006
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -995,7 +996,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7011023137676320938}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
@@ -1139,7 +1140,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4102817161895477153}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.99999994
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1256,6 +1257,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SortingLayer
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112304032059593439, guid: 88769ec999532ff48b568ca9da43ea76,
+        type: 3}
+      propertyPath: m_Text
+      value: Name
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112304032059593439, guid: 88769ec999532ff48b568ca9da43ea76,
+        type: 3}
+      propertyPath: m_FontData.m_MaxSize
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112304032059593439, guid: 88769ec999532ff48b568ca9da43ea76,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4112304032059593439, guid: 88769ec999532ff48b568ca9da43ea76,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 4489905454708430146, guid: 88769ec999532ff48b568ca9da43ea76,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 172
       objectReference: {fileID: 0}
     - target: {fileID: 5028886368135529096, guid: 88769ec999532ff48b568ca9da43ea76,
         type: 3}

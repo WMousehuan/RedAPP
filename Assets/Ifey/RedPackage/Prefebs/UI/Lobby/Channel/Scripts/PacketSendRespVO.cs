@@ -31,16 +31,20 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             get
             {
                 bool _isGrabed = false;
-                if (receiveMemberIds != null)
+                if (!string.IsNullOrEmpty(receiveMemberIds))
                 {
                     string[] receiveMemberIds = this.receiveMemberIds.Split(",");
                     for (int i = 0; i < receiveMemberIds.Length; i++)
                     {
-                        if (receiveMemberIds[i] == UserManager.Instance.appMemberUserInfoRespVO.id.ToString())
+                        if (UserManager.Instance != null&& UserManager.Instance.appMemberUserInfoRespVO!=null)
                         {
-                            _isGrabed = true;
-                            break;
+                            if (receiveMemberIds[i] == (UserManager.Instance.appMemberUserInfoRespVO.id.ToString()??""))
+                            {
+                                _isGrabed = true;
+                                break;
+                            }
                         }
+                        
                     }
                 }
                 return _isGrabed;

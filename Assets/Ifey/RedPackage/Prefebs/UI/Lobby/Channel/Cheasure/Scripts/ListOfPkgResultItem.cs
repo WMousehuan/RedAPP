@@ -14,10 +14,12 @@ public class ListOfPkgResultItem : MonoBehaviour
     public Text grabCoin;
     public GameObject bombCoinGameObject;
     public Text bombCoin;
+    public Text me_Text;
     // Start is called before the first frame update
     public void SetResultItemDetailValue(AppPacketReceiveRespVO pkgDetailItem)
     {
-        userName.text = pkgDetailItem.NickName + (pkgDetailItem.MemberId == UserManager.Instance.appMemberUserInfoRespVO.id ? "[ME]" : "");
+        me_Text?.gameObject?.SetActive(pkgDetailItem.MemberId == UserManager.Instance.appMemberUserInfoRespVO.id);
+        userName.text = pkgDetailItem.NickName;
         grabCoin.text = pkgDetailItem.GetAmount.ToString();
         createTime.text = pkgDetailItem.CreateTimeDateTime.ToString();
         //Debug.Log("(pkgDetailItem.CompensateAmount========"+ pkgDetailItem.CompensateAmount);

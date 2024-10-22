@@ -44,7 +44,7 @@ public class UiPutCoinInIt : Popup
 
     public void submitBtnClick()
     {
-        if(inputFieldAmount.text == null || inputFieldAmount.text.Length == 0)
+        if (inputFieldAmount.text == null || inputFieldAmount.text.Length == 0)
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Plz input the accmout！");
             return;
@@ -66,7 +66,7 @@ public class UiPutCoinInIt : Popup
         appPacketSendSaveReqVO.channelId = long.Parse(PlayerTreasureGameData.Instance.entranceChannelId);
         //选中的玩法
         PlayersCheckBox selectPlayMethon = numberOfPlayerHorizontal.getOnSelectPlayer();
-        if(selectPlayMethon==null|| selectPlayMethon.id == null)
+        if (selectPlayMethon == null || selectPlayMethon.id == null)
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Plz select the numebr of treasure!");
             return;
@@ -75,8 +75,16 @@ public class UiPutCoinInIt : Popup
 
         BombNumberCheckBox bombNumberCheckBox = bombNumberHorizontal.getBombNumberCheckBox();
         appPacketSendSaveReqVO.thunderNo = (int)bombNumberCheckBox.id;
-        Debug.Log("submit sendCoinPkg="+ appPacketSendSaveReqVO.ToString());
-        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sendRedPacketUrl, appPacketSendSaveReqVO, new submitPutCoinInItHttpCallBack());
+        Debug.Log("submit sendCoinPkg=" + appPacketSendSaveReqVO.ToString());
+        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sendRedPacketUrl, appPacketSendSaveReqVO, new submitPutCoinInItHttpCallBack(), (resultData) =>
+        {
+            waitMask_Ui?.ShowResultCase("Success", 1);
+        }
+        ,() =>
+        {
+            waitMask_Ui?.ShowResultCase("Fail", 1);
+        });
     }
 }
 

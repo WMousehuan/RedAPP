@@ -118,4 +118,5 @@ public enum PopupType
     PopupSuperiorOwnLowerUserDetail,
     PopupCreateChannelPanel,
 	PopupChannelInformation,
+    CommonUserInformation,
 }
