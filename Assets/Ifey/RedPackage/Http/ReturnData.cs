@@ -21,7 +21,7 @@ public class PageResultPacketSendRespVO<T>
     public T[] list;
     public int total;
 }
-
+[System.Serializable]
 public class PostFileData
 {
     public byte[] file = null;

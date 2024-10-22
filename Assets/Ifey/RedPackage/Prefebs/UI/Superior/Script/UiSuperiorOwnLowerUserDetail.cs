@@ -4,8 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using dotmob;
-using System.Net.NetworkInformation;
+using Newtonsoft.Json.Serialization;
+using BestHTTP.JSON.LitJson;
 public class UiSuperiorOwnLowerUserDetail : Popup
 {
 
@@ -19,14 +19,17 @@ public class UiSuperiorOwnLowerUserDetail : Popup
 
     public List<LowerAgentUserDataVO> lowerAgentUserDetail_List = new List<LowerAgentUserDataVO>();
     public Image loading_Image;
+    public Text totalBrokerage_Text;
+
     public override void Start()
     {
         base.Start();
     }
     public override void OnEnable()
     {
-        loading_Image?.gameObject.SetActive(false);
         base.OnEnable();
+        loading_Image?.gameObject.SetActive(false);
+     
         loadedPageIndex_HashSet.Clear();
         lowerAgentUserDetail_List.Clear();
         isLoadingList = false;
@@ -44,13 +47,16 @@ public class UiSuperiorOwnLowerUserDetail : Popup
             if (realIndex >= 0 && realIndex < lowerAgentUserDetail_List.Count)
             {
                 LowerAgentUserDataVO lowerAgentUserData = lowerAgentUserDetail_List[realIndex];
-                Button button = target.GetComponent<Button>();
-                button.onClick.RemoveAllListeners();
-                button.onClick.AddListener(() => {
-                    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
-                });
+                //Button button = target.GetComponent<Button>();
+                //button.onClick.RemoveAllListeners();
+                //button.onClick.AddListener(() =>
+                //{
+                //    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
+                //});
+                target.GetChild<Text>("Amount_Text").text = lowerAgentUserData.totalBrokerage.ToString("F2");
                 target.GetChild<Text>("NickName_Text").text = lowerAgentUserData.nickname;
-                target.GetChild<TMPro.TextMeshProUGUI>("CreateTime_Text").text = ConvertFormat.TimeStampToDataTime(long.Parse(lowerAgentUserData.createTime)).ToString();
+                print(lowerAgentUserData.createTime);
+                target.GetChild<TMPro.TextMeshProUGUI>("CreateTime_Text").text = dotmob.ConvertFormat.TimeStampToDataTime(long.Parse(lowerAgentUserData.createTime)).ToString();
             }
         };
 
@@ -87,25 +93,31 @@ public class UiSuperiorOwnLowerUserDetail : Popup
         }
 
     }
-
+    public class LowerAgentUserGroupDataVO 
+    {
+        public PageResultPacketSendRespVO<LowerAgentUserDataVO> pageResult;
+        public double totalBrokerage;
+    }
+    [System.Serializable]
     public class LowerAgentUserDataVO
     {
         public int id;//
         public string nickname;//昵称
-		public string avatar;//头像
-        public string mobile;//手机号
-        public int point;//积分
-        //public AgentLevelDataVO level;
-        public int userType;//用户类型
+		//public string avatar;//头像
+  //      public string mobile;//手机号
+  //      public int point;//积分
+  //      //public AgentLevelDataVO level;
+  //      public int userType;//用户类型
         public string createTime;//创建日期
+        public double totalBrokerage;
     }
-    public class AgentLevelDataVO
-    {
-        public int id;//等级编号
-        public string name;//等级名称
-        public int level;//等级
-        public int icon;//等级图标
-    }
+    //public class AgentLevelDataVO
+    //{
+    //    public int id;//等级编号
+    //    public string name;//等级名称
+    //    public int level;//等级
+    //    public int icon;//等级图标
+    //}
 
     public class GetSuperiorOwnLowerUserDetailInterface : HttpInterface
     {
@@ -120,14 +132,19 @@ public class UiSuperiorOwnLowerUserDetail : Popup
             {
                 return;
             }
-            ReturnData<PageResultPacketSendRespVO<LowerAgentUserDataVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<LowerAgentUserDataVO>>>(result);
-
-            if (responseData.data.list.Length > 0)
+            print(result);
+            if (!string.IsNullOrEmpty(result))
             {
-                source_Ctrl?.lowerAgentUserDetail_List?.AddRange(responseData.data.list);
-                source_Ctrl?.loopScroll?.Refresh(source_Ctrl.lowerAgentUserDetail_List.Count);
+                JsonData jsonData= JsonMapper.ToObject(result);
+                LowerAgentUserGroupDataVO responseData =JsonUtility.FromJson<LowerAgentUserGroupDataVO>(jsonData["data"].ToJson());
+                source_Ctrl.totalBrokerage_Text.text = responseData.totalBrokerage.ToString("F2");
+                if (responseData.pageResult.list.Length > 0)
+                {
+                    source_Ctrl?.lowerAgentUserDetail_List?.AddRange(responseData.pageResult.list);
+                    source_Ctrl?.loopScroll?.Refresh(source_Ctrl.lowerAgentUserDetail_List.Count);
+                }
+                Debug.Log("Success GetUserAmountDetail!");
             }
-            Debug.Log("Success GetUserAmountDetail!");
         }
 
         public void Fail(JObject json)

@@ -20,24 +20,24 @@ public class UiCommonUserInformation : Popup
         }
         userName_InputField.text = lowerAgentUserDataVO.nickname;
         avatar_RawImage.texture = defaultAvatar_Texture;
-        print(lowerAgentUserDataVO.avatar);
-        if (!string.IsNullOrEmpty(lowerAgentUserDataVO.avatar))
-        {
-            GeneralTool_Ctrl.DownloadImage(lowerAgentUserDataVO.avatar, (texture) =>
-            {
-                if (this.texture != null)
-                {
-                    Destroy(this.texture);
-                }
-                if (this == null)
-                {
-                    Destroy(texture);
-                    return;
-                }
-                this.texture = texture;
-                avatar_RawImage.texture = texture;
-            });
-        }
+        //print(lowerAgentUserDataVO.avatar);
+        //if (!string.IsNullOrEmpty(lowerAgentUserDataVO.avatar))
+        //{
+        //    GeneralTool_Ctrl.DownloadImage(lowerAgentUserDataVO.avatar, (texture) =>
+        //    {
+        //        if (this.texture != null)
+        //        {
+        //            Destroy(this.texture);
+        //        }
+        //        if (this == null)
+        //        {
+        //            Destroy(texture);
+        //            return;
+        //        }
+        //        this.texture = texture;
+        //        avatar_RawImage.texture = texture;
+        //    });
+        //}
     }
     private void OnDestroy()
     {

@@ -4,7 +4,6 @@ using System.Collections;
 using UnityEngine;
 using static UIServer;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine.UI;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
@@ -169,11 +168,21 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                     }
                     if (responseData.data.list.Length > 0)
                     {
-                        for (int i = 0; i < responseData.data.list.Length; i++)
+                        List<PacketSendRespVO> packetSendResp_List = new List<PacketSendRespVO>();
+                        packetSendResp_List.AddRange(responseData.data.list);
+                        packetSendResp_List.Sort((item_0, item_1) => {
+                            if (item_0.redStatus==0&& !item_0.isGrabed)
+                            {
+                                return -1;
+                            }
+                            return 0;
+                        });
+
+                        for (int i = 0; i < packetSendResp_List.Count; i++)
                         {
                             if(((currentPage) * pageSize + i)< source_Ctrl.PacketSendResp_List.Length)
                             {
-                                source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = responseData.data.list[i];
+                                source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = packetSendResp_List[i];
                             }
                         }
                         source_Ctrl?.loopScroll?.Refresh(responseData.data.total);

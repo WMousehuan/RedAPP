@@ -47,7 +47,9 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public GameObject PrefabGetCoinEffect3;
 
-	[HideInInspector]
+    public GameObject BombEffect_Prefab_0;
+
+    [HideInInspector]
 	public MarketVersionChecker VersionChecker;
 
 	public static bool holdOnUpdateCoin;
@@ -395,4 +397,23 @@ public class UIManager : MonoSingleton<UIManager>
 		yield return new WaitForSeconds(0.5f);
 		UnityEngine.Object.Destroy(objCoinEndEffect);
 	}
+	public void ShowBomb(Transform parentTransform, System.Action finishAction)
+	{
+		//GameObject bombEffect = Instantiate(BombEffect_Prefab, parentTransform);
+		//bombEffect.transform.GetChild<RectTransform>("Bomb");
+		//IEPool_Manager.instance.KeepTimeToDo("", 1, null, (_time) => {
+		//	bombEffect.transform.localScale = Vector3.Lerp(Vector3.zero, Vector3.one, 1 - _time / 1f);
+
+		//	return true;
+		//}, () => {
+  //          IEPool_Manager.instance.KeepTimeToDo("", 1, null, (_time) => {
+
+  //              return true;
+  //          }, () => {
+
+
+  //          });
+
+  //      });
+    }
 }

@@ -120,9 +120,9 @@ updateBannerVisibility();
 
 var loaderUrl = buildUrl + "RedPackage_WebGl.loader.js";
 var config = {
-dataUrl: buildUrl + "RedPackage_WebGl.data",
-frameworkUrl: buildUrl + "RedPackage_WebGl.framework.js",
-codeUrl: buildUrl + "RedPackage_WebGl.wasm",
+dataUrl: buildUrl + "RedPackage_WebGl.data.unityweb",
+frameworkUrl: buildUrl + "RedPackage_WebGl.framework.js.unityweb",
+codeUrl: buildUrl + "RedPackage_WebGl.wasm.unityweb",
 streamingAssetsUrl: "StreamingAssets",
 companyName: "ThrillGame",
 productName: "TreasureChest",

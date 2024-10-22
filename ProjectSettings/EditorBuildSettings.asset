@@ -14,10 +14,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/DM_Scenes/Lobby.unity
     guid: a3ff309ee2f8e4bdab9a9af9dd404342
-  - enabled: 1
+  - enabled: 0
     path: Assets/DM_Scenes/GamePool.unity
     guid: 8f8bebf67c0687f4e8924ea40212f79a
-  - enabled: 1
+  - enabled: 0
     path: Assets/DM_Scenes/Game.unity
     guid: 39831046dd24e446fb8329985aac13d3
   m_configObjects: {}
