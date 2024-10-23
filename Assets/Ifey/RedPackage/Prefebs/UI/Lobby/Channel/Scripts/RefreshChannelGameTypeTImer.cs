@@ -23,10 +23,11 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public GameObject packageItemParent; //pkgitem parent transfer
         public GameObject packageItemOri;    //One pkg item
         public Text title_Text;
-        private System.Timers.Timer timer;
-        public int interval = 60000; // 定时器间隔时间（单位：毫秒） fresh every 1 min
+        //private System.Timers.Timer timer;
+        public float refreshIntervalTime = 10;
+        float refreshTime = 0;
         private string freshUrl = "/app-api/red/channel/page";
-        bool ifNeedToRunRefresh = true;
+        //bool ifNeedToRunRefresh = true;
         List<PubGameChannel> packetSendRespVOList = new List<PubGameChannel>(); // pkg item list
         public List<ChannelRespVO> channelRespVOList = new List<ChannelRespVO>();
         public void addPacketSendRespVOList(PubGameChannel pubGameChannel)
@@ -51,10 +52,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         }
         void OnEnable()
         {
-            timer = new System.Timers.Timer(interval);
-            timer.Elapsed += OnTimerElapsed;
-            timer.AutoReset = true;
-            timer.Enabled = true;
+            //timer = new System.Timers.Timer(interval);
+            //timer.Elapsed += OnTimerElapsed;
+            //timer.AutoReset = true;
+            //timer.Enabled = true;
             title_Text.text = channelType.ToString();
 
             loopScroll.scrollEnterEvent= (realIndex, rowIndex, columnIndex, target) => 
@@ -76,25 +77,26 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             return null;
         }
 
-        private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // 在这里编写定时执行的任务
-            ifNeedToRunRefresh = true;
-        }
+        //private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
+        //{
+        //    // 在这里编写定时执行的任务
+        //    ifNeedToRunRefresh = true;
+        //}
         void OnDisable()
         {
-            if (timer != null)
-            {
-                timer.Stop();
-                timer.Dispose();
-                ifNeedToRunRefresh = false;
-                Debug.LogWarning("RefreshChannelGameTypeTImer On Disable");
-            }
+            //if (timer != null)
+            //{
+            //    timer.Stop();
+            //    timer.Dispose();
+            //    ifNeedToRunRefresh = false;
+            //    Debug.LogWarning("RefreshChannelGameTypeTImer On Disable");
+            //}
         }
 
         private void Update()
         {
-            if (ifNeedToRunRefresh)
+            refreshTime -= Time.deltaTime;
+            if (refreshTime<=0)
             {
                 refreshFromRequest();
             }
@@ -102,7 +104,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public void refreshFromRequest()
         {
             //Debug.Log("RefreshChannelGameTypeTImer定时器任务执行");
-            ifNeedToRunRefresh = false;
+            refreshTime = refreshIntervalTime;
             //string memberId = "";
             string pageNo = "1";
             string pageSize = "50";

@@ -19,10 +19,12 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
         public GameObject packageItemParent; //pkgitem parent transfer
         public GameObject packageItemOri;    //One pkg item
-        private System.Timers.Timer timer;
-        public int interval = 5000; // 定时器间隔时间（单位：毫秒）
+        //private System.Timers.Timer timer;
+
         private string freshUrl = "/app-api/red/packet-send/page";
-        bool ifNeedToRunRefresh = true;
+
+        public float refreshIntervalTime = 2;
+        float refreshTime = 0;
       
         List<PackageItem> packetSendRespVOList = new List<PackageItem>(); // pkg item list
 
@@ -73,10 +75,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         }
         void OnEnable()
         {
-            timer = new System.Timers.Timer(interval);
-            timer.Elapsed += OnTimerElapsed;
-            timer.AutoReset = true;
-            timer.Enabled = true;
+            //timer = new System.Timers.Timer(interval);
+            //timer.Elapsed += OnTimerElapsed;
+            //timer.AutoReset = true;
+            //timer.Enabled = true;
         }
         public PackageItem ifExitsPkgReturn(long id)
         {
@@ -90,33 +92,28 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             return null;
         }
 
-        private void OnTimerElapsed(object sender, System.Timers.ElapsedEventArgs e)
-        {
-            // 在这里编写定时执行的任务
-            ifNeedToRunRefresh = true;
-        }   
         void OnDisable()
         {
-            if (timer != null)
-            {
-                timer.Stop();
-                timer.Dispose();
-                ifNeedToRunRefresh = false;
-                Debug.Log("RefreshChannelTimer On Disable");
-            }
+            //if (timer != null)
+            //{
+            //    timer.Stop();
+            //    timer.Dispose();
+            //    Debug.Log("RefreshChannelTimer On Disable");
+            //}
         }
 
         private void Update()
         {
-            if (ifNeedToRunRefresh)
+            refreshTime -= Time.deltaTime;
+            if (refreshTime <= 0)
             {
                 refreshFromRequest();
             }
         }
         public void refreshFromRequest()
         {
+            refreshTime = refreshIntervalTime;
             Debug.Log("refreshFromRequest定时器任务执行");
-            ifNeedToRunRefresh = false;
             //string memberId = "";
             int pageNo = Mathf.FloorToInt((loopScroll.currentRow ) / loopScroll.itemCount);
 
@@ -158,11 +155,12 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                 }
 
                 ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>>>(result);
-                print(result);
                 if (source_Ctrl != null)
                 {
+                    bool isLengthChange = false;
                     if (rankObject.target == 0 && (source_Ctrl.PacketSendResp_List == null || source_Ctrl?.PacketSendResp_List.Length != responseData.data.total))
                     {
+                        isLengthChange = true;
                         rankObject.target++;
                         source_Ctrl.PacketSendResp_List = new PacketSendRespVO[responseData.data.total];
                     }
@@ -170,8 +168,9 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                     {
                         List<PacketSendRespVO> packetSendResp_List = new List<PacketSendRespVO>();
                         packetSendResp_List.AddRange(responseData.data.list);
-                        packetSendResp_List.Sort((item_0, item_1) => {
-                            if (item_0.redStatus==0&& !item_0.isGrabed)
+                        packetSendResp_List.Sort((item_0, item_1) =>
+                        {
+                            if (item_0.redStatus == 0 && !item_0.isGrabed && item_1.isGrabed)
                             {
                                 return -1;
                             }
@@ -180,12 +179,19 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
                         for (int i = 0; i < packetSendResp_List.Count; i++)
                         {
-                            if(((currentPage) * pageSize + i)< source_Ctrl.PacketSendResp_List.Length)
+                            if (((currentPage) * pageSize + i) < source_Ctrl.PacketSendResp_List.Length)
                             {
                                 source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = packetSendResp_List[i];
                             }
                         }
-                        source_Ctrl?.loopScroll?.Refresh(responseData.data.total);
+                        if (isLengthChange && false)
+                        {
+                            source_Ctrl?.loopScroll?.SetPosByIndex(0);
+                        }
+                        else
+                        {
+                            source_Ctrl?.loopScroll?.Refresh(responseData.data.total);
+                        }
                     }
                 }
                 // 实现 Success 方法的逻辑
