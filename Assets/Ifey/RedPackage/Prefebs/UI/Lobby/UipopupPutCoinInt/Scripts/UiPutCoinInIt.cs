@@ -83,7 +83,7 @@ public class UiPutCoinInIt : Popup
         }
         ,() =>
         {
-            waitMask_Ui?.ShowResultCase("Fail", 1);
+            waitMask_Ui?.ShowResultCase("Fail", 0);
         });
     }
 }
@@ -117,6 +117,7 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
             }
             else if (code == 1022001001)
             {
+                
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", json["msg"].Value<string>());
                 Debug.Log("submitPutCoinInItHttpCallBack "+ json["msg"].Value<string>());
                 return;

@@ -79,11 +79,11 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         {
             case DirectionType.Up:
             case DirectionType.Down:
-                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.y) / (spacing.y + item_Prefab.sizeDelta.y))) + 1;
+                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.y) / (spacing.y + item_Prefab.sizeDelta.y))) + 2;
                 break;
             case DirectionType.Left:
             case DirectionType.Right:
-                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.x) / (spacing.y + item_Prefab.sizeDelta.x))) + 1;
+                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.x) / (spacing.y + item_Prefab.sizeDelta.x))) + 2;
                 break;
         }
         int rowCount=  Mathf.CeilToInt(count / (float)column) ;
