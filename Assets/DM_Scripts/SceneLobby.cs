@@ -66,12 +66,13 @@ public class SceneLobby : SceneClass
 
 	private void Start()
 	{
-		//base.Start();
+        UserManager.Instance.GetUserMainInfo();
+        //base.Start();
 
-		//Debug.Log("CURREN LEVEL " + MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo);
+        //Debug.Log("CURREN LEVEL " + MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo);
 
-		//ObjNoAdsButton.SetActive(value: true);
-		SetLevelBallScrollView(fullScreen: false);
+        //ObjNoAdsButton.SetActive(value: true);
+        SetLevelBallScrollView(fullScreen: false);
         EventManager.Instance.Regist(typeof(UiCreateChannelPanel).ToString(), this.GetInstanceID(), (objects) => {
 			string sign = (string)objects[0];
 			switch (sign)

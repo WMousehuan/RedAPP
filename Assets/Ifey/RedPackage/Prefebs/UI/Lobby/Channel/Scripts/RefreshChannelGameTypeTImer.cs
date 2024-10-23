@@ -95,6 +95,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
         private void Update()
         {
+            if (UserManager.Instance.appMemberUserInfoRespVO == null)
+            {
+                return;
+            }
             refreshTime -= Time.deltaTime;
             if (refreshTime<=0)
             {

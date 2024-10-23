@@ -117,6 +117,7 @@ public class PopupSetting : Popup
         //Debug.Log("QUIT");
         SoundSFX.Play(SFXIndex.ButtonClick);
         PlayerPrefs.DeleteAll();
+        UserManager.Instance.appMemberUserInfoRespVO = null;
 #if UNITY_EDITOR             
         MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
 #elif PLATFORM_ANDROID
