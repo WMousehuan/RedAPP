@@ -48,7 +48,9 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
         }
         set
         {
+
             PlayerPrefs.SetFloat(userBalanceKey, value);
+            EventManager.Instance.DispatchEvent(GameType.CoinUpdate.ToString(), this.GetInstanceID());
         }
     }
 

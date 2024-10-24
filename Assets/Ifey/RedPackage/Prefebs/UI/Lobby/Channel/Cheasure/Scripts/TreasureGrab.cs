@@ -66,6 +66,7 @@ public class TreasureGrabRespond : HttpInterface
     public FailPubDo failPubDo = new FailPubDo();
     TreasureGrab source_Ctrl;
     UiWaitMask uiWaitMask;
+    float AmountOffset = 0;
     // 构造方法
     public TreasureGrabRespond(TreasureGrab treasureGrab, UiWaitMask uiWaitMask)
     {
@@ -89,22 +90,26 @@ public class TreasureGrabRespond : HttpInterface
         source_Ctrl.packageItem.SetPacketSendRespVOInfo(source_Ctrl.packageItem.packetSendRespVO);
         //显示明细
         Transform parent = this.source_Ctrl.transform.parent;
-        Debug.Log(responseData.data.CompensateAmount + "===========================");
         if (responseData.data.CompensateAmount == null || responseData.data.CompensateAmount == 0)
         {
+            AmountOffset += (float)responseData.data.GetAmount.Value;
             UIManager.Instance.ShowGetCoinEffect(parent, new Vector2(0f, 100f), EffectFinishEvent, 10); //show coin effect
         }
         else
         {
+            AmountOffset += ((float)responseData.data.GetAmount.Value + (float)responseData.data.CompensateAmount.Value);
             UIManager.Instance.ShowBomb(parent, EffectFinishEvent);
         }
-    
+        
+
+
     }
     void EffectFinishEvent()
     {
         PopupManager.Instance.CloseAllPopup();
         source_Ctrl.packageItem.OpenPackageDetailResultClick();
-        MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+        RedPackageAuthor.Instance.userBalance += (AmountOffset);
+        //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
     }
     public void Fail(JObject json)
     {
