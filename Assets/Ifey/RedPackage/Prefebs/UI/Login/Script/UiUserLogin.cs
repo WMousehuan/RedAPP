@@ -13,6 +13,11 @@ public class UiUserLogin : Popup
     public TMP_InputField loginPsd;
     [HideInInspector]
     string loginUrl = "/app-api/member/auth/login/username";
+    public override void Start()
+    {
+        base.Start();
+        uerId.text = UserManager.tempUserId;
+    }
     public void openSignUp()
     {
         MonoSingleton<PopupManager>.Instance.CloseAllPopup();
@@ -23,6 +28,7 @@ public class UiUserLogin : Popup
     {
         try
         {
+
             AppAuthUsernameLoginReqVO appAuthUsernameLoginReqVO = new AppAuthUsernameLoginReqVO();
             appAuthUsernameLoginReqVO.username = uerId.text;
             appAuthUsernameLoginReqVO.password = loginPsd.text;
@@ -36,8 +42,13 @@ public class UiUserLogin : Popup
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "The minimum length of the username is 4 digits");
                 return;
             }
+            UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
             //when start the game,get the userInfo
-            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(loginUrl, appAuthUsernameLoginReqVO, new UserLoginInterface());
+            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(loginUrl, appAuthUsernameLoginReqVO, new UserLoginInterface(), (resultData) => {
+                waitMask_Ui?.ShowResultCase("Success", 0);
+            }, () => {
+                waitMask_Ui?.ShowResultCase("fail", 0);
+            });
         }
         catch (Exception e)
         {
