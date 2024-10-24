@@ -46,23 +46,19 @@ public class Ui_UserInformation : Popup
         
         RefreshUserInformation();
         OnEventSwitchSetNameState(false);
-        EventManager.Instance.Regist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID(), (objects) =>
+        EventManager.Instance.Regist(GameType.GetUserData.ToString(), this.GetInstanceID(), (objects) =>
         {
-            string sign = (string)objects[0];
-            switch (sign)
-            {
-                case "GetAvatar":
-                    RefreshUserInformation();
-                    break;
-                case "UpdateData":
-                    RefreshUserInformation();
-                    break;
-            }
+            RefreshUserInformation();
+        });
+        EventManager.Instance.Regist(GameType.GetUserAvatar.ToString(), this.GetInstanceID(), (objects) =>
+        {
+            RefreshUserInformation();
         });
     }
     private void OnDestroy()
     {
-        EventManager.Instance?.UnRegist(typeof(GetUserInfoInterface).ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameType.GetUserData.ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameType.GetUserAvatar.ToString(), this.GetInstanceID());
     }
     public void RefreshUserInformation()
     {

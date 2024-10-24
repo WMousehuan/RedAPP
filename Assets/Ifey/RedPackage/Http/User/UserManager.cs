@@ -26,7 +26,7 @@ public class UserManager : MonoSingleton<UserManager>
         set
         {
             _currentAvatar_Texture = value;
-            EventManager.Instance.DispatchEvent(typeof(GetUserInfoInterface).ToString(), "GetAvatar");
+            EventManager.Instance.DispatchEvent(GameType.GetUserAvatar.ToString());
         }
     }
     [HideInInspector]
@@ -84,7 +84,7 @@ public class GetUserInfoInterface : HttpInterface
         // 实现 Success 方法的逻辑
         RedPackageAuthor.Instance.userBalance = responseData.data.balance;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;
-        EventManager.Instance.DispatchEvent(typeof(GetUserInfoInterface).ToString(), "UpdateData");
+        EventManager.Instance.DispatchEvent(GameType.GetUserData.ToString());
         Debug.Log("Success Get User info!");
     }
 

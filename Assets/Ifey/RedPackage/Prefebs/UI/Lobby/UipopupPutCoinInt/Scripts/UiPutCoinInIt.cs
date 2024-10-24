@@ -77,7 +77,7 @@ public class UiPutCoinInIt : Popup
         appPacketSendSaveReqVO.thunderNo = (int)bombNumberCheckBox.id;
         Debug.Log("submit sendCoinPkg=" + appPacketSendSaveReqVO.ToString());
         UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
-        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sendRedPacketUrl, appPacketSendSaveReqVO, new submitPutCoinInItHttpCallBack(), (resultData) =>
+        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sendRedPacketUrl, appPacketSendSaveReqVO, new submitPutCoinInItHttpCallBack(appPacketSendSaveReqVO.redAmount), (resultData) =>
         {
             waitMask_Ui?.ShowResultCase("Success", 1);
         }
@@ -91,11 +91,17 @@ public class UiPutCoinInIt : Popup
 public class submitPutCoinInItHttpCallBack : HttpInterface
 {
     public FailPubDo failPubDo = new FailPubDo();
+    public double payAmount = 0;
+    public submitPutCoinInItHttpCallBack(float payAmount)
+    {
+        this.payAmount = payAmount;
+    }
     public void Success(string result)
     {
         Debug.Log("submitPutCoinInItHttpCallBack Success");
         MonoSingleton<PopupManager>.Instance.CloseAllPopup();
-        MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+        RedPackageAuthor.Instance.userBalance -= (float)payAmount;
+        //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
         MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Lobby, SceneChangeEffect.Color);
         SoundSFX.Play(SFXIndex.DailyBonusGet);
         MonoSingleton<UIOverlayEffectManager>.Instance.ShowEffectRibbonFireworks();

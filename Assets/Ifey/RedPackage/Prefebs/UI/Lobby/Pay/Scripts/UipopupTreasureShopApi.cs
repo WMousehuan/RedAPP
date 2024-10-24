@@ -12,7 +12,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
     [HideInInspector]
     string createOrderApi = "/app-api/red/cash-recharge/create";
 
-    public void BuyCoinHttp(double coinNumber)
+    public void BuyCoinHttp(double coinNumber, double rewardAmount)
     {
         try
         {
@@ -20,7 +20,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
             AppCashRechargeSaveReqVO appCashRechargeSaveReqVO = new AppCashRechargeSaveReqVO();
             appCashRechargeSaveReqVO.optCash = coinNumber;
             //when start the game,get the userInfo
-            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(createOrderApi, appCashRechargeSaveReqVO, new UipopupTreasureShopApiRespond(this));
+            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(createOrderApi, appCashRechargeSaveReqVO, new UipopupTreasureShopApiRespond(this, coinNumber + rewardAmount));
         }
         catch (Exception e)
         {
@@ -28,10 +28,10 @@ public class UipopupTreasureShopApi : MonoBehaviour
             // Handle the exception, for example display an error message or log the exception
         }
     }
-    public void MakeBuyProductThrillGame(double indexProduct)
+    public void MakeBuyProductThrillGame(double indexProduct,double rewardAmount)
     {
 
-        BuyCoinHttp(indexProduct);
+        BuyCoinHttp(indexProduct, rewardAmount);
 
     }
 }
@@ -42,10 +42,12 @@ public class UipopupTreasureShopApiRespond : HttpInterface
 {
     public FailPubDo failPubDo = new FailPubDo();
     UipopupTreasureShopApi source_Ctrl;
+    double value = 0;
     // 构造方法
-    public UipopupTreasureShopApiRespond(UipopupTreasureShopApi uipopupTreasureShopApi)
+    public UipopupTreasureShopApiRespond(UipopupTreasureShopApi uipopupTreasureShopApi, double value)
     {
         this.source_Ctrl = uipopupTreasureShopApi;
+        this.value = value;
     }
     public void Success(string result)
     {
@@ -65,7 +67,8 @@ public class UipopupTreasureShopApiRespond : HttpInterface
     }
     void Coins()
     {
-        MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+        RedPackageAuthor.Instance.userBalance += (float)value;
+        //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
     }
 
     public void Fail(JObject json)

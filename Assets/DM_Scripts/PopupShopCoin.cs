@@ -114,14 +114,14 @@ public class PopupShopCoin : Popup
             banner_Image.sprite = banner_Sprite;
             goods_Case.transform.GetChild<Text>("Banner_Text").text = banner_Text;
             goods_Case.transform.GetChild<Button>("Buy_Button").onClick.AddListener(() => {
-                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopData.rechargeAmount);
+                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopData.rechargeAmount, coinShopData.awardAmount);
             });
             goods_Case.transform.GetChild<Text>("Buy_Button/Text").text = "$" + coinShopData.rechargeAmount.ToString();
             goods_Case.transform.GetChild<Text>("Price_Text").text = coinShopData.rechargeAmount.ToString() + "+" + coinShopData.awardAmount.ToString();
             Button button = target.transform.GetChild<Button>("Buy_Button");
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => {
-                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopDataVOs[realIndex].rechargeAmount);
+                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopDataVOs[realIndex].rechargeAmount, coinShopData.awardAmount);
             });
         };
         loopScroll_Ctrl.Init(0,0);

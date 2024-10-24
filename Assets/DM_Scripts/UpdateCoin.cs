@@ -8,14 +8,20 @@ public class UpdateCoin : MonoBehaviour
 	private void Start()
 	{
 		text = GetComponent<Text>();
+		EventManager.Instance.Regist(GameType.CoinUpdate.ToString(), this.GetInstanceID(), (objects) => {
+            text.text = RedPackageAuthor.Instance.userBalance.ToString();
+        });
 	}
-
-	private void LateUpdate()
+    private void OnDestroy()
+    {
+		EventManager.Instance.UnRegist(GameType.CoinUpdate.ToString(), this.GetInstanceID());
+    }
+    private void LateUpdate()
 	{
-		if ((bool)text && !UIManager.holdOnUpdateCoin)
-		{
-			text.text = RedPackageAuthor.Instance.userBalance.ToString();// Utils.GetCurrencyNumberString(MonoSingleton<PlayerDataManager>.Instance.Coin);
-            //text.text =  Utils.GetCurrencyNumberString(MonoSingleton<PlayerDataManager>.Instance.Coin);
-        }
+		//if ((bool)text && !UIManager.holdOnUpdateCoin)
+		//{
+		//	text.text = RedPackageAuthor.Instance.userBalance.ToString();// Utils.GetCurrencyNumberString(MonoSingleton<PlayerDataManager>.Instance.Coin);
+  //          //text.text =  Utils.GetCurrencyNumberString(MonoSingleton<PlayerDataManager>.Instance.Coin);
+  //      }
 	}
 }
