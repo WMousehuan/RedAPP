@@ -153,11 +153,11 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void Update()
 	{
-		//if (Input.GetKeyDown(KeyCode.A))
-		//{
-		//	ShowBomb(PopupManager.Instance.ParentPopupGroup);
+        //if (Input.GetKeyDown(KeyCode.A))
+        //{
+        //    ShowBomb(PopupManager.Instance.ParentPopupGroup);
 
-  //      }
+        //}
         if (Application.platform != RuntimePlatform.Android || !Input.GetKeyUp(KeyCode.Escape) || IsModalLoading)
 		{
 			return;

@@ -289,8 +289,4 @@ public class Popup : MonoBehaviour
 		popupLayout.posAndScale = posAndScale;
 		layouts.Add(popupLayout);
 	}
-    private void OnDestroy()
-    {
-		print(this.name);
-    }
 }

@@ -104,7 +104,7 @@ public class TreasureGrabRespond : HttpInterface
     {
         PopupManager.Instance.CloseAllPopup();
         source_Ctrl.packageItem.OpenPackageDetailResultClick();
-        //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+        MonoSingleton<UserManager>.Instance.GetUserMainInfo();
     }
     public void Fail(JObject json)
     {
