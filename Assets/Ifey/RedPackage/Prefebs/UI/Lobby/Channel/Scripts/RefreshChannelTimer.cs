@@ -5,6 +5,7 @@ using UnityEngine;
 using static UIServer;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 {
@@ -25,10 +26,11 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
         public float refreshIntervalTime = 2;
         float refreshTime = 0;
-      
+        public int total = 0;
+        //List<PackageItem> realPacketSendRespVOList = new List<PackageItem>(); // pkg item list
         List<PackageItem> packetSendRespVOList = new List<PackageItem>(); // pkg item list
-
-        public PacketSendRespVO[] PacketSendResp_List = null;
+        public List<PacketSendRespVO> packetSendResp_List = new List<PacketSendRespVO>();
+        public List<PacketSendRespVO> packetSendResp_List_1 = new List<PacketSendRespVO>();
         private void Start()
         {
             EventManager.Instance.Regist(typeof(submitPutCoinInItHttpCallBack).ToString(), this.GetInstanceID(), (objects) => {
@@ -43,10 +45,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
             loopScroll.scrollEnterEvent = (realIndex, rowIndex, cloumIndex, target) =>
             {
-                if (realIndex >= 0 && PacketSendResp_List != null && realIndex < PacketSendResp_List.Length)
+                if (realIndex >= 0 && packetSendResp_List_1 != null && realIndex < packetSendResp_List_1.Count)
                 {
                     PackageItem packageItem = target.GetComponent<PackageItem>();
-                    packageItem.SetPacketSendRespVOInfo(PacketSendResp_List[realIndex]);
+                    packageItem.SetPacketSendRespVOInfo(packetSendResp_List_1[realIndex]);
                 }
             };
             loopScroll.Init(0, 0);
@@ -113,22 +115,60 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public void refreshFromRequest()
         {
             refreshTime = refreshIntervalTime;
-            Debug.Log("refreshFromRequest定时器任务执行");
+            //Debug.Log("refreshFromRequest定时器任务执行");
             //string memberId = "";
             int pageNo = Mathf.FloorToInt((loopScroll.currentRow ) / loopScroll.itemCount);
 
             int pageSize = loopScroll.itemCount;
             ObjectPack<int> valuaPack = new ObjectPack<int>("", 0);
+            System.Action<string> successAction = (resultData) => {
+                if (valuaPack.target <= 0)
+                {
+                    return;
+                }
+                packetSendResp_List_1 = new List<PacketSendRespVO>();
+                packetSendResp_List_1.AddRange(packetSendResp_List.ToArray());
+                int insertIndex = 0;
+                for (; insertIndex < packetSendResp_List_1.Count; insertIndex++)
+                {
+                    //print(packetSendResp_List_1[insertIndex].id == 2850);
+                    if (packetSendResp_List_1[insertIndex] == null || packetSendResp_List_1[insertIndex].redStatus != 0)
+                    {
+                        break;
+                    }
+                }
+                if (insertIndex > 1)
+                {
+                    int offset = 1;
+                    for (int i = Mathf.Min(50, Mathf.Clamp(insertIndex,0, packetSendResp_List_1.Count-1)); i >= 0; i--)
+                    {
+                        if (packetSendResp_List_1[i] == null)
+                        {
+                            continue;
+                        }
+
+                        if (packetSendResp_List_1[i].redStatus == 0 && packetSendResp_List_1[i].isGrabed)
+                        {
+                            PacketSendRespVO packetSendRespVO = packetSendResp_List_1[i];
+                            packetSendResp_List_1.RemoveAt(i);
+                            packetSendResp_List_1.Insert(insertIndex - offset, packetSendRespVO);
+                            offset++;
+                        }
+                    }
+                }
+
+                loopScroll?.Refresh(total);
+            };
             if (pageNo >= 0)
             {
                 string paramsUrl_0 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo + 1, pageSize);
-                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_0, new RefreshChannelRespond(this, pageNo, pageSize, valuaPack));
+                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_0, new RefreshChannelRespond(this, pageNo, pageSize, valuaPack), successAction);
             }
             int pageNo_1 = pageNo + 1;
             if (pageNo_1 >= 0)
             {
                 string paramsUrl_1 = freshUrl + string.Format("?channelId={0}&pageNo={1}&pageSize={2}", PlayerTreasureGameData.Instance.entranceChannelId, pageNo_1 + 1, pageSize);
-                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_1, new RefreshChannelRespond(this, pageNo_1, pageSize, valuaPack));
+                UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(paramsUrl_1, new RefreshChannelRespond(this, pageNo_1, pageSize, valuaPack), successAction);
             }
 
         }
@@ -153,53 +193,46 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
                 {
                     return;
                 }
-
                 ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PacketSendRespVO>>>(result);
-                if (source_Ctrl != null)
-                {
-                    bool isLengthChange = false;
-                    if (rankObject.target == 0 && (source_Ctrl.PacketSendResp_List == null || source_Ctrl?.PacketSendResp_List.Length != responseData.data.total))
-                    {
-                        isLengthChange = true;
-                        rankObject.target++;
-                        source_Ctrl.PacketSendResp_List = new PacketSendRespVO[responseData.data.total];
-                    }
-                    if (responseData.data.list.Length > 0)
-                    {
-                        List<PacketSendRespVO> packetSendResp_List = new List<PacketSendRespVO>();
-                        packetSendResp_List.AddRange(responseData.data.list);
-                        packetSendResp_List.Sort((item_0, item_1) =>
-                        {
-                            if (item_0.redStatus == 0 && !item_0.isGrabed && item_1.isGrabed)
-                            {
-                                return -1;
-                            }
-                            return 0;
-                        });
 
-                        for (int i = 0; i < packetSendResp_List.Count; i++)
+                if (rankObject.target == 0 && (source_Ctrl.packetSendResp_List == null || source_Ctrl?.packetSendResp_List.Count != responseData.data.total))
+                {
+                    source_Ctrl.total = responseData.data.total;
+
+                    source_Ctrl.packetSendResp_List.AddRange(new PacketSendRespVO[responseData.data.total]);
+                }
+                rankObject.target++;
+                if (responseData.data.list.Length > 0)
+                {
+
+                    //List<PacketSendRespVO> packetSendResp_List = new List<PacketSendRespVO>();
+                    //packetSendResp_List.AddRange(responseData.data.list);
+                    //packetSendResp_List.Sort((item_0, item_1) =>
+                    //{
+                    //    if (item_0.redStatus == 0 && !item_0.isGrabed && item_1.isGrabed)
+                    //    {
+                    //        return -1;
+                    //    }
+                    //    return 0;
+                    //});
+
+                    for (int i = 0; i < responseData.data.list.Length; i++)
+                    {
+                        if (((currentPage) * pageSize + i) < source_Ctrl.packetSendResp_List.Count)
                         {
-                            if (((currentPage) * pageSize + i) < source_Ctrl.PacketSendResp_List.Length)
-                            {
-                                source_Ctrl.PacketSendResp_List[((currentPage) * pageSize + i)] = packetSendResp_List[i];
-                            }
-                        }
-                        if (isLengthChange && false)
-                        {
-                            source_Ctrl?.loopScroll?.SetPosByIndex(0);
-                        }
-                        else
-                        {
-                            source_Ctrl?.loopScroll?.Refresh(responseData.data.total);
+                            source_Ctrl.packetSendResp_List[((currentPage) * pageSize + i)] = responseData.data.list[i];
                         }
                     }
+
+
+
                 }
-                // 实现 Success 方法的逻辑
-                Debug.Log("Success RefreshChannelRespond!And now create pkg item!count=" + responseData.data.list.Length);
+                //Debug.Log("Success RefreshChannelRespond!And now create pkg item!count=" + responseData.data.list.Length);
             }
 
             public void Fail(JObject json)
             {
+                rankObject.target += 1;
                 if (!failPubDo.failPubdo(json))
                 {
                     MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "RefreshChannelRespond Fail!");
@@ -209,6 +242,7 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 
             public void UnknowError(string errorMsg)
             {
+                rankObject.target += 1;
                 Debug.LogError("RefreshChannelRespond" + errorMsg);
             }
         }

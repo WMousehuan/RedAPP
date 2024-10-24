@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using static RedPackageAuthor;
@@ -37,7 +38,7 @@ public class UserManager : MonoSingleton<UserManager>
     }
     public void GetUserMainInfo()
     {
-       
+
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo

@@ -25,7 +25,7 @@ public class PackageItem : MonoBehaviour
     public Text getIt_Text;
     public Button currentButton;
     public Text me_Text;
-
+    public Text id_Text;
     private void Update()
     {
         if (getIt_Text && getIt_Text.gameObject.activeSelf)
@@ -100,7 +100,11 @@ public class PackageItem : MonoBehaviour
             backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
             setBackground(1);
             this.transform.GetChild("Fx_Star").gameObject?.SetActive(false);
-            //setBackground(0);
+            if (id_Text != null)
+            {
+                id_Text.text = "";
+            }
+  
             return;
         }
         if (currentButton != null)
@@ -138,8 +142,11 @@ public class PackageItem : MonoBehaviour
             backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
             setBackground(1);
         }
-        
-       
+        if (id_Text != null)
+        {
+            id_Text.text = packetSendRespVO.id.ToString() ;
+        }
+
         setHammerVisi();
     }
 

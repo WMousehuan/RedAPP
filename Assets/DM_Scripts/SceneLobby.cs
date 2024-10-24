@@ -66,7 +66,7 @@ public class SceneLobby : SceneClass
 
 	private void Start()
 	{
-        UserManager.Instance.GetUserMainInfo();
+        //UserManager.Instance.GetUserMainInfo();
         //base.Start();
 
         //Debug.Log("CURREN LEVEL " + MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo);
@@ -205,6 +205,10 @@ public class SceneLobby : SceneClass
 			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
 			{
                 MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+            }
+			else
+			{
+				PopupManager.Instance.Open(PopupType.PopupLogin);
             }
         }
     }

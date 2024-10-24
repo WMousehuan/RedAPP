@@ -216,7 +216,6 @@ public class PopupManager : MonoSingleton<PopupManager>
             Popup popup = listOpenedPopupObject[listOpenedPopupObject.Count - 1];
             if (popup!=null)
             {
-				print(popup);
                 popup.gameObject.SetActive(value: true);
                 CurrentPopupType = popup.m_PopupType;
                 this.CurrentPopup = popup;
@@ -230,8 +229,6 @@ public class PopupManager : MonoSingleton<PopupManager>
                 {
                     DisableBackCloseEvent();
                 }
-  
-				print(CurrentPopup);
                 return;
             }
 		
