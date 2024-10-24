@@ -310,7 +310,6 @@ namespace Gley.EasyIAP.Internal
 
             if (IsInitialized())
             {
-                
                 Product product = m_StoreController.products.WithID(productId);
                 if (product != null && product.availableToPurchase)
                 {
