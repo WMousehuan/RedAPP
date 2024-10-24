@@ -370,7 +370,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: df23bce63b344bd888731fc684868388, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d734d4e309c040f1847208eaf83780ed, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1470,8 +1470,7 @@ MonoBehaviour:
     obj: {fileID: 0}
   DisableBackKey: 0
   buttonHome: {fileID: 9122542710385555742}
-  buttonOut: {fileID: 9122542710385555725}
-  buttonQuit: {fileID: 1602975202135433739}
+  buttonQuit: {fileID: 9122542710385555725}
   ObjGroupOption: {fileID: 9122542710385555761}
   ToggleSoundBGMButton: {fileID: 9122542710385549930}
   ToggleSoundEffectButton: {fileID: 9122542710385549921}

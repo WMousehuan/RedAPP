@@ -11,14 +11,16 @@ public class AdManager : MonoBehaviour
 
     private void Start()
     {
-       // API.Initialize(OnInitialized);
+#if PLATFORM_ANDROID
+        APIMobileAds.Initialize(OnInitialized);
+#endif
 
     }
 
     private void OnInitialized()
     {
         APIMobileAds.ShowBanner(BannerPosition.Bottom, BannerType.Adaptive);
-
+        APIMobileAds.ShowBuiltInConsentPopup(() => { });
         if (!APIMobileAds.GDPRConsentWasSet())
         {
             APIMobileAds.ShowBuiltInConsentPopup(PopupCloseds);

@@ -21,9 +21,8 @@ public class UiUserAmountDetails : Popup
         Refund,//ÕÀøÓ
         Withdrawal,//Ã·œ÷
         Give,//‘˘ÀÕ
-        CompensateAward,//≈‚∏∂Ω±¿¯
     }
-    private string url = "/app-api/member/account-statement/page";
+    string url = "/app-api/member/account-statement/page";
 
     public Dropdown amountStateGroup_Dropdown;
     public GridLoopScroll_Ctrl amountDetail_LoopScroll;
@@ -35,8 +34,6 @@ public class UiUserAmountDetails : Popup
     public HashSet<int> loadedPageIndex_HashSet = new HashSet<int>();
     public List<AmountDetailVO> amountDetail_List = new List<AmountDetailVO>();
 
-    public ObjectGroup<AmountStateType, string> amountStateContents;
-
     public AmountStateType currentAmountStateType = AmountStateType.All;
 
     public override void Start()
@@ -45,7 +42,7 @@ public class UiUserAmountDetails : Popup
         amountStateGroup_Dropdown.options.Clear();
         foreach(string amountStateType in Enum.GetNames(typeof(AmountStateType)))
         {
-            amountStateGroup_Dropdown.options.Add(new Dropdown.OptionData((amountStateContents.ContainsKey(Enum.Parse<AmountStateType>(amountStateType)) ? amountStateContents[Enum.Parse<AmountStateType>(amountStateType)].ToString() : "")));
+            amountStateGroup_Dropdown.options.Add(new Dropdown.OptionData(amountStateType));
         }
         
     }
@@ -72,8 +69,7 @@ public class UiUserAmountDetails : Popup
                 double amount = amountDetail_List[realIndex].Amount;
                 target.transform.GetChild<Text>("DealAmount_Text").text = (amount > 0 ? "+" : "") + amountDetail_List[realIndex].Amount.ToString();
                 target.transform.GetChild<TMP_Text>("DealID_Text").text = "No." + amountDetail_List[realIndex].Id.ToString();
-                AmountStateType currentAmountStateType = ((AmountStateType)(amountDetail_List[realIndex].TradeType + 1));
-                target.transform.GetChild<TMP_Text>("DealState_Text").text = amountStateContents.ContainsKey(currentAmountStateType) ? amountStateContents[currentAmountStateType].ToString():"";
+                target.transform.GetChild<TMP_Text>("DealState_Text").text = ((AmountStateType)(amountDetail_List[realIndex].TradeType + 1)).ToString();
             }
         };
 
@@ -123,25 +119,21 @@ public class UiUserAmountDetails : Popup
 }
 public class GetUserAmountDetailInterface : HttpInterface
 {
-    UiUserAmountDetails source_Ctrl;
+    UiUserAmountDetails userAmountDetails;
     public GetUserAmountDetailInterface(UiUserAmountDetails source)
     {
-        source_Ctrl = source;
+        userAmountDetails = source;
     }
     public void Success(string result)
     {
-        if (source_Ctrl == null)
-        {
-            return;
-        }
         ReturnData<PageResultPacketSendRespVO<AmountDetailVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<AmountDetailVO>>>(result);
 
         if (responseData.data.list.Length > 0)
         {
-            source_Ctrl?.amountDetail_List?.AddRange(responseData.data.list);
-            source_Ctrl?.amountDetail_LoopScroll?.Refresh(source_Ctrl.amountDetail_List.Count);
+            userAmountDetails.amountDetail_List.AddRange(responseData.data.list);
+            userAmountDetails.amountDetail_LoopScroll.Refresh(userAmountDetails.amountDetail_List.Count);
         }
-        //Debug.Log("Success GetUserAmountDetail!");
+        Debug.Log("Success GetUserAmountDetail!");
     }
 
     public void Fail(JObject json)

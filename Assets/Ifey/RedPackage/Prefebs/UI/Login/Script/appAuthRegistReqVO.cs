@@ -9,6 +9,4 @@ public class AppAuthRegistReqVO
     public string nickname { get; set; }
     public string password { get; set; }
     public string payPassword { get; set; }
-
-    public string encryptSuperiorId { get; set; }
 }

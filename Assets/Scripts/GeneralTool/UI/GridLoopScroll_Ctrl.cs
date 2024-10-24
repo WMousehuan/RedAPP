@@ -50,14 +50,11 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     public int maxIndex = 0;
 
     public System.Action scrollOverBottomAction;
-    /// <summary>
-    /// realIndex, rowIndex, columnIndex, target
-    /// </summary>
+
     public System.Action<int, int, int, RectTransform> scrollEnterEvent;
     public System.Action<int, int, int, RectTransform> scrollExitEvent;
     public List<Int2> activeIndexs = new List<Int2>();
     public List<int> realIndex = new List<int>();
-    public float overedOffset = 20;
     public bool isOvered = false;
     private void Awake()
     {
@@ -71,7 +68,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         Init(15, 0);
     }
 
-    public void Init(int count, int currentRow,System.Action<Transform,int> itemAction=null)
+    public void Init(int count, int currentRow,System.Action<Transform> itemAction=null)
     {
         item_Prefab.gameObject.SetActive(false);
         this.count = count;
@@ -79,11 +76,11 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         {
             case DirectionType.Up:
             case DirectionType.Down:
-                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.y) / (spacing.y + item_Prefab.sizeDelta.y))) + 2;
+                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.y) / (spacing.y + item_Prefab.sizeDelta.y))) + 1;
                 break;
             case DirectionType.Left:
             case DirectionType.Right:
-                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.x) / (spacing.y + item_Prefab.sizeDelta.x))) + 2;
+                viewRowCount = Mathf.CeilToInt(((scrollRect.viewport.rect.size.x) / (spacing.y + item_Prefab.sizeDelta.x))) + 1;
                 break;
         }
         int rowCount=  Mathf.CeilToInt(count / (float)column) ;
@@ -114,7 +111,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 items.Add(item);
                 item.gameObject.SetActive(true);
-                itemAction?.Invoke(item,index);
+                itemAction?.Invoke(item);
             }
             else
             {
@@ -127,11 +124,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     }
     public void Refresh(int count)
     {
-        if (item_Prefab != null)
-        {
-            item_Prefab?.gameObject?.SetActive(false);
-        }
-
+        item_Prefab.gameObject.SetActive(false);
         this.count = count;
         int rowCount = Mathf.CeilToInt(count / (float)column);
         SetContentSizeByItemCount(rowCount);
@@ -158,10 +151,6 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     }
     public void SetContentSizeByItemCount(int itemCount)
     {
-        if (item_Prefab == null)
-        {
-            return;
-        }
         float itemSize = 0;
         switch (directionType)
         {
@@ -179,11 +168,11 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         {
             case DirectionType.Up:
             case DirectionType.Down:
-                scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, Mathf.Clamp(offset.top + offset.bottom + itemSize * itemCount,scrollRect.viewport.rect.size.y,float.MaxValue));
+                scrollRect.content.sizeDelta = new Vector2(scrollRect.content.sizeDelta.x, offset.top + offset.bottom + itemSize* itemCount);
                 break;
             case DirectionType.Left:
             case DirectionType.Right:
-                scrollRect.content.sizeDelta = new Vector2(Mathf.Clamp(offset.left + offset.right + itemSize * itemCount, scrollRect.viewport.rect.size.x, float.MaxValue) , scrollRect.content.sizeDelta.y);
+                scrollRect.content.sizeDelta = new Vector2(offset.left + offset.right + itemSize * itemCount , scrollRect.content.sizeDelta.y);
                 break;
         }
     }
@@ -292,10 +281,10 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
             }
         }
 
-        switch (directionType)
+        switch (directionType) 
         {
             case DirectionType.Up:
-                if ((scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y - overedOffset) > -scrollRect.viewport.rect.size.y)
+                if ((scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y) > -scrollRect.viewport.rect.size.y)
                 {
                     if (!isOvered)
                     {
@@ -309,7 +298,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 break;
             case DirectionType.Down:
-                if ((-scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y - overedOffset) > scrollRect.viewport.rect.size.y)
+                if ((-scrollRect.content.anchoredPosition3D.y - scrollRect.content.rect.size.y) > scrollRect.viewport.rect.size.y)
                 {
                     if (!isOvered)
                     {
@@ -323,7 +312,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 break;
             case DirectionType.Left:
-                if ((-scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x - overedOffset) > scrollRect.viewport.rect.size.x)
+                if ((-scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x) > scrollRect.viewport.rect.size.x)
                 {
                     if (!isOvered)
                     {
@@ -333,12 +322,12 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 }
                 else
                 {
-
+                  
                     isOvered = false;
                 }
                 break;
             case DirectionType.Right:
-                if ((scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x - overedOffset) > -scrollRect.viewport.rect.size.x)
+                if ((scrollRect.content.anchoredPosition3D.x - scrollRect.content.rect.size.x) > -scrollRect.viewport.rect.size.x)
                 {
                     if (!isOvered)
                     {

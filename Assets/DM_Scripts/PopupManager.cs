@@ -27,7 +27,6 @@ public class PopupManager : MonoSingleton<PopupManager>
 
 	public Popup CurrentPopup;
 
-	public CanvasScaler canvasScaler;
 	public Camera PopupCamera;
 
 	public GameObject ObjBackBlocking;
@@ -55,17 +54,15 @@ public class PopupManager : MonoSingleton<PopupManager>
 	private void Start()
 	{
 		ObjBackBlocking.SetActive(value: false);
-    }
+	}
 
-    private void Update()
-    {
-        canvasScaler.matchWidthOrHeight = Mathf.Lerp(1, 0, ((Screen.height / (float)Screen.width) - (4 / 3f)) / ((16 / 9f) - (4 / 3f)));
+	private void Update()
+	{
+	}
 
-    }
-
-    public void CloseAllPopup(bool UseCloseEvent = false)
-    {
-        for (int num = listOpenedPopupObject.Count - 1; num >= 0; num--)
+	public void CloseAllPopup(bool UseCloseEvent = false)
+	{
+		for (int num = listOpenedPopupObject.Count - 1; num >= 0; num--)
 		{
 			try
 			{
@@ -112,13 +109,11 @@ public class PopupManager : MonoSingleton<PopupManager>
 
 	public Popup Open(PopupType type, bool enableBackCloseButton = true, Action actionCloseEvent = null, Action actionEvent = null, Action actionNegativeEvent = null, bool holdEventOK = false, bool holdEventNegative = false, bool isReserve = false, bool enableOverlapPopup = false, bool disableBackKey = false, bool enableBlocking = true)
 	{
-		print(type.ToString());
 		if (type == CurrentPopupType && CurrentPopup != null)
 		{
 			return CurrentPopup;
 		}
-
-        Popup popup = null;
+		Popup popup = null;
 		GameObject popup2 = m_PopupList.GetPopup(type);
 		if (popup2 == null)
 		{
@@ -137,8 +132,8 @@ public class PopupManager : MonoSingleton<PopupManager>
 		popupCanvasScaler.enabled = false;
 		popupCanvasScaler.enabled = true;
 		if ((bool)popup)
-        {
-            popup.EnableOverlapPopup = enableOverlapPopup;
+		{
+			popup.EnableOverlapPopup = enableOverlapPopup;
 			popup.DisableBackKey = disableBackKey;
 			popup.transform.SetParent(ParentPopupGroup, worldPositionStays: false);
 			popup.transform.localPosition = Vector3.zero;
@@ -169,76 +164,65 @@ public class PopupManager : MonoSingleton<PopupManager>
 			if ((bool)component)
 			{
 				component.PlayTweenListOpen();
-            }
-        }
-        return popup;
-    }
-    public T Open<T>(PopupType type) where T : Popup
-    {
-        Popup popup = Open(type);
-        return (T)popup;
-    }
+			}
+		}
+		return popup;
+	}
 
-    public void Close()
-    {
-		Close(CurrentPopup);
+	public void Close()
+	{
+		bool flag = true;
+		bool flag2 = false;
+		if ((bool)CurrentPopup)
+		{
+			flag2 = CurrentPopup.EnableOverlapPopup;
+			if (CurrentPopup.EnableOverlapPopup)
+			{
+				ObjBackBlocking.transform.SetAsFirstSibling();
+			}
+			CurrentPopup.SoundPlayHide();
+			flag = CurrentPopup.DoBackBlur;
+			if (CurrentPopup.DontDestroy)
+			{
+				CurrentPopup.gameObject.SetActive(value: false);
+			}
+			else
+			{
+				UnityEngine.Object.DestroyImmediate(CurrentPopup.gameObject);
+			}
+		}
+		if (listOpenedPopupObject.Count > 0)
+		{
+			listOpenedPopupObject.RemoveAt(listOpenedPopupObject.Count - 1);
+		}
+		if (listOpenedPopupObject.Count > 0)
+		{
+			Popup popup = listOpenedPopupObject[listOpenedPopupObject.Count - 1];
+			if ((bool)popup)
+			{
+				popup.gameObject.SetActive(value: true);
+				CurrentPopupType = popup.m_PopupType;
+				CurrentPopup = popup;
+				popupCanvasScaler.enabled = false;
+				popupCanvasScaler.enabled = true;
+				if (CurrentPopup.enableBackBlockingClose)
+				{
+					EnableBackCloseEvent();
+				}
+				else
+				{
+					DisableBackCloseEvent();
+				}
+				return;
+			}
+		}
+		IsActive = false;
+		ObjBackBlocking.SetActive(value: false);
+		CurrentPopupType = PopupType.PopupNone;
+		CurrentPopup = null;
+	}
 
-    }
-    public void Close(Popup CurrentPopup)
-    {
-        bool flag = true;
-        bool flag2 = false;
-        if ((bool)CurrentPopup)
-        {
-            if (listOpenedPopupObject.Count > 0)
-            {
-                listOpenedPopupObject.Remove(CurrentPopup);
-            }
-            flag2 = CurrentPopup.EnableOverlapPopup;
-            if (CurrentPopup.EnableOverlapPopup)
-            {
-                ObjBackBlocking.transform.SetAsFirstSibling();
-            }
-            CurrentPopup.SoundPlayHide();
-            flag = CurrentPopup.DoBackBlur;
-            if (CurrentPopup.DontDestroy)
-            {
-                CurrentPopup.gameObject.SetActive(value: false);
-            }
-            else
-            {
-                UnityEngine.Object.DestroyImmediate(CurrentPopup.gameObject);
-            }
-        }
-
-        if (listOpenedPopupObject.Count > 0)
-        {
-            Popup popup = listOpenedPopupObject[listOpenedPopupObject.Count - 1];
-            if (popup!=null)
-            {
-                popup.gameObject.SetActive(value: true);
-                CurrentPopupType = popup.m_PopupType;
-                this.CurrentPopup = popup;
-                popupCanvasScaler.enabled = false;
-                popupCanvasScaler.enabled = true;
-                if (CurrentPopup.enableBackBlockingClose)
-                {
-                    EnableBackCloseEvent();
-                }
-                else
-                {
-                    DisableBackCloseEvent();
-                }
-                return;
-            }
-		
-        }
-        IsActive = false;
-        ObjBackBlocking.SetActive(value: false);
-        CurrentPopupType = PopupType.PopupNone;
-        this.CurrentPopup = null;
-    }
-    public void OnPressBlocker()
+	public void OnPressBlocker()
 	{
 		if ((bool)CurrentPopup && CurrentPopup.UseClosingByBlocker)
 		{

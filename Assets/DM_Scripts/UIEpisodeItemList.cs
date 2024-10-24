@@ -33,12 +33,11 @@ public class UIEpisodeItemList : MonoBehaviour
 
 	public Sprite SpriteLevelBallCleared;
 
-    private EpisodeItemTweenState tweenState = EpisodeItemTweenState.Close;
+	private EpisodeItemTweenState tweenState = EpisodeItemTweenState.Close;
 
 	private List<GameObject> listObjLevelBalls = new List<GameObject>();
 
 	private Vector2 baseSizeDelta = Vector2.zero;
-
 
 	private void Start()
 	{

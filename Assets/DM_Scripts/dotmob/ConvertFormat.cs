@@ -42,13 +42,7 @@ namespace dotmob
 		{
 			return Epoch.AddSeconds(unixTimeStamp).ToLocalTime();
 		}
-		public static DateTime TimeStampToDataTime(long timeStamp)
-		{
-            DateTime utcTime = DateTimeOffset.FromUnixTimeMilliseconds(timeStamp).UtcDateTime;
-            TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
-            DateTime localTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, localTimeZone);
-            return localTime;
-        }
+
 		public static TimeSpan GetRemainTime(string eventStartTime, string eventEndTime)
 		{
 			DateTime result = default(DateTime);

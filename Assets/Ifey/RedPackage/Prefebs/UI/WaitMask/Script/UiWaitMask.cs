@@ -17,32 +17,23 @@ public class UiWaitMask : Popup
 
     public Transform ShowCase(string childName)
     {
-        if (this == null)
-        {
-            return null;
-        }
         Transform target = null;
         for (int i = 0; i < this.transform.childCount; i++)
         {
             Transform child = this.transform.GetChild(i);
             child.gameObject.SetActive(child.name == childName);
-            if (child.name == childName)
+            if(child.name == childName)
             {
                 target = child;
             }
         }
         return target;
     }
-    public void ShowResultCase(string content,float closeTime,System.Action finishAction=null)
+    public void ShowResultCase(string content,float closeTime)
     {
-        if (this == null)
-        {
-            return;
-        }
         ShowCase("Result_Case").GetChild<Text>().text = content;
         IEPool_Manager.instance.WaitTimeToDo("", closeTime,null, () => {
-            PopupManager.Instance.Close(this);
-            finishAction?.Invoke();
+            PopupManager.Instance.Close();
         });
     }
 }

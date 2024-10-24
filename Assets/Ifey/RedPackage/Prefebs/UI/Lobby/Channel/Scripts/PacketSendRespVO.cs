@@ -3,10 +3,9 @@ using UnityEngine;
 
 namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
 {
-    [System.Serializable]
     public class PacketSendRespVO
     {
-        public long id; // 主键  红包ID
+        public long id { get; set; } // 主键  红包ID
         public long memberId { get; set; } // 用户id
         public string? username { get; set; } // 用户名称
         public double redAmount { get; set; } // 发包总金额
@@ -24,32 +23,6 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         public int redStatus { get; set; } // 红包状态 0-正常 1-已抢完 2-已过期
         public string? Avatar { get; set; }
 
-        public string receiveMemberIds;//抢过此红包的用户
-
-        public bool isGrabed
-        {
-            get
-            {
-                bool _isGrabed = false;
-                if (!string.IsNullOrEmpty(receiveMemberIds))
-                {
-                    string[] receiveMemberIds = this.receiveMemberIds.Split(",");
-                    for (int i = 0; i < receiveMemberIds.Length; i++)
-                    {
-                        if (UserManager.Instance != null&& UserManager.Instance.appMemberUserInfoRespVO!=null)
-                        {
-                            if (receiveMemberIds[i] == (UserManager.Instance.appMemberUserInfoRespVO.id.ToString()??""))
-                            {
-                                _isGrabed = true;
-                                break;
-                            }
-                        }
-                        
-                    }
-                }
-                return _isGrabed;
-            }
-        }
         public override string ToString()
         {
             return $"PacketSendRespVO: [id={id}, memberId={memberId}, username={username}, redAmount={redAmount}, redCount={redCount}, thunderNo={thunderNo}, compensateAmount={compensateAmount}, compensateRatio={compensateRatio}, channelId={channelId}, redPacketData={redPacketData}, redPassword={redPassword}, expiration={expiration}, redQuota={redQuota}, createTime={createTime}, redStatus={redStatus}]";

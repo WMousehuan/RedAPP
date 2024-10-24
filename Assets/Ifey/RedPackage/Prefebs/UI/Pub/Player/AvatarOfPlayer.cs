@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Policy;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -29,7 +30,7 @@ public class AvatarOfPlayer : MonoBehaviour
         }
         else
         {
-            rawImage.sprite = avatar_Dictionary[imageUrl] == null ? oriSprite : avatar_Dictionary[imageUrl];
+            rawImage.sprite = avatar_Dictionary[imageUrl]==null? oriSprite: avatar_Dictionary[imageUrl];
         }
     }
     public void SetDefaultAvatar()
@@ -54,10 +55,6 @@ public class AvatarOfPlayer : MonoBehaviour
             if (avatar_Dictionary.ContainsKey(imageUrl))
             {
                 avatar_Dictionary[imageUrl] = sprite;
-            }
-            else
-            {
-                avatar_Dictionary.Add(imageUrl, sprite);
             }
             rawImage.sprite = sprite;
         }

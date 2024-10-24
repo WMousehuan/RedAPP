@@ -58,7 +58,6 @@ public class UserLoginInterface : HttpInterface
         // 实现 Success 方法的逻辑
         RedPackageAuthor.Instance.authorizationValue = responseData.data.accessToken;
         RedPackageAuthor.Instance.refreshTokenAuthorizationValue = responseData.data.refreshToken;
-        PlayerPrefs.SetString("LastLoginDateTime", DateTime.Now.ToString());
         UserManager.Instance.GetUserMainInfo();
         Debug.Log("Success User Login Success!");
     }

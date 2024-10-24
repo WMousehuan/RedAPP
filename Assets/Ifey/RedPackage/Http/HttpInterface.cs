@@ -20,13 +20,9 @@ public class FailPubDo
         //not login
         if (code == 401)
         {
-            if(PopupManager.Instance.CurrentPopupType!= PopupType.PopupLogin)
-            {
-                MonoSingleton<PopupManager>.Instance.CloseAllPopup();
-                Debug.Log("User notLogin Show Login UI!");
-                MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
-            }
-
+            MonoSingleton<PopupManager>.Instance.CloseAllPopup();
+            Debug.Log("User notLogin Show Login UI!");
+            MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
             //MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupCommonYesNo);
             return true;
         }
@@ -45,23 +41,5 @@ public class FailPubDo
             return true;
         }
         return false;
-    }
-}
-public class CommonHttpInterface : HttpInterface
-{
-    public void Success(string result)
-    {
-
-    }
-    public void Fail(JObject json)
-    {
-        if (!(new FailPubDo()).failPubdo(json))
-        {
-        }
-    }
-
-    public void UnknowError(string errorMsg)
-    {
-        Debug.Log("GetUserDetailInterface UnknowError=" + errorMsg);
     }
 }

@@ -21,21 +21,22 @@ public class PackageItem : MonoBehaviour
     public string redStatus;  //redStatus 0 normal,1 over,2 timeout
     [HideInInspector]
     public PacketSendRespVO packetSendRespVO;
-
-    public Text getIt_Text;
-    public Button currentButton;
-    public Text me_Text;
-    public Text id_Text;
-    private void Update()
-    {
-        if (getIt_Text && getIt_Text.gameObject.activeSelf)
-        {
-            getIt_Text.transform.localScale = Vector3.one + Vector3.one * Mathf.Sin(Time.time*6) * 0.1f;
-        }
-    }
+    // Start is called before the first frame update
     public void setBackground(int backageInt)
     {
         backageImage.sprite = backgroundSprites[backageInt];
+    }
+
+    public void setBackgroundWithPacketSendRespVO()
+    {
+        if (this.packetSendRespVO !=null && this.packetSendRespVO.redStatus==0)
+        {
+            setBackground(0);
+        }
+        else
+        {
+            setBackground(1);
+        }
     }
 
     public void setHammerVisi()
@@ -54,64 +55,21 @@ public class PackageItem : MonoBehaviour
         }
     }
 
-    public void OnEventOpenPackageClick()
+    public void openPackageClick()
     {
-        if (packetSendRespVO.isGrabed || packetSendRespVO.redStatus != 0)
-        {
-            OpenPackageDetailResultClick();
-        }
-        else
-        {
-            Popup popup = MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTreasureOpen);
-            PackageItem pkgItemPackageItem = popup.GetComponent<PackageItem>();
-            pkgItemPackageItem.SetPacketSendRespVOInfo(this.packetSendRespVO);
-        }
-
+        Popup popup = MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTreasureOpen);
+        PackageItem pkgItemPackageItem = popup.GetComponent<PackageItem>();
+        pkgItemPackageItem.setPacketSendRespVOInfo(this.packetSendRespVO) ;
     }
-    public void OpenPackageDetailResultClick()
+    public void openPackageDetailResultClick()
     {
         Popup popup = MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTreasureResultDetailOpen);
         UIPopupTreasureDetailResultMain uIPopupTreasureDetailResultMain = popup.GetComponent<UIPopupTreasureDetailResultMain>();
         uIPopupTreasureDetailResultMain.myPackageItem = this;
         uIPopupTreasureDetailResultMain.setPacketInfor(this.packetSendRespVO);
     }
-    public void SetPacketSendRespVOInfo()
+    public void setPacketSendRespVOInfo(PacketSendRespVO packetSendRespVO)
     {
-        SetPacketSendRespVOInfo(packetSendRespVO);
-    }
-    public void SetPacketSendRespVOInfo(PacketSendRespVO packetSendRespVO)
-    {
-        if (packetSendRespVO == null)
-        {
-            this.me_Text?.gameObject?.SetActive(false);
-            this.packetSendRespVO = null;
-            this.userName.text = "Loading..";
-            this.redAmount.text = "Loading..";
-            this.compensateRatio.text = "Loading..";
-            if (currentButton != null)
-            {
-                currentButton.interactable = false;
-            }
-            if (getIt_Text != null)
-            {
-                getIt_Text.gameObject.SetActive(false);
-            }
-            avatarOfPlayer.SetDefaultAvatar();
-            backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
-            setBackground(1);
-            this.transform.GetChild("Fx_Star").gameObject?.SetActive(false);
-            if (id_Text != null)
-            {
-                id_Text.text = "";
-            }
-  
-            return;
-        }
-        if (currentButton != null)
-        {
-            currentButton.interactable = true;
-        }
-        this.me_Text?.gameObject?.SetActive(packetSendRespVO.memberId==UserManager.Instance.appMemberUserInfoRespVO.id);
         if (!string.IsNullOrEmpty(packetSendRespVO.Avatar))
         {
             avatarOfPlayer.StartToGetUrlImage(packetSendRespVO.Avatar);
@@ -121,32 +79,18 @@ public class PackageItem : MonoBehaviour
         //Debug.Log("usernameToShow" + usernameToShow);
         this.userName.text = nickNameToShow;
         this.redAmount.text = packetSendRespVO.redAmount.ToString();
-        this.thunderNo.setNumber(packetSendRespVO.thunderNo);
-        this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString() + "X";
+        this.thunderNo.setNumber(packetSendRespVO.thunderNo); 
+        this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString()+"X";
         redStatus = packetSendRespVO.redStatus.ToString();
-
-        bool canGrab = packetSendRespVO.redStatus == 0 && !packetSendRespVO.isGrabed;
-        if (getIt_Text != null)
+        //Set the package color
+        if (packetSendRespVO.redStatus == 0)
         {
-            getIt_Text.gameObject.SetActive(canGrab);
-        }
-        if (canGrab)
-        {
-            this.transform.GetChild("Fx_Star").gameObject?.SetActive(true);
-            backageImage.color = Color.white;
             setBackground(0);
         }
         else
         {
-            this.transform.GetChild("Fx_Star").gameObject?.SetActive(false);
-            backageImage.color = new Color(0.5f, 0.5f, 0.5f, 1);
             setBackground(1);
         }
-        if (id_Text != null)
-        {
-            id_Text.text = packetSendRespVO.id.ToString() ;
-        }
-
         setHammerVisi();
     }
 

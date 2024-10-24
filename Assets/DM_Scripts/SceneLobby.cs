@@ -12,11 +12,10 @@ using UnityEngine;
 //using UnityEngine.Purchasing;
 using UnityEngine.UI;
 using Gley.MobileAds;
-using Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts;
 
 public class SceneLobby : SceneClass
 {
-	public static string autoEnterChannelId;//自动进入频道id;
+	
 
 	public ScrollRect LevelBallScrollRect;
 
@@ -28,7 +27,6 @@ public class SceneLobby : SceneClass
 
 	private List<GameObject> listObj = new List<GameObject>();
 
-	public List<RefreshChannelGameTypeTImer> refreshChannelGameTypeTImers;
 	private void SetLevelBall(GameObject obj, int level)
 	{
 		if (!(obj == null))
@@ -66,34 +64,17 @@ public class SceneLobby : SceneClass
 
 	private void Start()
 	{
-        //UserManager.Instance.GetUserMainInfo();
-        //base.Start();
+		//base.Start();
 
-        //Debug.Log("CURREN LEVEL " + MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo);
+		//Debug.Log("CURREN LEVEL " + MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo);
 
-        //ObjNoAdsButton.SetActive(value: true);
-        SetLevelBallScrollView(fullScreen: false);
-        EventManager.Instance.Regist(typeof(UiCreateChannelPanel).ToString(), this.GetInstanceID(), (objects) => {
-			string sign = (string)objects[0];
-			switch (sign)
-			{
-				case "CreateChannel":
-					foreach(RefreshChannelGameTypeTImer refreshChannelGameTypeTImer in refreshChannelGameTypeTImers)
-					{
-						refreshChannelGameTypeTImer.refreshFromRequest();
-                    }
-                    break;
-            }
-
-        });//"CreateChannel"
-    }
-    private void OnDestroy()
-    {
-        EventManager.Instance?.UnRegist(typeof(UiCreateChannelPanel).ToString(), this.GetInstanceID());//"CreateChannel"
-    }
+		//ObjNoAdsButton.SetActive(value: true);
+		SetLevelBallScrollView(fullScreen: false);
+	}
 
 
-    public void OnClickWatchAds()
+
+	public void OnClickWatchAds()
 	{
 		SoundSFX.Play(SFXIndex.ButtonClick);
 		if (APIMobileAds.IsRewardedVideoAvailable())
@@ -202,14 +183,7 @@ public class SceneLobby : SceneClass
 		{
 			//MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupEventDailySpinReward);
             Debug.Log("First Time to login to do!");
-			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
-			{
-                MonoSingleton<UserManager>.Instance.GetUserMainInfo();
-            }
-			else
-			{
-				PopupManager.Instance.Open(PopupType.PopupLogin);
-            }
+            MonoSingleton<UserManager>.Instance.GetUserMainInfo();
         }
     }
 

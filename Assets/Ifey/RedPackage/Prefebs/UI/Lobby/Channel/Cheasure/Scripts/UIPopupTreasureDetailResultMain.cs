@@ -38,17 +38,13 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
 
     public void setPacketInfor(PacketSendRespVO packetSendRespVO)
     {
-        if (packetSendRespVO == null)
-        {
-            return;
-        }
         if (!string.IsNullOrEmpty(packetSendRespVO.Avatar))
         {
             avatarOfPlayer.StartToGetUrlImage(packetSendRespVO.Avatar);
         }
-        string usernameToShow = string.IsNullOrEmpty(packetSendRespVO.nickName) ? "noname" : packetSendRespVO.nickName;
+        string usernameToShow = string.IsNullOrEmpty(packetSendRespVO.username) ? "noname" : packetSendRespVO.username;
         //Debug.Log("usernameToShow" + usernameToShow);
-        this.userName.text = usernameToShow + (packetSendRespVO.memberId == UserManager.Instance.appMemberUserInfoRespVO.id ? "[ME]" : "");
+        this.userName.text = usernameToShow;
         this.redAmount.text = packetSendRespVO.redAmount.ToString();
         this.thunderNo.setNumber(packetSendRespVO.thunderNo);
         this.compensateRatio.text = packetSendRespVO.compensateRatio.ToString() + "X";
@@ -57,30 +53,26 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
     public class UIPopupTreasureDetailResultMainCallBack : HttpInterface
     {
         public FailPubDo failPubDo = new FailPubDo();
-        UIPopupTreasureDetailResultMain source_Ctrl;
+        UIPopupTreasureDetailResultMain uIPopupTreasureDetailResultMain;
         public UIPopupTreasureDetailResultMainCallBack(UIPopupTreasureDetailResultMain uIPopupTreasureDetailResultMain)
         {
-            this.source_Ctrl = uIPopupTreasureDetailResultMain;
+            this.uIPopupTreasureDetailResultMain = uIPopupTreasureDetailResultMain;
         }
         public void Success(string result)
         {
-            if (source_Ctrl == null)
-            {
-                return;
-            }
+            //MonoSingleton<PopupManager>.Instance.CloseAllPopup();
             ReturnData<PageResultPacketSendRespVO<AppPacketReceiveRespVO>> responseData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<AppPacketReceiveRespVO>>>(result);
             // 实现 Success 方法的逻辑
             Debug.Log("Success UIPopupTreasureDetailResultMainCallBack!And now show item!data=" + responseData.data.ToString());
-            if ( responseData.data.list.Length > 0)
+            if (responseData.data.list.Length > 0)
             {
-                for (int i = 0; i < responseData.data.list.Length ; i++)
+                for (int i = responseData.data.list.Length - 1; i >= 0; i--)
                 {
                     AppPacketReceiveRespVO pkgDetailItem = responseData.data.list[i];
                     //add new pkg
                     if (pkgDetailItem != null)
                     {
-                        GameObject createPkgItem = Instantiate(this.source_Ctrl.listItemOfGrabDetails, this.source_Ctrl.transformParentOflistItemOfGrabDetails);
-                        createPkgItem.gameObject.SetActive(true);
+                        GameObject createPkgItem = Instantiate(this.uIPopupTreasureDetailResultMain.listItemOfGrabDetails, this.uIPopupTreasureDetailResultMain.transformParentOflistItemOfGrabDetails);
                         ListOfPkgResultItem listOfPkgResultItem = createPkgItem.GetComponent<ListOfPkgResultItem>();
                         listOfPkgResultItem.SetResultItemDetailValue(pkgDetailItem);
                         //packageItem.setPacketSendRespVOInfo(pkgItem);
@@ -106,13 +98,13 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
                 int code = json["code"].Value<int>();
                 if (code == 1004001004)
                 {
-                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Not enough coin to sent!");
                     Debug.Log("Not enough coin to sent!!");
                     return;
                 }
                 else
                 {
-                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Get Treasure grab detail fail!");
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Get Treasure grab detail fail!");
                 }
             }
         }

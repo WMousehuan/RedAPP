@@ -69,9 +69,9 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 2d3ca542dd2746679d86b0b6efc3dc2f, type: 3}
     m_FontSize: 32
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 2
-    m_MaxSize: 32
+    m_MaxSize: 44
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -597,7 +597,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.000025224686}
+  m_AnchoredPosition: {x: 0, y: -0.0033288859}
   m_SizeDelta: {x: 0, y: 137.43}
   m_Pivot: {x: 0, y: 1}
 --- !u!1 &2607708557293118310
@@ -740,7 +740,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: state
+  m_text: state1
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 125cb55b44b24c4393181402bc6200e6, type: 2}
@@ -749,15 +749,15 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 1
-  m_colorMode: 2
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 0.54901963, g: 0.54901963, b: 0.54901963, a: 1}
-    topRight: {r: 0.54901963, g: 0.54901963, b: 0.54901963, a: 1}
-    bottomLeft: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
-    bottomRight: {r: 0.084905684, g: 0.084905684, b: 0.084905684, a: 1}
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -767,12 +767,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 28
+  m_fontSize: 32
   m_fontSizeBase: 32
   m_fontWeight: 400
-  m_enableAutoSizing: 1
+  m_enableAutoSizing: 0
   m_fontSizeMin: 18
-  m_fontSizeMax: 28
+  m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
@@ -929,8 +929,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6922381165412790206}
   m_HandleRect: {fileID: 8520538585398782504}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.9998169
+  m_Value: 1
+  m_Size: 0.99998415
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1055,8 +1055,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8915550088156225662}
   m_HandleRect: {fileID: 7732801755304636367}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 1
+  m_Value: 1
+  m_Size: 0.9999813
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1241,9 +1241,9 @@ MonoBehaviour:
     m_Font: {fileID: 12800000, guid: 2d3ca542dd2746679d86b0b6efc3dc2f, type: 3}
     m_FontSize: 24
     m_FontStyle: 0
-    m_BestFit: 1
+    m_BestFit: 0
     m_MinSize: 2
-    m_MaxSize: 24
+    m_MaxSize: 47
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -1361,8 +1361,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -84.47, y: 0}
-  m_SizeDelta: {x: -168.94, y: 0}
+  m_AnchoredPosition: {x: -64, y: 0}
+  m_SizeDelta: {x: -128, y: -0.0000009536743}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &4489416719513588157
 GameObject:
@@ -1628,7 +1628,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 15.999985, y: 16}
-  m_SizeDelta: {x: 360, y: 48}
+  m_SizeDelta: {x: 320, y: 48}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &708072777864306093
 CanvasRenderer:
@@ -2142,7 +2142,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.0234375}
+  m_AnchoredPosition: {x: 0, y: -0.006286621}
   m_SizeDelta: {x: 0, y: 68}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1 &5806191534570197062
@@ -2297,7 +2297,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &720888747615517495
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2759,8 +2759,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8494401295933521568}
   m_HandleRect: {fileID: 4884752466635645037}
   m_Direction: 0
-  m_Value: 0
-  m_Size: 1
+  m_Value: -2.3795123
+  m_Size: 0.9999323
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -3193,30 +3193,6 @@ MonoBehaviour:
   currentPage: 0
   isLoadingList: 0
   amountDetail_List: []
-  amountStateContents:
-    objects:
-    - key: 0
-      target: All
-    - key: 1
-      target: Rencharge
-    - key: 2
-      target: Send Red Packet
-    - key: 3
-      target: Get Red Packet
-    - key: 4
-      target: Brokerage
-    - key: 5
-      target: Award
-    - key: 6
-      target: Compensate
-    - key: 7
-      target: Red Packet refund
-    - key: 8
-      target: Cash withdrawal amount
-    - key: 9
-      target: Give as a present
-    - key: 10
-      target: Compensate award
   currentAmountStateType: 0
 --- !u!1 &6830131161608094553
 GameObject:
@@ -3416,7 +3392,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -20, y: 0}
-  m_SizeDelta: {x: 148.94, y: 0}
+  m_SizeDelta: {x: 108.04, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!222 &9008468334271224328
 CanvasRenderer:
