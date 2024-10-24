@@ -32,6 +32,8 @@ public class UserManager : MonoSingleton<UserManager>
     [HideInInspector]
     public string userMainInfoUrl = "/app-api/member/user/get"; //get userInfo Url
     public static string encryptSuperiorId = "";
+
+    public static string tempUserId;
     private void Start()
     {
         currentAvatar_Texture = defaultTexture;

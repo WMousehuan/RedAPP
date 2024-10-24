@@ -26,6 +26,7 @@ public class UIPOPSignup : Popup
 
     public void signUpClick()
     {
+
         AppAuthRegistReqVO appAuthRegistReqVO = new AppAuthRegistReqVO();
         appAuthRegistReqVO.username = uerId.text;
         appAuthRegistReqVO.password = loginPsd.text;
@@ -47,7 +48,12 @@ public class UIPOPSignup : Popup
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "The nickname length of the username is 4 digits");
             return;
         }
-        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(userSignUpUrl, appAuthRegistReqVO, new SignUpInfoInterface());
+        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(userSignUpUrl, appAuthRegistReqVO, new SignUpInfoInterface(this), (resultData) => {
+            waitMask_Ui?.ShowResultCase("Success", 0);
+        }, () => {
+            waitMask_Ui?.ShowResultCase("fail", 0);
+        });
     }
 }
 
@@ -55,8 +61,14 @@ public class UIPOPSignup : Popup
 //get userInfo
 public class SignUpInfoInterface : HttpInterface
 {
+    public UIPOPSignup source_Ctrl;
+    public SignUpInfoInterface(UIPOPSignup source_Ctrl)
+    {
+        this.source_Ctrl = source_Ctrl;
+    }
     public void Success(string result)
     {
+        UserManager.tempUserId = source_Ctrl.uerId.text;
         MonoSingleton<PopupManager>.Instance.CloseAllPopup();
         // 实现 Success 方法的逻辑
         MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonInfo, "Success", "Success Plz login.", OnEventClickToLogin, OnEventClickToLogin);
