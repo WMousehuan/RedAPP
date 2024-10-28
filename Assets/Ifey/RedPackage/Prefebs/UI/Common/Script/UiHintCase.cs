@@ -11,11 +11,11 @@ public class UiHintCase :Singleton_Base<UiHintCase>
     public IEnumerator ie;
     private void Start()
     {
-        this.gameObject.SetActive(false);
+        case_Image.gameObject.SetActive(false);
     }
     public void Show(string content)
     {
-        this.gameObject.SetActive(true);
+        case_Image.gameObject.SetActive(true);
         content_Text.color = new Color(content_Text.color.r, content_Text.color.g, content_Text.color.b, 0);
         case_Image.color = new Color(case_Image.color.r, case_Image.color.g, case_Image.color.b, 0);
         content_Text.text = content;
@@ -39,7 +39,7 @@ public class UiHintCase :Singleton_Base<UiHintCase>
                     return true;
                 }, () =>
                 {
-                    this.gameObject.SetActive(false);
+                    case_Image.gameObject.SetActive(false);
                     content_Text.color = new Color(content_Text.color.r, content_Text.color.g, content_Text.color.b, 0);
                     case_Image.color = new Color(case_Image.color.r, case_Image.color.g, case_Image.color.b, 0);
                 });

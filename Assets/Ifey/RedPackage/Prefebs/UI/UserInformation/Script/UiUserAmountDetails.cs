@@ -6,23 +6,23 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System;
-
+public enum AmountStateType
+{
+    All,
+    Recharge,//³äÖµ
+    HandOut,//·¢ºì°ü
+    Grab,//ÇÀºì°ü
+    Commission,//Ó¶½ğ
+    Reward,//½±Àø
+    Compensation,//Åâ¸¶
+    Refund,//ÍË¿î
+    Withdrawal,//ÌáÏÖ
+    Give,//ÔùËÍ
+    CompensateAward,//Åâ¸¶½±Àø
+}
 public class UiUserAmountDetails : Popup
 {
-    public enum AmountStateType
-    {
-        All,
-        Recharge,//³äÖµ
-        HandOut,//·¢ºì°ü
-        Grab,//ÇÀºì°ü
-        Commission,//Ó¶½ğ
-        Reward,//½±Àø
-        Compensation,//Åâ¸¶
-        Refund,//ÍË¿î
-        Withdrawal,//ÌáÏÖ
-        Give,//ÔùËÍ
-        CompensateAward,//Åâ¸¶½±Àø
-    }
+    
     private string url = "/app-api/member/account-statement/page";
 
     public Dropdown amountStateGroup_Dropdown;
@@ -38,16 +38,13 @@ public class UiUserAmountDetails : Popup
     public ObjectGroup<AmountStateType, string> amountStateContents;
 
     public AmountStateType currentAmountStateType = AmountStateType.All;
-
-    public override void Start()
+    private void Awake()
     {
-        base.Start();
         amountStateGroup_Dropdown.options.Clear();
-        foreach(string amountStateType in Enum.GetNames(typeof(AmountStateType)))
+        foreach (string amountStateType in Enum.GetNames(typeof(AmountStateType)))
         {
             amountStateGroup_Dropdown.options.Add(new Dropdown.OptionData((amountStateContents.ContainsKey(Enum.Parse<AmountStateType>(amountStateType)) ? amountStateContents[Enum.Parse<AmountStateType>(amountStateType)].ToString() : "")));
         }
-        
     }
     public override void OnEnable()
     {
@@ -88,45 +85,59 @@ public class UiUserAmountDetails : Popup
             loading_Image.transform.eulerAngles += new Vector3(0, 0, -180 * Time.deltaTime);
         }
     }
-    public void GetAmountDetialsByPage(int page, int size = 20)
+
+    public void GetAmountDetialsByPage(int page, int size = 20, bool isReal = false)
     {
-        if (!isLoadingList)
+        if (!isLoadingList||isReal)
         {
             isLoadingList = true;
             loading_Image.gameObject.SetActive(true);
         
             string targetUrl = url + string.Format("?pageNo={0}&pageSize={1}{2}", (page + 1), size, currentAmountStateType == AmountStateType.All ? "" : "&tradeType=" + (int)(currentAmountStateType - 1));
-            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(targetUrl, new GetUserAmountDetailInterface(this), (resultData) =>
+            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(targetUrl, new GetUserAmountDetailInterface(this, currentAmountStateType), (resultData) =>
             {
-                loadedPageIndex_HashSet.Add(page);
-                currentPage++;
-                isLoadingList = false;
-                loading_Image.gameObject.SetActive(false);
+                if (this != null)
+                {
+                    loadedPageIndex_HashSet.Add(page);
+                    currentPage++;
+                    isLoadingList = false;
+                    loading_Image.gameObject.SetActive(false);
+                }
             }, () =>
             {
-                isLoadingList = false;
-                loading_Image.gameObject.SetActive(false);
+                if (this != null)
+                {
+                    isLoadingList = false;
+                    loading_Image.gameObject.SetActive(false);
+                }
             });
         }
 
     }
-    public void OnAmountStateGroup_DropdownValueChange(int value)
+    public void OnAmountStateGroup_DropdownValueChange(int value, bool isReal)
     {
+        amountStateGroup_Dropdown.SetValueWithoutNotify(value);
         currentAmountStateType = (AmountStateType)value;
         currentPage = 0;
         loadedPageIndex_HashSet.Clear();
         amountDetail_List.Clear();
         isLoadingList = false;
         amountDetail_LoopScroll.Init(0,0);
-        GetAmountDetialsByPage(0, 10);
+        GetAmountDetialsByPage(0, 10, isReal);
+    }
+    public void OnAmountStateGroup_DropdownValueChange(int value)
+    {
+        OnAmountStateGroup_DropdownValueChange(value,false);
     }
 }
 public class GetUserAmountDetailInterface : HttpInterface
 {
     UiUserAmountDetails source_Ctrl;
-    public GetUserAmountDetailInterface(UiUserAmountDetails source)
+    public AmountStateType currentAmountStateType;
+    public GetUserAmountDetailInterface(UiUserAmountDetails source, AmountStateType currentAmountStateType)
     {
         source_Ctrl = source;
+        this.currentAmountStateType = currentAmountStateType;
     }
     public void Success(string result)
     {
@@ -138,8 +149,11 @@ public class GetUserAmountDetailInterface : HttpInterface
 
         if (responseData.data.list.Length > 0)
         {
-            source_Ctrl?.amountDetail_List?.AddRange(responseData.data.list);
-            source_Ctrl?.amountDetail_LoopScroll?.Refresh(source_Ctrl.amountDetail_List.Count);
+            if(source_Ctrl.currentAmountStateType==0|| source_Ctrl.currentAmountStateType== currentAmountStateType)
+            {
+                source_Ctrl?.amountDetail_List?.AddRange(responseData.data.list);
+                source_Ctrl?.amountDetail_LoopScroll?.Refresh(source_Ctrl.amountDetail_List.Count);
+            }
         }
         //Debug.Log("Success GetUserAmountDetail!");
     }

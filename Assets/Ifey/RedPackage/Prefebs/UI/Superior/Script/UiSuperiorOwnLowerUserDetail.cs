@@ -47,12 +47,12 @@ public class UiSuperiorOwnLowerUserDetail : Popup
             if (realIndex >= 0 && realIndex < lowerAgentUserDetail_List.Count)
             {
                 LowerAgentUserDataVO lowerAgentUserData = lowerAgentUserDetail_List[realIndex];
-                //Button button = target.GetComponent<Button>();
-                //button.onClick.RemoveAllListeners();
-                //button.onClick.AddListener(() =>
-                //{
-                //    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
-                //});
+                Button button = target.GetComponent<Button>();
+                button.onClick.RemoveAllListeners();
+                button.onClick.AddListener(() =>
+                {
+                    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
+                });
                 target.GetChild<Text>("Amount_Text").text = lowerAgentUserData.totalBrokerage.ToString("F2");
                 target.GetChild<Text>("NickName_Text").text = lowerAgentUserData.nickname;
                 print(lowerAgentUserData.createTime);
@@ -103,11 +103,11 @@ public class UiSuperiorOwnLowerUserDetail : Popup
     {
         public int id;//
         public string nickname;//昵称
-		//public string avatar;//头像
-  //      public string mobile;//手机号
-  //      public int point;//积分
-  //      //public AgentLevelDataVO level;
-  //      public int userType;//用户类型
+        //public string avatar;//头像
+        //public string mobile;//手机号
+        //public int point;//积分
+        ////public AgentLevelDataVO level;
+        //public int userType;//用户类型
         public string createTime;//创建日期
         public double totalBrokerage;
     }

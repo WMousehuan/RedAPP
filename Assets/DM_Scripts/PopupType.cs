@@ -119,4 +119,5 @@ public enum PopupType
     PopupCreateChannelPanel,
 	PopupChannelInformation,
     CommonUserInformation,
+	PopupAvatarSelect,
 }

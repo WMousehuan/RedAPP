@@ -57,6 +57,9 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
     public System.Action<int, int, int, RectTransform> scrollExitEvent;
     public List<Int2> activeIndexs = new List<Int2>();
     public List<int> realIndex = new List<int>();
+
+    public System.Action<Transform, int> destoryAction = null;
+
     public float overedOffset = 20;
     public bool isOvered = false;
     private void Awake()
@@ -71,7 +74,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
         Init(15, 0);
     }
 
-    public void Init(int count, int currentRow,System.Action<Transform,int> itemAction=null)
+    public void Init(int count, int currentRow,System.Action<Transform,int> itemAction=null,System.Action<Transform,int> destoryAction=null)
     {
         item_Prefab.gameObject.SetActive(false);
         this.count = count;
@@ -121,7 +124,7 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
                 itemPool[i].gameObject.SetActive(false);
             }
         }
-       
+        this.destoryAction = destoryAction;
         SetContentSizeByItemCount(rowCount);
         SetPosByIndex(0);
     }
@@ -392,6 +395,16 @@ public class GridLoopScroll_Ctrl : MonoBehaviour
             return null;
         }
     }
+
+    private void OnDestroy()
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            Int2 int2 = activeIndexs.Find(item => { return item.itemIndex == i; });
+            destoryAction?.Invoke(items[i], int2.realIndex);
+        }
+    }
+
     [System.Serializable]
     public class Int2
     {

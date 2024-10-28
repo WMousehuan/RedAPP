@@ -325,11 +325,11 @@ public class ObjectGroup<K, V>
             return default;
         }
     }
-    public V this[int index]
+    public ObjectPack<K, V> this[int index]
     {
         get
         {
-            return objects[index].target;
+            return objects[index];
         }
     }
     public bool ContainsKey(K key)
@@ -349,6 +349,24 @@ public class ObjectGroup<K, V>
             return object_Dictionary.ContainsKey(key);
         }
         return false;
+    }
+    public int GetIndexByKey(K key)
+    {
+        if (object_Dictionary == null)
+        {
+            object_Dictionary = new Dictionary<K, int>();
+            int index = 0;
+            foreach (ObjectPack<K, V> _object in objects)
+            {
+                object_Dictionary.Add(_object.key, index);
+                index++;
+            }
+        }
+        if (object_Dictionary.ContainsKey(key))
+        {
+            return object_Dictionary[key];
+        }
+        return -1;
     }
     public void Add(K key,V value)
     {
