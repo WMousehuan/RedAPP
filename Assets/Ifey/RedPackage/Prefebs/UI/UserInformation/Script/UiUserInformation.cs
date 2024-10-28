@@ -32,9 +32,16 @@ public class Ui_UserInformation : Popup
 
     private string uploadUserDataUrl = "/app-api/member/user/update";
     private string updateFileUrl = "/app-api/infra/file/upload";
+    private string getStatisticDetailUrl = "/app-api/member/account-statement/statistic";
 
-    public string receiveWebFileBase64Data;
-    public string receiveWebFileName;
+    public ObjectGroup<AmountStateType, StatisticDetailData> statisticDetailData_Group=new ObjectGroup<AmountStateType, StatisticDetailData>();
+    public ObjectGroup<AmountStateType, Transform> amountStateItem_Group;
+    public ObjectGroup<AmountStateType, string> amountStateContents;
+    private string receiveWebFileBase64Data;
+    private string receiveWebFileName;
+    public Popup uiAvatarSelectCase_Prefab;
+
+
 #if UNITY_WEBGL            
     [DllImport("__Internal")]
     public static extern void clickSelectFileBtn(string name);
@@ -54,6 +61,34 @@ public class Ui_UserInformation : Popup
         {
             RefreshUserInformation();
         });
+        for(int i = 0; i < amountStateItem_Group.Count;i++)
+        {
+            int index = i;
+            amountStateItem_Group[i].target.GetChild<Text>("State_Text").text = (amountStateContents.ContainsKey(amountStateItem_Group[i].key) ? amountStateContents[amountStateItem_Group[i].key].ToString() : "").ToString();
+            amountStateItem_Group[i].target.GetComponent<Button>().onClick.AddListener(() => {
+                ((UiUserAmountDetails)PopupManager.Instance.Open(PopupType.PopupUserAmountDetial)).OnAmountStateGroup_DropdownValueChange((int)amountStateItem_Group[index].key,true);
+                //UiUserAmountDetails uiUserAmountDetails = ((UiUserAmountDetails)PopupManager.Instance.Open(PopupType.PopupUserAmountDetial));
+                //uiUserAmountDetails.SetState((int)amountStateItem_Group[index].key);
+            });
+        }
+        //return;
+        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getStatisticDetailUrl, null, (resultData) =>
+        {
+            ReturnData<PageResultPacketSendRespVO<StatisticDetailData>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<StatisticDetailData>>>(resultData);
+
+            for (int i = 0; i < returnData.data.list.Length; i++)
+            {
+                StatisticDetailData statisticDetailData = returnData.data.list[i];
+                statisticDetailData_Group.Add((AmountStateType)(statisticDetailData.tradeType + 1), statisticDetailData);
+
+                if (amountStateItem_Group.ContainsKey((AmountStateType)(statisticDetailData.tradeType + 1)))
+                {
+                    amountStateItem_Group[(AmountStateType)(statisticDetailData.tradeType + 1)].GetChild<Text>("Amount_Text").text = (statisticDetailData.totalAmount > 0 ? "+" : "") + statisticDetailData.totalAmount.ToString();
+                }
+
+            }
+        });
+
     }
     private void OnDestroy()
     {
@@ -78,10 +113,11 @@ public class Ui_UserInformation : Popup
         }
 
     }
-
+    //public void 
     public void OnEventSetAvatar()
     {
-
+        PopupManager.Instance.Open(uiAvatarSelectCase_Prefab);
+        return;
 #if UNITY_EDITOR||PLATFORM_ANDROID
         NativeFilePicker.PickFile((path) => {
             UploadAvatarByPath(path);
@@ -102,7 +138,7 @@ public class Ui_UserInformation : Popup
         {
             UserManager.Instance.appMemberUserInfoRespVO.nickname = userName_InputField.text;
             OnEventSwitchSetNameState(false);
-            waitMask_Ui?.ShowResultCase("Success", 1);
+            waitMask_Ui?.ShowResultCase("Success", 0);
         }, () =>
         {
             OnEventSwitchSetNameState(false);
@@ -191,6 +227,7 @@ public class Ui_UserInformation : Popup
             print(url);
             UtilJsonHttp.Instance.PutContentWithParamAuthorizationToken(uploadUserDataUrl, GetUploadDataString((UserInfoType.avatar, url)), new PostAvatarFileInterface(this), (requestData) =>
             {
+                UserManager.Instance.appMemberUserInfoRespVO.avatar = url;
                 // 创建Texture2D并加载图片数据
                 Texture2D texture = new Texture2D(2, 2, TextureFormat.ASTC_8x8, false);
                 texture.name = path;
@@ -198,12 +235,11 @@ public class Ui_UserInformation : Popup
                 UserManager.Instance.currentAvatar_Texture = texture;
 
                 avatar_RawImage.texture = texture;
-                waitMask_Ui?.ShowResultCase("Success", 1);
+                waitMask_Ui?.ShowResultCase("Success", 0);
             }, () =>
             {
                 waitMask_Ui?.ShowResultCase("Fail", 1);
             });
-
         }, () =>
         {
             avatar_RawImage.texture = defaultAvatar_Texture;
@@ -242,7 +278,12 @@ public class Ui_UserInformation : Popup
 
 #endif
 }
-
+public class StatisticDetailData
+{
+    public int tradeType;
+    public string tradeTypeDesc;
+    public double totalAmount;
+}
 public class PutUserInformationInterface : HttpInterface
 {
     Ui_UserInformation ui_UserInformation;
@@ -261,7 +302,6 @@ public class PutUserInformationInterface : HttpInterface
         {
 
         }
-
     }
 
     public void UnknowError(string errorMsg)

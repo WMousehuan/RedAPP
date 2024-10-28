@@ -14,7 +14,14 @@ public class UiWaitMask : Popup
             waitCaseDots_Text.text += ". ";
         }
     }
-
+    public void Init(string content)
+    {
+        if (this == null)
+        {
+            return;
+        }
+        ShowCase("Wait_Case").GetChild<Text>().text = content;
+    }
     public Transform ShowCase(string childName)
     {
         if (this == null)

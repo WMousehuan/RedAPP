@@ -173,6 +173,69 @@ public class PopupManager : MonoSingleton<PopupManager>
         }
         return popup;
     }
+    public Popup Open(Popup popup_Prefab, bool enableBackCloseButton = true, Action actionCloseEvent = null, Action actionEvent = null, Action actionNegativeEvent = null, bool holdEventOK = false, bool holdEventNegative = false, bool isReserve = false, bool enableOverlapPopup = false, bool disableBackKey = false, bool enableBlocking = true)
+    {
+        if (CurrentPopup != null&& CurrentPopup.GetType() == popup_Prefab.GetType())
+        {
+            return CurrentPopup;
+        }
+
+
+        //GameObject popup2 = m_PopupList.GetPopup(type);
+        //if (popup2 == null)
+        //{
+        //    return null;
+        //}
+        Popup popup = null;
+        GameObject gameObject = UnityEngine.Object.Instantiate(popup_Prefab.gameObject);
+        if (gameObject == null)
+        {
+            return null;
+        }
+        if (!gameObject.activeSelf)
+        {
+            gameObject.SetActive(value: true);
+        }
+        popup = gameObject.GetComponent<Popup>();
+        popupCanvasScaler.enabled = false;
+        popupCanvasScaler.enabled = true;
+        if ((bool)popup)
+        {
+            popup.EnableOverlapPopup = enableOverlapPopup;
+            popup.DisableBackKey = disableBackKey;
+            popup.transform.SetParent(ParentPopupGroup, worldPositionStays: false);
+            popup.transform.localPosition = Vector3.zero;
+            popup.Open(PopupType.PopupNone, actionEvent, actionNegativeEvent, actionCloseEvent, holdEventOK, holdEventNegative);
+            IsActive = true;
+            if (popup.EnableOverlapPopup)
+            {
+                ObjBackBlocking.transform.SetSiblingIndex(popup.transform.GetSiblingIndex() - 1);
+            }
+            //listOpenedPopupObject.Add(popup);
+            popup.enableBackBlockingClose = enableBackCloseButton;
+            CurrentPopup = popup;
+            CurrentPopupType = popup.m_PopupType;
+            CurrentPopup.SoundPlayShow();
+            if (CurrentPopup.enableBackBlockingClose)
+            {
+                EnableBackCloseEvent();
+            }
+            else
+            {
+                DisableBackCloseEvent();
+            }
+            if (enableBlocking)
+            {
+                ObjBackBlocking.SetActive(value: true);
+            }
+            UITweenList component = CurrentPopup.gameObject.GetComponent<UITweenList>();
+            if ((bool)component)
+            {
+                component.PlayTweenListOpen();
+            }
+        }
+        return popup;
+    }
     public T Open<T>(PopupType type) where T : Popup
     {
         Popup popup = Open(type);

@@ -4,10 +4,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Net;
+using System.Reflection;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static RedPackageAuthor;
+using static UnityEngine.GraphicsBuffer;
 
 public class UserManager : MonoSingleton<UserManager>
 {
@@ -34,31 +37,80 @@ public class UserManager : MonoSingleton<UserManager>
     public static string encryptSuperiorId = "";
 
     public static string tempUserId;
+
+
+    private string getAvatarsUrl = "/app-api/member/avatar/page";
+    public static ObjectGroup<string, (bool, Texture2D)> avatarData_Group = null;
+    public System.Action<Texture2D,int> loadedAvatarAction = null;
     private void Start()
     {
         currentAvatar_Texture = defaultTexture;
+
+        if (avatarData_Group == null && !string.IsNullOrEmpty(getAvatarsUrl))
+        {
+            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getAvatarsUrl, null, (resultData) =>
+            {
+                ReturnData<PageResultPacketSendRespVO<ReserveAvatarData>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<ReserveAvatarData>>>(resultData);
+                if (avatarData_Group == null)
+                {
+                    avatarData_Group = new ObjectGroup<string, (bool, Texture2D)>();
+                    for (int i = 0; i < returnData.data.list.Length; i++)
+                    {
+                        int index = i;
+                        avatarData_Group.Add(returnData.data.list[index].avatarUrl, (false, null));
+                        GeneralTool_Ctrl.DownloadImage(avatarData_Group[index].key, (texture2d) =>
+                        {
+                            avatarData_Group[index].target = (true, texture2d);
+                            loadedAvatarAction?.Invoke(texture2d, i);
+                            EventManager.Instance.DispatchEvent(GameType.LoadedAvatarTexture.ToString(), texture2d, index, avatarData_Group[index].key);
+                        }, () =>
+                        {
+                            avatarData_Group[index].target = (false, null);
+                        });
+                        
+                    }
+                }
+            });
+        }
+        EventManager.Instance.Regist(GameType.LoadedAvatarTexture.ToString(), this.GetInstanceID(), objects =>
+        {
+            Texture2D texture2d = (Texture2D)objects[0];
+            //int realIndex = (int)objects[1];
+            string avatarUrl = (string)objects[2];
+
+            if (appMemberUserInfoRespVO!=null&& appMemberUserInfoRespVO.avatar== avatarUrl)
+            {
+                currentAvatar_Texture = texture2d;
+            }
+
+        });
     }
-    public void GetUserMainInfo()
+    private void OnDestroy()
+    {
+        EventManager.Instance.UnRegist(GameType.LoadedAvatarTexture.ToString(), this.GetInstanceID());
+    }
+    public void GetUserMainInfo(System.Action<bool> loadedAction = null)
     {
 
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo
-        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resultData) => {
+        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resultData) =>
+        {
+            loadedAction?.Invoke(true);
             EventManager.Instance.DispatchEvent(typeof(UserManager).ToString(), "LoginIn");
-            GeneralTool_Ctrl.DownloadImage(appMemberUserInfoRespVO.avatar, (texture) =>
+            if (avatarData_Group != null && avatarData_Group[appMemberUserInfoRespVO.avatar].Item2 != null)
             {
-                if (currentAvatar_Texture != null&& currentAvatar_Texture!= defaultTexture)
-                {
-                    Destroy(currentAvatar_Texture);
-                }
-                if (this == null)
-                {
-                    Destroy(texture);
-                    return;
-                }
-                currentAvatar_Texture = texture;
-            });
+                currentAvatar_Texture = avatarData_Group[appMemberUserInfoRespVO.avatar].Item2;
+            }
+            //GeneralTool_Ctrl.DownloadImage(appMemberUserInfoRespVO.avatar, (texture) =>
+            //{
+            //    currentAvatar_Texture = texture;
+            //}, () => {
+            //    loadedAction?.Invoke(false);
+            //});
+        }, () => {
+            loadedAction?.Invoke(false);
         });
     }
 

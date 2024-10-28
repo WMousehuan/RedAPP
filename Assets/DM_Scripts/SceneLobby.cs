@@ -204,7 +204,19 @@ public class SceneLobby : SceneClass
             Debug.Log("First Time to login to do!");
 			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
 			{
-                MonoSingleton<UserManager>.Instance.GetUserMainInfo();
+                UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+				waitMask_Ui.Init("Sign in");
+                MonoSingleton<UserManager>.Instance.GetUserMainInfo((isSuccess) => {
+					switch (isSuccess)
+					{
+						case true:
+                            waitMask_Ui.ShowResultCase("Success", 0);
+                            break;
+						case false:
+                            waitMask_Ui.ShowResultCase("Fail", 0);
+                            break;
+					}
+				});
             }
 			else
 			{
