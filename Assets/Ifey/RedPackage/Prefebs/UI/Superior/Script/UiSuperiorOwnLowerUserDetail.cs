@@ -21,6 +21,7 @@ public class UiSuperiorOwnLowerUserDetail : Popup
     public Image loading_Image;
     public Text totalBrokerage_Text;
 
+    public UiLowerUserDetail uiLowerUserDetail_Prefabs;
     public override void Start()
     {
         base.Start();
@@ -51,11 +52,13 @@ public class UiSuperiorOwnLowerUserDetail : Popup
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() =>
                 {
-                    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
+                    UiLowerUserDetail.currentUserId = lowerAgentUserData.id;
+                    UiLowerUserDetail uiLowerUserDetail= PopupManager.Instance.Open(uiLowerUserDetail_Prefabs).GetComponent<UiLowerUserDetail>();
+                    uiLowerUserDetail.Inits(lowerAgentUserData.nickname, lowerAgentUserData.avatar);
+                    //((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentUserData);
                 });
                 target.GetChild<Text>("Amount_Text").text = lowerAgentUserData.totalBrokerage.ToString("F2");
                 target.GetChild<Text>("NickName_Text").text = lowerAgentUserData.nickname;
-                print(lowerAgentUserData.createTime);
                 target.GetChild<TMPro.TextMeshProUGUI>("CreateTime_Text").text = dotmob.ConvertFormat.TimeStampToDataTime(long.Parse(lowerAgentUserData.createTime)).ToString();
             }
         };
@@ -103,7 +106,7 @@ public class UiSuperiorOwnLowerUserDetail : Popup
     {
         public int id;//
         public string nickname;//昵称
-        //public string avatar;//头像
+        public string avatar;//头像
         //public string mobile;//手机号
         //public int point;//积分
         ////public AgentLevelDataVO level;

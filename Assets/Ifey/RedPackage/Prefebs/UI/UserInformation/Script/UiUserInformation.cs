@@ -29,7 +29,7 @@ public class Ui_UserInformation : Popup
     public TMP_InputField userName_InputField;
     public Button setName_Button;
     public Transform setNameEidit_Case;
-
+    public Transform statisticDetail_Case;
     private string uploadUserDataUrl = "/app-api/member/user/update";
     private string updateFileUrl = "/app-api/infra/file/upload";
     private string getStatisticDetailUrl = "/app-api/member/account-statement/statistic";
@@ -41,6 +41,7 @@ public class Ui_UserInformation : Popup
     private string receiveWebFileName;
     public Popup uiAvatarSelectCase_Prefab;
 
+    public Transform followerCommissionItem;
 
 #if UNITY_WEBGL            
     [DllImport("__Internal")]
@@ -72,23 +73,28 @@ public class Ui_UserInformation : Popup
             });
         }
         //return;
-        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getStatisticDetailUrl, null, (resultData) =>
+        if(statisticDetail_Case!=null&& statisticDetail_Case.gameObject.activeSelf)
         {
-            ReturnData<PageResultPacketSendRespVO<StatisticDetailData>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<StatisticDetailData>>>(resultData);
-
-            for (int i = 0; i < returnData.data.list.Length; i++)
+            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getStatisticDetailUrl, null, (resultData) =>
             {
-                StatisticDetailData statisticDetailData = returnData.data.list[i];
-                statisticDetailData_Group.Add((AmountStateType)(statisticDetailData.tradeType + 1), statisticDetailData);
+                ReturnData<PageResultPacketSendRespVO<StatisticDetailData>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<StatisticDetailData>>>(resultData);
 
-                if (amountStateItem_Group.ContainsKey((AmountStateType)(statisticDetailData.tradeType + 1)))
+                for (int i = 0; i < returnData.data.list.Length; i++)
                 {
-                    amountStateItem_Group[(AmountStateType)(statisticDetailData.tradeType + 1)].GetChild<Text>("Amount_Text").text = (statisticDetailData.totalAmount > 0 ? "+" : "") + statisticDetailData.totalAmount.ToString();
+                    StatisticDetailData statisticDetailData = returnData.data.list[i];
+                    statisticDetailData_Group.Add((AmountStateType)(statisticDetailData.tradeType + 1), statisticDetailData);
+
+                    if (amountStateItem_Group.ContainsKey((AmountStateType)(statisticDetailData.tradeType + 1)))
+                    {
+                        amountStateItem_Group[(AmountStateType)(statisticDetailData.tradeType + 1)].GetChild<Text>("Amount_Text").text = (statisticDetailData.totalAmount > 0 ? "+" : "") + statisticDetailData.totalAmount.ToString();
+                    }
+                    if (statisticDetailData.tradeType == 4)
+                    {
+                        followerCommissionItem.GetChild<Text>("Amount_Text").text = (statisticDetailData.totalAmount > 0 ? "+" : "") + statisticDetailData.totalAmount.ToString();
+                    }
                 }
-
-            }
-        });
-
+            });
+        }
     }
     private void OnDestroy()
     {
