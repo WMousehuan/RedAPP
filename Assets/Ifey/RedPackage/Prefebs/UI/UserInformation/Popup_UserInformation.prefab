@@ -1407,7 +1407,7 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'Amount
 
-    Detial'
+    Detail'
 --- !u!1 &2334284472089854505
 GameObject:
   m_ObjectHideFlags: 0
@@ -3507,7 +3507,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: PopupSuperiorOwnLowerUserDetail
+          m_StringArgument: PopupUserAmountDetial
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &6645436405258136713
