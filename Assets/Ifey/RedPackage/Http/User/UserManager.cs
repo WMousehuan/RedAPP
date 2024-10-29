@@ -15,7 +15,7 @@ using static UnityEngine.GraphicsBuffer;
 public class UserManager : MonoSingleton<UserManager>
 {
     [HideInInspector]
-    public AppMemberUserInfoRespVO appMemberUserInfoRespVO =null; //userInfo
+    public AppMemberUserInfoRespVO appMemberUserInfoRespVO = null; //userInfo
 
     public Texture2D defaultTexture;
 
@@ -41,7 +41,7 @@ public class UserManager : MonoSingleton<UserManager>
 
     private string getAvatarsUrl = "/app-api/member/avatar/page";
     public static ObjectGroup<string, (bool, Texture2D)> avatarData_Group = null;
-    public System.Action<Texture2D,int> loadedAvatarAction = null;
+    public System.Action<Texture2D, int> loadedAvatarAction = null;
     private void Start()
     {
         currentAvatar_Texture = defaultTexture;
@@ -67,7 +67,7 @@ public class UserManager : MonoSingleton<UserManager>
                         {
                             avatarData_Group[index].target = (false, null);
                         });
-                        
+
                     }
                 }
             });
@@ -78,7 +78,7 @@ public class UserManager : MonoSingleton<UserManager>
             //int realIndex = (int)objects[1];
             string avatarUrl = (string)objects[2];
 
-            if (appMemberUserInfoRespVO!=null&& appMemberUserInfoRespVO.avatar== avatarUrl)
+            if (appMemberUserInfoRespVO != null && appMemberUserInfoRespVO.avatar == avatarUrl)
             {
                 currentAvatar_Texture = texture2d;
             }
@@ -113,7 +113,69 @@ public class UserManager : MonoSingleton<UserManager>
             loadedAction?.Invoke(false);
         });
     }
+    public void SetAvatarRawImageByUrl(RawImage avatar_RawImage,string avatarUrl)
+    {
+        print(avatarUrl);
+        if (string.IsNullOrEmpty(avatarUrl))
+        {
+            return;
+        }
+        if (avatarData_Group.ContainsKey(avatarUrl))
+        {
+  
+            if (avatarData_Group[avatarUrl].Item2 != null)
+            {
+                avatar_RawImage.texture = avatarData_Group[avatarUrl].Item2;
+                return;
+            }
+            int currentIndex =avatarData_Group.GetIndexByKey(avatarUrl);
+            if (UserManager.avatarData_Group[avatarUrl].Item1 == true)
+            {
 
+                System.Action<Texture2D, int> loadedAvatarAction = null;
+                loadedAvatarAction = (texture2D, index) => {
+                    if (index == currentIndex)
+                    {
+                        if (avatar_RawImage != null)
+                        {
+                            avatar_RawImage.texture = texture2D;
+                        }
+                    }
+                };
+                this.loadedAvatarAction = loadedAvatarAction;
+                return;
+            }
+            else
+            {
+                GeneralTool_Ctrl.DownloadImage(avatarUrl, (texture2D) =>
+                {
+                    if (avatar_RawImage != null)
+                    {
+                        avatar_RawImage.texture = texture2D;
+                    }
+                    avatarData_Group[currentIndex].target = (true, texture2D);
+                    this.loadedAvatarAction?.Invoke(texture2D, currentIndex);
+                    EventManager.Instance.DispatchEvent(GameType.LoadedAvatarTexture.ToString(), texture2D, currentIndex, avatarData_Group[currentIndex].key);
+                }, () =>
+                {
+                    avatarData_Group[currentIndex].target = (false, null);
+                });
+            }
+        }
+        else
+        {
+            GeneralTool_Ctrl.DownloadImage(avatarUrl, (texture2D) =>
+            {
+                if (avatar_RawImage != null)
+                {
+                    avatar_RawImage.texture = texture2D;
+                }
+
+            }, () =>
+            {
+            });
+        }
+    }
     
 }
 

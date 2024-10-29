@@ -10,6 +10,8 @@ public class UIPOPSignup : Popup
     public TMP_InputField loginPsd;
     public TMP_InputField nickname;
     public TMP_InputField superiorId;
+    public TMP_InputField phoneNumber_InputField;
+    public TMP_InputField code_InputField;
     [HideInInspector]
     string userSignUpUrl = "/app-api/member/auth/register";
 
@@ -46,6 +48,14 @@ public class UIPOPSignup : Popup
         if (appAuthRegistReqVO.nickname.Length < 4)
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "The nickname length of the username is 4 digits");
+            return;
+        }
+        if(phoneNumber_InputField!=null&& phoneNumber_InputField.text.Length < 13)
+        {
+            return;
+        }
+        if (code_InputField != null && string.IsNullOrEmpty(code_InputField.text))
+        {
             return;
         }
         UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
