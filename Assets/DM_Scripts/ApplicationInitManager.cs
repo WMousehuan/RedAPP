@@ -40,18 +40,21 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
             {
 
 
-                SceneLobby.autoEnterChannelId = SceneLobby.autoEnterChannelId.Remove(SceneLobby.autoEnterChannelId.Length - 3);
+               
                 var dataObject = new
                 {
                     channelId = SceneLobby.autoEnterChannelId,
                 };
                 UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sharedChannelUrl, dataObject, new CommonHttpInterface(), (resultData) =>
                 {
+                    SceneLobby.autoEnterChannelId = SceneLobby.autoEnterChannelId.Remove(SceneLobby.autoEnterChannelId.Length - 3);
                     MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Lobby, SceneChangeEffect.Color);
                     PlayerTreasureGameData.Instance.entranceChannelId = SceneLobby.autoEnterChannelId;
                     //Get playList info »ñÈ¡Íæ·¨
                     MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(SceneLobby.autoEnterChannelId);
                     SceneLobby.autoEnterChannelId = "";
+                }, () => {
+                    UiHintCase.instance.Show("Channel Non-existent");
                 });
             }
         }
