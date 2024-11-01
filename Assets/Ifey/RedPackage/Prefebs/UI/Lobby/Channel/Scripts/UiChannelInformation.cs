@@ -65,7 +65,7 @@ public class UiChannelInformation : Popup
                     promotionLink_InputField.text = promotionUrl;
                 }
                 copy_Button?.gameObject?.SetActive(true);
-            }, () =>
+            }, (code, msg) =>
             {
             });
         }
@@ -100,7 +100,7 @@ public class UiChannelInformation : Popup
                 waitMask_Ui?.ShowResultCase("Success", 1, () => {
                     MonoSingleton<SceneControlManager>.Instance?.LoadScene(SceneType.Title, SceneChangeEffect.Color);
                 });
-            }, () =>
+            }, (code, msg) =>
             {
                 waitMask_Ui?.ShowResultCase("Fail", 1);
             });
@@ -178,7 +178,7 @@ public class UiChannelInformation : Popup
             {
                 PopupManager.Instance?.Close();
             });
-        }, () =>
+        }, (code, msg) =>
         {
             waitMask_Ui?.ShowResultCase("Fail", 1);
         });

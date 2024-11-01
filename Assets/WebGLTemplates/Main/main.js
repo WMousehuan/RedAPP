@@ -288,6 +288,9 @@ function receiveMessageFromUnity(s) {
             case "clipbord":
                 ClipboardJS.copy(receiveMessageStages[1]);
                 break;
+            case "openUrl":
+                window.open(receiveMessageStages[1], '_blank');
+                break;
         }
     }
     else {

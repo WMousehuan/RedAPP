@@ -52,7 +52,7 @@ public class UiSuperiorUser : Popup
             UpdateState();
             waitMask_Ui?.ShowResultCase("GetData", 1);
 
-        }, () =>
+        }, (code, msg) =>
         {
             waitMask_Ui?.ShowResultCase("Fail", 1, () =>
             {
@@ -83,7 +83,7 @@ public class UiSuperiorUser : Popup
                 waitMask_Ui?.ShowResultCase("Success", 1, () => {
                     WebRequestPromotionUrl();
                 });
-            }, () =>
+            }, (code, msg) =>
             {
                 waitMask_Ui?.ShowResultCase("Fail", 1);
             });

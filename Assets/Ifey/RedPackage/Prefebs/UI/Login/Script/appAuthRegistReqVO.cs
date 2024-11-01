@@ -10,5 +10,8 @@ public class AppAuthRegistReqVO
     public string password { get; set; }
     public string payPassword { get; set; }
 
+    public string mobile { get; set; }
+    public string code { get; set; }
+
     public string encryptSuperiorId { get; set; }
 }

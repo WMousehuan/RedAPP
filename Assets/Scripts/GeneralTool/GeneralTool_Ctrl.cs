@@ -39,7 +39,7 @@ public class GeneralTool_Ctrl : Singleton_Base<GeneralTool_Ctrl>
     /// 获得当前时间戳
     /// </summary>
     /// <returns></returns>
-    public static long GetTimeStemp()
+    public static long GetTimeStamp()
     {
         return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }

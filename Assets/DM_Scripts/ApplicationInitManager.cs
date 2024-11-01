@@ -18,19 +18,13 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
     }
     private void Start()
     {
-        EventManager.Instance.Regist(typeof(UserManager).ToString(), this.GetInstanceID(), (objects) => {
-            string sign = (string)objects[0];
-            switch (sign)
-            {
-                case "LoginIn":
-                    TurnToChannel();
-                    break;
-            }
+        EventManager.Instance.Regist(GameEventType.Login.ToString(), this.GetInstanceID(), (objects) => {
+            TurnToChannel();
         });
     }
     private void OnDestroy()
     {
-        EventManager.Instance.UnRegist(typeof(UserManager).ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameEventType.Login.ToString(), this.GetInstanceID());
     }
     public void TurnToChannel()
     {
@@ -53,7 +47,7 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
                     //Get playList info »ñÈ¡Íæ·¨
                     MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(SceneLobby.autoEnterChannelId);
                     SceneLobby.autoEnterChannelId = "";
-                }, () => {
+                }, (code,msg) => {
                     UiHintCase.instance.Show("Channel Non-existent");
                 });
             }

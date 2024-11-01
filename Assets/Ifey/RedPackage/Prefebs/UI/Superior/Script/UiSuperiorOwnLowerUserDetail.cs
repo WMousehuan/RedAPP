@@ -88,7 +88,7 @@ public class UiSuperiorOwnLowerUserDetail : Popup
                 currentPage++;
                 isLoadingList = false;
                 loading_Image?.gameObject.SetActive(false);
-            }, () =>
+            }, (code, msg) =>
             {
                 isLoadingList = false;
                 loading_Image?.gameObject.SetActive(false);

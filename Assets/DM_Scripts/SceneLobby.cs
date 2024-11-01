@@ -80,7 +80,7 @@ public class SceneLobby : SceneClass
 				case "CreateChannel":
 					foreach(RefreshChannelGameTypeTImer refreshChannelGameTypeTImer in refreshChannelGameTypeTImers)
 					{
-						refreshChannelGameTypeTImer.refreshFromRequest();
+						refreshChannelGameTypeTImer.RefreshFromRequest();
                     }
                     break;
             }
@@ -204,19 +204,12 @@ public class SceneLobby : SceneClass
             Debug.Log("First Time to login to do!");
 			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
 			{
-                UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
-				waitMask_Ui.Init("Sign in");
-                MonoSingleton<UserManager>.Instance.GetUserMainInfo((isSuccess) => {
-					switch (isSuccess)
-					{
-						case true:
-                            waitMask_Ui.ShowResultCase("Success", 0);
-                            break;
-						case false:
-                            waitMask_Ui.ShowResultCase("Fail", 0);
-                            break;
-					}
-				});
+				if (UserManager.Instance.appMemberUserInfoRespVO == null)
+				{
+                    UserManager.Instance.GetUserMainInfo((isSuccess) => {
+
+                    });
+                }
             }
 			else
 			{
