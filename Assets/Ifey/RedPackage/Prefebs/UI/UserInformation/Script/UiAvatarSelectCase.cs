@@ -22,7 +22,7 @@ public class UiAvatarSelectCase : Popup
         base.Start();
         loopScroll_Ctrl.Init(0, 0, (target, index) =>
         {
-            EventManager.Instance.Regist(GameType.LoadedAvatarTexture.ToString(), target.GetInstanceID(), objects =>
+            EventManager.Instance.Regist(GameEventType.LoadedAvatarTexture.ToString(), target.GetInstanceID(), objects =>
             {
                 Texture2D texture2d = (Texture2D)objects[0];
                 int realIndex = (int)objects[1];
@@ -33,7 +33,7 @@ public class UiAvatarSelectCase : Popup
             });
         }, (target, index) =>
         {
-            EventManager.Instance.UnRegist(GameType.LoadedAvatarTexture.ToString(), target.GetInstanceID());
+            EventManager.Instance?.UnRegist(GameEventType.LoadedAvatarTexture.ToString(), target.GetInstanceID());
         });
         loopScroll_Ctrl.scrollEnterEvent = (realIndex, rowIndex, columnIndex, target) =>
         {
@@ -65,6 +65,7 @@ public class UiAvatarSelectCase : Popup
 
         if (UserManager.avatarData_Group == null )
         {
+            UserManager.Instance.GetAvatarDatas();
             PopupManager.Instance.Close(this);
             UiHintCase.instance.Show("Avatars Load Fail");
         }
@@ -77,6 +78,11 @@ public class UiAvatarSelectCase : Popup
     }
     public void Save()
     {
+        if (UserManager.avatarData_Group[selectAvatarIndex].key == UserManager.Instance.appMemberUserInfoRespVO.avatar)
+        {
+            this.OnEventClose();
+            return;
+        }
         UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
         UtilJsonHttp.Instance.PutContentWithParamAuthorizationToken(uploadUserDataUrl, GetUploadDataString((UserInfoType.avatar, UserManager.avatarData_Group[selectAvatarIndex].key)), null, (requestData) =>
         {
@@ -121,7 +127,7 @@ public class UiAvatarSelectCase : Popup
                 waitMask_Ui.ShowResultCase("Success", 0);
                 this.OnEventClose();
             }
-        }, () =>
+        }, (code, msg) =>
         {
             waitMask_Ui.ShowResultCase("Fail", 1);
         });

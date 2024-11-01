@@ -8,13 +8,18 @@ public class UpdateCoin : MonoBehaviour
 	private void Start()
 	{
 		text = GetComponent<Text>();
-		EventManager.Instance.Regist(GameType.CoinUpdate.ToString(), this.GetInstanceID(), (objects) => {
+		EventManager.Instance.Regist(GameEventType.CoinUpdate.ToString(), this.GetInstanceID(), (objects) => {
             text.text = RedPackageAuthor.Instance.userBalance.ToString();
         });
-	}
+        EventManager.Instance.Regist(GameEventType.Logout.ToString(), this.GetInstanceID(), (objects) => {
+			text.text = 0+"";
+        });
+
+    }
     private void OnDestroy()
     {
-		EventManager.Instance.UnRegist(GameType.CoinUpdate.ToString(), this.GetInstanceID());
+		EventManager.Instance?.UnRegist(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
+		EventManager.Instance?.UnRegist(GameEventType.Logout.ToString(), this.GetInstanceID());
     }
     private void LateUpdate()
 	{

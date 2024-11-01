@@ -6,11 +6,31 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using BestHTTP.JSON.LitJson;
 
 public class UipopupTreasureShopApi : MonoBehaviour
 {
+    //[HideInInspector]
+    //string createOrderApi = "/app-api/red/cash-recharge/create";
+
+    //public void BuyCoinHttp(double coinNumber, double rewardAmount)
+    //{
+    //    try
+    //    {
+    //        Debug.Log("Start grab pkg!");
+    //        AppCashRechargeSaveReqVO appCashRechargeSaveReqVO = new AppCashRechargeSaveReqVO();
+    //        appCashRechargeSaveReqVO.optCash = coinNumber;
+    //        //when start the game,get the userInfo
+    //        UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(createOrderApi, appCashRechargeSaveReqVO, new UipopupTreasureShopApiRespond(this, coinNumber + rewardAmount));
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        Debug.LogError("UipopupTreasureShopApi An exception occurred: " + e.Message);
+    //        // Handle the exception, for example display an error message or log the exception
+    //    }
+    //}
     [HideInInspector]
-    string createOrderApi = "/app-api/red/cash-recharge/create";
+    string rechargeUrl = "/app-api/red/order/toRecharge";
 
     public void BuyCoinHttp(double coinNumber, double rewardAmount)
     {
@@ -19,8 +39,31 @@ public class UipopupTreasureShopApi : MonoBehaviour
             Debug.Log("Start grab pkg!");
             AppCashRechargeSaveReqVO appCashRechargeSaveReqVO = new AppCashRechargeSaveReqVO();
             appCashRechargeSaveReqVO.optCash = coinNumber;
-            //when start the game,get the userInfo
-            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(createOrderApi, appCashRechargeSaveReqVO, new UipopupTreasureShopApiRespond(this, coinNumber + rewardAmount));
+
+            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(rechargeUrl, appCashRechargeSaveReqVO, null, (resultData) =>
+            {
+                print(resultData);
+                JsonData jsonData = JsonMapper.ToObject(resultData);
+                if (jsonData.ContainsKey("data")&& jsonData["data"]!=null)
+                {
+                    string url = jsonData["data"].ToString();
+                    if (!string.IsNullOrEmpty(url))
+                    {
+#if UNITY_EDITOR || PLATFORM_ANDROID
+                        Application.OpenURL(url);
+#elif UNITY_WEBGL
+                        WebMessage_Ctrl.SendMessageToWeb("openUrl^"+url);
+#endif
+                        //System.Action loopChackResultAction = null;
+                        //loopChackResultAction = () => 
+                        //{
+                        //    IEPool_Manager.instance.WaitTimeToDo(null, 5, null, () => {
+                                
+                        //    });
+                        //};
+                    }
+                }
+            });
         }
         catch (Exception e)
         {
@@ -28,7 +71,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
             // Handle the exception, for example display an error message or log the exception
         }
     }
-    public void MakeBuyProductThrillGame(double indexProduct,double rewardAmount)
+    public void MakeBuyProductThrillGame(double indexProduct, double rewardAmount)
     {
 
         BuyCoinHttp(indexProduct, rewardAmount);

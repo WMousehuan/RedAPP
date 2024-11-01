@@ -103,7 +103,7 @@ public class UiCreateChannelPanel : Popup
             waitMask_Ui?.ShowResultCase("Success", 1, () => {
                 PopupManager.Instance.Close();
             });
-        }, () =>
+        }, (code, msg) =>
         {
             waitMask_Ui?.ShowResultCase("Fail", 1);
         });

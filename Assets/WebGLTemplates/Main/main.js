@@ -34,43 +34,11 @@ if("encryptSuperiorId" in urlSearch_Dictionary)
 {
     encryptSuperiorId=urlSearch_Dictionary["encryptSuperiorId"];
 }
-// if ("initScene" in urlSearch_Dictionary) {
-//     var _currentSceneName=urlSearch_Dictionary["initScene"];
-//     switch(_currentSceneName){
-//         case "HallLobby":
-//         _currentSceneName="Lobby";
-//             break;
-//             case "HallConference":
-//         _currentSceneName="ConferenceHall";
-//             break;
-//     }
-//     if(_currentSceneName!=initSceneName)
-//     {
-//         realTargetScene=_currentSceneName;
-//     }    
-//     initSceneName = _currentSceneName;
-   
-// }
-// if ("scene" in urlSearch_Dictionary) {
-//     var _currentSceneName=urlSearch_Dictionary["scene"];
-//     switch(_currentSceneName){
-//         case "HallLobby":
-//         _currentSceneName="Lobby";
-//             break;
-//             case "HallConference":
-//         _currentSceneName="ConferenceHall";
-//             break;
-//         case "Lobby":
-//         case "ExhibitionHall":
-//         case "ConferenceHall":     
-//         break;
-//     }
-//     if(_currentSceneName!=initSceneName)
-//     {
-//         realTargetScene=_currentSceneName;
-//     }    
-//     initSceneName = _currentSceneName;
-// }
+var channelId="";
+if("channelId" in urlSearch_Dictionary)
+{
+    channelId=urlSearch_Dictionary["channelId"];
+}
  var xhr = null;
 // var haveToken = false;
 // var token = "";
@@ -152,9 +120,9 @@ updateBannerVisibility();
 
 var loaderUrl = buildUrl + "RedPackage_WebGl.loader.js";
 var config = {
-dataUrl: buildUrl + "RedPackage_WebGl.data",
-frameworkUrl: buildUrl + "RedPackage_WebGl.framework.js",
-codeUrl: buildUrl + "RedPackage_WebGl.wasm",
+dataUrl: buildUrl + "RedPackage_WebGl.data.unityweb",
+frameworkUrl: buildUrl + "RedPackage_WebGl.framework.js.unityweb",
+codeUrl: buildUrl + "RedPackage_WebGl.wasm.unityweb",
 streamingAssetsUrl: "StreamingAssets",
 companyName: "ThrillGame",
 productName: "TreasureChest",
@@ -199,7 +167,8 @@ createUnityInstance(document.querySelector("#unity-canvas"), config, (progress) 
     finishAction();
     //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'InitManager|' + initSceneName+"^"+realTargetScene);
     console.log("++++++++++++++++++" + encryptSuperiorId);
-    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "UserManager|encryptSuperiorId^"+encryptSuperiorId);                                   
+    unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', "InitManager|WebInitData^"+encryptSuperiorId+"^"+channelId);
+    history.pushState({ key: 'value' }, 'Title', mainUrl)
     //unityInstance.SendMessage('WebMessage_Ctrl', 'ReciveMessage', 'MainUI|GetWebPlatform^' + navigator.userAgent);
 });
 }
@@ -316,35 +285,16 @@ function receiveMessageFromUnity(s) {
                         break;
                 }
                 break;
+            case "clipbord":
+                ClipboardJS.copy(receiveMessageStages[1]);
+                break;
+            case "openUrl":
+                window.open(receiveMessageStages[1], '_blank');
+                break;
         }
     }
     else {
         switch (s) {
-            case "CreateAvatarFinish":
-                finish();
-                break;
-            case "closeMeeting":
-                closeMeeting();
-                break;
-            case "showInput":
-                showInput();
-                break;
-            case "hideInput":
-                hideInput();
-                break;
-            case "hideChat":
-                talkjs_container.style.display = "none";
-                talkjs_container.style.opacity = 0;
-                talkjs_container.style.pointerEvents = "none";
-                //talkjs_container.style.display="none";
-                if (chatCloseImg != null) {
-                    if (talkjs_container.contains(chatCloseImg)) {
-                        talkjs_container.removeChild(chatCloseImg);
-                    }
-                    chatCloseImg = null;
-                }
-                CreateChat("");
-                break;
             case "GC":
                 break;
             case "Refresh":

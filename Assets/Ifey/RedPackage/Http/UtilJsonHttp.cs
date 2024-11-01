@@ -25,11 +25,11 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
     /// </summary>
     /// <param name="apiUrl"></param>
     /// <param name="httpInterface"></param>
-    public void GetRequestWithAuthorizationToken(string apiUrl, HttpInterface httpInterface,System.Action<string> successAction =null, System.Action failAction = null)
+    public void GetRequestWithAuthorizationToken(string apiUrl, HttpInterface httpInterface,System.Action<string> successAction =null, System.Action<int,string> failAction = null)
     {
         StartCoroutine(IEGetRequestWithAuthorizationToken(apiUrl, httpInterface, successAction, failAction));
     }
-    IEnumerator IEGetRequestWithAuthorizationToken(string apiUrl, HttpInterface httpInterface, System.Action<string> finishAction = null, System.Action failAction = null)
+    IEnumerator IEGetRequestWithAuthorizationToken(string apiUrl, HttpInterface httpInterface, System.Action<string> finishAction = null, System.Action<int,string> failAction = null)
     {
         string url = mainDomain+ apiUrl; 
         // Create UnityWebRequest Object
@@ -45,7 +45,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             {
                 Debug.Log(www.error);
                 httpInterface?.UnknowError(www.error);
-                failAction?.Invoke();
+                failAction?.Invoke(-1, www.error);
             }
             else
             {
@@ -54,6 +54,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
+                string msg= json["msg"].Value<string>();
                 if (code == 0)
                 {
                     httpInterface?.Success(result);
@@ -63,7 +64,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 else
                 {
                     httpInterface?.Fail(json);
-                    failAction?.Invoke();
+                    failAction?.Invoke(code, msg);
                 }
             }
         }
@@ -106,11 +107,11 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
         }
     }
 
-    public void PostRequestWithParamAuthorizationToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    public void PostRequestWithParamAuthorizationToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         StartCoroutine(IEPostRequestWithParamAndToken(apiUrl, paramers, httpInterface, successAction, failAction));
     }
-    IEnumerator IEPostRequestWithParamAndToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    IEnumerator IEPostRequestWithParamAndToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         string url = mainDomain + apiUrl;
 
@@ -132,8 +133,9 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
 
             if (www.result != UnityWebRequest.Result.Success)
             {
+
                 Debug.Log(www.error);
-                failAction?.Invoke();
+                failAction?.Invoke(-1, www.error);
             }
             else
             {
@@ -142,6 +144,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
+                string msg = json["msg"].Value<string>();
                 if (code == 0)
                 {
                     httpInterface?.Success(result);
@@ -151,16 +154,17 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 else
                 {
                     httpInterface?.Fail(json);
-                    failAction?.Invoke();
+                    failAction?.Invoke(code, msg);
+                    Debug.LogError("code:"+code);
                 }
             }
         }
     }
-    public void PostFileWithParamAuthorizationToken(string apiUrl, string fileName, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    public void PostFileWithParamAuthorizationToken(string apiUrl, string fileName, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         StartCoroutine(IEPostFileWithParamAndToken(apiUrl,  fileData, httpInterface, successAction, failAction));
     }
-    IEnumerator IEPostFileWithParamAndToken(string apiUrl, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    IEnumerator IEPostFileWithParamAndToken(string apiUrl, byte[] fileData, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         string url = mainDomain + apiUrl;
 
@@ -178,8 +182,9 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
 
             if (www.result != UnityWebRequest.Result.Success)
             {
+          
                 Debug.Log(www.error);
-                failAction?.Invoke();
+                failAction?.Invoke(-1, www.error);
             }
             else
             {
@@ -188,6 +193,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
+                string msg = json["msg"].Value<string>();
                 if (code == 0)
                 {
                     httpInterface?.Success(result);
@@ -197,21 +203,21 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 else
                 {
                     httpInterface?.Fail(json);
-                    failAction?.Invoke();
+                    failAction?.Invoke(code, msg);
                 }
             }
         }
     }
-    public void PutObjectWithParamAuthorizationToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    public void PutObjectWithParamAuthorizationToken(string apiUrl, object paramers, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         string jsonParam = JsonConvert.SerializeObject(paramers);
         StartCoroutine(IEPutContentWithParamAndToken(apiUrl, jsonParam, httpInterface, successAction, failAction));
     }
-    public void PutContentWithParamAuthorizationToken(string apiUrl, string jsonParam, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    public void PutContentWithParamAuthorizationToken(string apiUrl, string jsonParam, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         StartCoroutine(IEPutContentWithParamAndToken(apiUrl, jsonParam, httpInterface, successAction, failAction));
     }
-    IEnumerator IEPutContentWithParamAndToken(string apiUrl, string jsonParam, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    IEnumerator IEPutContentWithParamAndToken(string apiUrl, string jsonParam, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         string url = mainDomain + apiUrl;
 
@@ -232,7 +238,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(www.error);
-                failAction?.Invoke();
+                failAction?.Invoke(-1, www.error);
             }
             else
             {
@@ -241,6 +247,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
+                string msg = json["msg"].Value<string>();
                 if (code == 0)
                 {
                     httpInterface?.Success(result);
@@ -250,17 +257,17 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 else
                 {
                     httpInterface?.Fail(json);
-                    failAction?.Invoke();
+                    failAction?.Invoke(code, msg);
                 }
             }
         }
     }
 
-    public void DeleteParamAuthorizationToken(string apiUrl, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    public void DeleteParamAuthorizationToken(string apiUrl, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         StartCoroutine(IEDeleteFormWithParamAndToken(apiUrl, httpInterface, successAction, failAction));
     }
-    IEnumerator IEDeleteFormWithParamAndToken(string apiUrl, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action failAction = null)
+    IEnumerator IEDeleteFormWithParamAndToken(string apiUrl, HttpInterface httpInterface, System.Action<string> successAction = null, System.Action<int,string> failAction = null)
     {
         string url = mainDomain + apiUrl;
         // Create UnityWebRequest Object
@@ -277,7 +284,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
             if (www.result != UnityWebRequest.Result.Success)
             {
                 Debug.Log(www.error);
-                failAction?.Invoke();
+                failAction?.Invoke(-1,www.error);
             }
             else
             {
@@ -286,6 +293,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 // Use Json.NET to JSON the result to JObject type
                 JObject json = JObject.Parse(result);
                 int code = json["code"].Value<int>();
+                string msg = json["msg"].Value<string>();
                 if (code == 0)
                 {
                     httpInterface?.Success(result);
@@ -295,7 +303,7 @@ public class UtilJsonHttp : MonoSingleton<UtilJsonHttp>
                 else
                 {
                     httpInterface?.Fail(json);
-                    failAction?.Invoke();
+                    failAction?.Invoke(code, msg);
                 }
             }
         }

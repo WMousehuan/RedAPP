@@ -103,7 +103,7 @@ public class UiUserAmountDetails : Popup
                     isLoadingList = false;
                     loading_Image.gameObject.SetActive(false);
                 }
-            }, () =>
+            }, (code, msg) =>
             {
                 if (this != null)
                 {

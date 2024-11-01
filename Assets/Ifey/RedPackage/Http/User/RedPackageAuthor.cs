@@ -50,7 +50,7 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
         {
 
             PlayerPrefs.SetFloat(userBalanceKey, value);
-            EventManager.Instance.DispatchEvent(GameType.CoinUpdate.ToString(), this.GetInstanceID());
+            EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
     }
 

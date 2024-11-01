@@ -116,14 +116,29 @@ public class PopupSetting : Popup
     {
         //Debug.Log("QUIT");
         SoundSFX.Play(SFXIndex.ButtonClick);
-        PlayerPrefs.DeleteAll();
-#if UNITY_EDITOR             
-        MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
+
+
+        UiAgreeCase uiAgreeCase = PopupManager.Instance.Open(PopupType.PopupAgreeCase).GetComponent<UiAgreeCase>();
+        uiAgreeCase.Init(() =>
+        {
+            PlayerPrefs.DeleteAll();
+            UserManager.Instance.appMemberUserInfoRespVO = null;
+#if UNITY_EDITOR
+            UserManager.Instance.UserLogout();
+            MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
+            EventManager.Instance.DispatchEvent(GameEventType.Logout.ToString());
 #elif PLATFORM_ANDROID
-        Application.Quit();
+            Application.Quit();
 #elif UNITY_WEBGL
-        MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
+            UserManager.Instance.UserLogout();
+            MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
+            EventManager.Instance.DispatchEvent(GameEventType.Logout.ToString());
 #endif
+        }, "Is ready to Logout?", "Confirm", "Back");
+
+
+
+
         //MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Title, SceneChangeEffect.Color);
     }
 

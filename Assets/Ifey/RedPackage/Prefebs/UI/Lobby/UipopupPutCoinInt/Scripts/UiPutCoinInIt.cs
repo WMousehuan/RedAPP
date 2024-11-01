@@ -81,7 +81,7 @@ public class UiPutCoinInIt : Popup
         {
             waitMask_Ui?.ShowResultCase("Success", 1);
         }
-        ,() =>
+        ,(code, msg) =>
         {
             waitMask_Ui?.ShowResultCase("Fail", 0);
         });
