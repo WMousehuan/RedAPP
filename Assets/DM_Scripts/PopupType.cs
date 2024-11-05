@@ -121,4 +121,5 @@ public enum PopupType
     CommonUserInformation,
 	PopupAvatarSelect,
     PopupLoginByPhoneNumber,
+	PopupMyUser,
 }

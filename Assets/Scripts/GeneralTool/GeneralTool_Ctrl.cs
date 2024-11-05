@@ -43,6 +43,22 @@ public class GeneralTool_Ctrl : Singleton_Base<GeneralTool_Ctrl>
     {
         return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
     }
+    public static DateTime GetDateTimeByStamp(string createTimeContent)
+    {
+        //long createTime = 0;
+        if (long.TryParse(createTimeContent, out long createTime))
+        {
+            return GetDateTimeByStamp(createTime);
+        }
+        return default;
+    }
+    public static DateTime GetDateTimeByStamp(long createTime)
+    {
+        DateTime utcTime = DateTimeOffset.FromUnixTimeMilliseconds((long)createTime).UtcDateTime;
+        TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+        DateTime localTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, localTimeZone);
+        return localTime;
+    }
     public static int CheckBit(int number,int index)
     {
         int i = number >> index;

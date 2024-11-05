@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using BestHTTP.JSON.LitJson;
 
 public class UipopupTreasureShopApi : MonoBehaviour
 {
@@ -29,9 +28,10 @@ public class UipopupTreasureShopApi : MonoBehaviour
     //        // Handle the exception, for example display an error message or log the exception
     //    }
     //}
-    [HideInInspector]
-    string rechargeUrl = "/app-api/red/order/toRecharge";
-
+    private string createRechargeUrl = "/app-api/red/order/toRecharge";//发起订单
+    private string cancleRechargeUrl = "/app-api/red/order/cancelRecharge/{0}";//取消订单
+    private string catchRechargeUrl = "/app-api/red/cash-recharge/page";//查询订单
+    private IEnumerator catchRechargeIE;
     public void BuyCoinHttp(double coinNumber, double rewardAmount)
     {
         try
@@ -39,31 +39,96 @@ public class UipopupTreasureShopApi : MonoBehaviour
             Debug.Log("Start grab pkg!");
             AppCashRechargeSaveReqVO appCashRechargeSaveReqVO = new AppCashRechargeSaveReqVO();
             appCashRechargeSaveReqVO.optCash = coinNumber;
-
-            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(rechargeUrl, appCashRechargeSaveReqVO, null, (resultData) =>
+            UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+            UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(createRechargeUrl, appCashRechargeSaveReqVO, null, (Action<string>)((resultData) =>
             {
-                print(resultData);
-                JsonData jsonData = JsonMapper.ToObject(resultData);
-                if (jsonData.ContainsKey("data")&& jsonData["data"]!=null)
+                //print(resultData);
+                ReturnData<PurchaseOrderDataVO> returnData = JsonConvert.DeserializeObject<ReturnData<PurchaseOrderDataVO>>(resultData);
+                if (!string.IsNullOrEmpty(returnData.data.payUrl))
                 {
-                    string url = jsonData["data"].ToString();
-                    if (!string.IsNullOrEmpty(url))
+#if UNITY_WEBGL
+                    UiPurchaseCase.instance.closeAction = () => {
+                        waitMask_Ui?.ShowResultCase("Cancle recharge", 0);
+                    }; 
+                    UiPurchaseCase.instance.timeOverAction = () => {
+                        UiPurchaseCase.instance.Close();
+                        IEPool_Manager.instance.StopIE(catchRechargeIE);
+                        waitMask_Ui?.ShowResultCase("Cancle recharge", 1);
+                    };
+                    UiPurchaseCase.instance.OpenUrl(returnData.data.payUrl);
+                    
+                    long timeStamp = 0;
+                    if (long.TryParse(returnData.data.expirationTime, out timeStamp))
                     {
-#if UNITY_EDITOR || PLATFORM_ANDROID
-                        Application.OpenURL(url);
-#elif UNITY_WEBGL
-                        WebMessage_Ctrl.SendMessageToWeb("openUrl^"+url);
-#endif
-                        //System.Action loopChackResultAction = null;
-                        //loopChackResultAction = () => 
-                        //{
-                        //    IEPool_Manager.instance.WaitTimeToDo(null, 5, null, () => {
-                                
-                        //    });
-                        //};
+
                     }
+                    System.Action loopAction = null;
+                    int stateIndex = 0;
+                    float catchTime = 20;
+                    float limitTime = timeStamp - GeneralTool_Ctrl.GetTimeStamp();
+                    UiPurchaseCase.instance.targetStampTime = timeStamp;
+                    loopAction = () => {
+                        limitTime = timeStamp - GeneralTool_Ctrl.GetTimeStamp();
+                        if (limitTime<=0)
+                        {
+                            UiPurchaseCase.instance.Close();
+                            waitMask_Ui?.ShowResultCase("Recharge timeout", 1);
+                            return;
+                        }
+                        switch (stateIndex)
+                        {
+                            case 0:
+                                catchTime = 20;
+                                break;
+                            case 1:
+                                catchTime = 15;
+                                break;
+                            case 2:
+                                catchTime = 10;
+                                break;
+                            default:
+                                catchTime = 5;
+                                break;
+                        }
+                        stateIndex++;
+                        IEPool_Manager.instance.WaitTimeToDo("RechargeCatch" + returnData.data.orderNo, catchTime, null, () => {
+                            string catchRechargeUrl = this.catchRechargeUrl + "?orderNo=" + returnData.data.orderNo;
+                            UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(catchRechargeUrl, null, (resultData) => {
+                                //查询订单状态 未完成
+                                ReturnData<PurchaseOrderDataVO> returnData = JsonConvert.DeserializeObject<ReturnData<PurchaseOrderDataVO>>(resultData);
+                                switch (returnData.data.rechargeStatus)
+                                {
+                                    case 0://正在充值
+                                        loopAction?.Invoke();
+                                        break;
+                                    case 1://充值成功
+                                        UiPurchaseCase.instance.Close();
+                                        waitMask_Ui?.ShowResultCase("Recharge successful", 1);
+                                        UIManager.Instance.ShowGetCoinEffect(base.transform, new Vector2(0, 100), () => {
+                                            RedPackageAuthor.Instance.userBalance += returnData.data.optCash + returnData.data.awardCash;
+                                        }, 10);
+                                        break;
+                                    case 2://充值失败
+                                        UiPurchaseCase.instance.Close();
+                                        waitMask_Ui?.ShowResultCase("Recharge Failed", 1);
+                                        break;
+                                    case 3://充值取消
+                                        UiPurchaseCase.instance.Close();
+                                        waitMask_Ui?.ShowResultCase("Cancle recharge", 1);
+                                        break;
+                                }
+                            }, (code,msg) => {
+                                loopAction?.Invoke();
+                            });
+                        });
+                    };
+                    loopAction?.Invoke();
+#elif UNITY_EDITOR || PLATFORM_ANDROID
+                    Application.OpenURL(returnData.data.payUrl);
+#endif
                 }
-            });
+
+            }));
         }
         catch (Exception e)
         {
@@ -140,4 +205,24 @@ public class UipopupTreasureShopApiRespond : HttpInterface
     {
         Debug.LogError("TreasureGrabRespond" + errorMsg);
     }
+
+    
+    //public class OrderDataVO
+    //{
+    //    public string orderNo;
+    //    public string rechargeStatus;
+    //    public string createTime;
+    //    public string expirationTime;
+    //}
+}
+public class PurchaseOrderDataVO
+{
+    public int id;
+    public string orderNo;
+    public string payUrl;
+    public float optCash;
+    public float awardCash;
+    public int rechargeStatus;
+    public string createTime;
+    public string expirationTime;
 }

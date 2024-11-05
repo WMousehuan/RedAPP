@@ -40,17 +40,17 @@ public class GetPlayListInterface : HttpInterface
             MonoSingleton<PlayerTreasureGameData>.Instance.playList[i] = responseData.data[i];
         }
         //MonoSingleton<GetChannelPlayInfo>.Instance.playList = responseData.data;
-        Debug.Log("Success GetPlayListInterface="+ responseData.data.ToString());
+        //Debug.Log("Success GetPlayListInterface="+ responseData.data.ToString());
         // 遍历 data 数组并打印每个 AppPlayRespVO 对象的信息
-        foreach (AppPlayRespVO appPlayResp in MonoSingleton<PlayerTreasureGameData>.Instance.playList)
-        {
-            //Debug.Log("id: " + appPlayResp.id);
-            //Debug.Log("redPacketNum: " + appPlayResp.redPacketNum);
-            //Debug.Log("compensateRatio: " + appPlayResp.compensateRatio);
-            //Debug.Log("status: " + appPlayResp.status);
-            //Debug.Log("createTime: " + appPlayResp.createTime);
-            //Debug.Log("playStatus: " + appPlayResp.playStatus);
-        }
+        //foreach (AppPlayRespVO appPlayResp in MonoSingleton<PlayerTreasureGameData>.Instance.playList)
+        //{
+        //    //Debug.Log("id: " + appPlayResp.id);
+        //    //Debug.Log("redPacketNum: " + appPlayResp.redPacketNum);
+        //    //Debug.Log("compensateRatio: " + appPlayResp.compensateRatio);
+        //    //Debug.Log("status: " + appPlayResp.status);
+        //    //Debug.Log("createTime: " + appPlayResp.createTime);
+        //    //Debug.Log("playStatus: " + appPlayResp.playStatus);
+        //}
     }
 
     public void Fail(JObject json)
