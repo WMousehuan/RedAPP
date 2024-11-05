@@ -62,7 +62,7 @@ public class VerifyCodeTextCountDown_Ctrl : MonoBehaviour
     }
     private void OnDestroy()
     {
-        EventManager.Instance.UnRegist(GameEventType.SetVerifyStampTime.ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameEventType.SetVerifyStampTime.ToString(), this.GetInstanceID());
     }
     // Update is called once per frame
     void Update()

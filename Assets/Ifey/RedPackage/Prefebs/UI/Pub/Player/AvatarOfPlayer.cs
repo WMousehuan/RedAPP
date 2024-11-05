@@ -22,6 +22,7 @@ public class AvatarOfPlayer : MonoBehaviour
 
     public void StartToGetUrlImage(string imageUrl)
     {
+        //if(UserManager.Instance.av)
         if (!avatar_Dictionary.ContainsKey(imageUrl))
         {
             StartCoroutine(DownloadImage(imageUrl));

@@ -193,34 +193,39 @@ public class SceneLobby : SceneClass
 		//listObj[(MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo - 1) / 20].GetComponent<UIEpisodeItemList>().OnPressButton(doNotTween: true);
 		Canvas.ForceUpdateCanvases();
 		LevelBallScrollRect.content.transform.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, (MonoSingleton<PlayerDataManager>.Instance.CurrentLevelNo - 1) / 20 * 142);
-		
-		MonoSingleton<PlayerDataManager>.Instance.LoadLastDailyBonusDate();
-		//First time to open the game and do someThing
+
+        MonoSingleton<PlayerDataManager>.Instance.LoadLastDailyBonusDate();
+        //First time to open the game and do someThing
 
 
-		if (AppEventCommonParameters.IsDifferentDay(MonoSingleton<PlayerDataManager>.Instance.lastRecvDailyBonusDateTime))
-		{
-			//MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupEventDailySpinReward);
-            Debug.Log("First Time to login to do!");
-			if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
-			{
-				if (UserManager.Instance.appMemberUserInfoRespVO == null)
-				{
-                    UserManager.Instance.GetUserMainInfo((isSuccess) => {
+        if (UserManager.Instance.appMemberUserInfoRespVO == null)
+        {
+            if (AppEventCommonParameters.IsDifferentDay(MonoSingleton<PlayerDataManager>.Instance.lastRecvDailyBonusDateTime))
+            {
+                //MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupEventDailySpinReward);
+#if UNITY_EDITOR
+                Debug.Log("First Time to login to do!");
+#endif
+                if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
+                {
+
+                    UserManager.Instance.GetUserMainInfo((isSuccess) =>
+                    {
 
                     });
+
                 }
-            }
-			else
-			{
-				PopupManager.Instance.Open(PopupType.PopupLogin);
+                else
+                {
+                    PopupManager.Instance.Open(PopupType.PopupLogin);
+                }
             }
         }
     }
 
-	
 
-	public override void OnSceneHideStart()
+
+    public override void OnSceneHideStart()
 	{
 	}
 

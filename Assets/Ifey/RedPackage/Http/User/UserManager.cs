@@ -32,7 +32,6 @@ public class UserManager : MonoSingleton<UserManager>
         UE,//44
         Japan,//81
         India,//91
-
     }
     [HideInInspector]
     public AppMemberUserInfoRespVO appMemberUserInfoRespVO = null; //userInfo
@@ -60,7 +59,7 @@ public class UserManager : MonoSingleton<UserManager>
 
     public TextAsset areaCode_TextAsset;
     public ObjectGroup<AreaType, AreaCodeData> areaCodeData_Group;
-    public int currentAreaTypeIndex = 1;
+    public int currentAreaTypeIndex = 4;
     public string currentAreaCode
     {
         get
@@ -389,8 +388,10 @@ public class GetUserInfoInterface : HttpInterface
         RedPackageAuthor.Instance.userBalance = responseData.data.balance;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;
         EventManager.Instance.DispatchEvent(GameEventType.GetUserData.ToString());
+#if UNITY_EDITOR
         Debug.Log(result);
         Debug.Log("Success Get User info!");
+#endif
     }
 
     public void Fail(JObject json)
@@ -432,7 +433,8 @@ public class AppMemberUserInfoRespVO
     public string mobile { get; set; }
     public int sex { get; set; }
     public int point { get; set; }
-    public float balance {  get; set; }
+    public float balance {  get; set; }//×ÜÓà¶î
+    public float commission { get; set; }//Ó¶½ðÓà¶î
     public int experience { get; set; }
     public int userType { get; set; }
     public Level level { get; set; }

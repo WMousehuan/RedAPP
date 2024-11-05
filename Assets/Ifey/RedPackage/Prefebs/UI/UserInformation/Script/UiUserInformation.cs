@@ -68,8 +68,6 @@ public class Ui_UserInformation : Popup
             amountStateItem_Group[i].target.GetChild<Text>("State_Text").text = (amountStateContents.ContainsKey(amountStateItem_Group[i].key) ? amountStateContents[amountStateItem_Group[i].key].ToString() : "").ToString();
             amountStateItem_Group[i].target.GetComponent<Button>().onClick.AddListener(() => {
                 ((UiUserAmountDetails)PopupManager.Instance.Open(PopupType.PopupUserAmountDetial)).OnAmountStateGroup_DropdownValueChange((int)amountStateItem_Group[index].key,true);
-                //UiUserAmountDetails uiUserAmountDetails = ((UiUserAmountDetails)PopupManager.Instance.Open(PopupType.PopupUserAmountDetial));
-                //uiUserAmountDetails.SetState((int)amountStateItem_Group[index].key);
             });
         }
         //return;
