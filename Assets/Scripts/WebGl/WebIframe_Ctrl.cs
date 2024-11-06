@@ -46,6 +46,10 @@ public class WebIframe_Ctrl : MonoBehaviour
     {
         WebMessage_Ctrl.SendMessageToWeb("closeIframe");
     }
-
+#else
+    public void SetUrl(string url)
+    {
+        WebMessage_Ctrl.SendMessageToWeb("setIframeUrl^" + url);
+    }
 #endif
 }

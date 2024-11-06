@@ -189,7 +189,7 @@ public class UiRechargeDetail : Popup
                             };
                             loopAction?.Invoke();
 #elif UNITY_EDITOR || PLATFORM_ANDROID
-                    Application.OpenURL(returnData.data.payUrl);
+                    Application.OpenURL(purchaseOrderDataVO.payUrl);
 #endif
                         });
                         break;

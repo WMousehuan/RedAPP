@@ -7,4 +7,5 @@ public enum GameEventType
     Login,//登录
     Logout,//退出登录
     SetVerifyStampTime,//设置验证码时间戳
+    GameGuide,
 }
