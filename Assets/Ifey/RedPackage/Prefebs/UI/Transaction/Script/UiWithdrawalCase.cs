@@ -38,7 +38,7 @@ public class UiWithdrawalCase : Popup
             return payeeUserAccount;
         }
     }
-
+    public TMP_InputField userName_InputField;
     public TMP_InputField ifscCode_InputField;
     public float limitValue;
     public enum PayCodeType
@@ -128,6 +128,11 @@ public class UiWithdrawalCase : Popup
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Account Number cannot be empty");
         }
+        if (string.IsNullOrEmpty(userName_InputField.text))
+        {
+            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Name of payee cannot be empty");
+            return;
+        }
         if (string.IsNullOrEmpty(ifscCode_InputField.text))
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "IFSC Code cannot be empty");
@@ -139,6 +144,7 @@ public class UiWithdrawalCase : Popup
             optType = (int)balanceType,
             payeeUserAccount = this.payeeUserAccount_InputField.text,
             payeeBranchCode = this.ifscCode_InputField.text,
+            payeeUsername = this.userName_InputField.text,
             payCode = ((PayCodeType)paycode_DropDown.value).ToString(),
             bizCode = ((BizCodeType)bizCode_DropDown.value).ToString(),
             currency = ((CurrencyType)currency_DropDown.value).ToString(),
