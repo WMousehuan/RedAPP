@@ -8,6 +8,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Cheasure.Scripts.Bean;
 using System.Drawing;
+using System.Security.Policy;
+using Vuplex.WebView;
+using Fishtail.PlayTheBall.Vibration;
 
 /// <summary>
 /// ÇÀºì°ü
@@ -100,7 +103,7 @@ public class TreasureGrabRespond : HttpInterface
             AmountOffset += ((float)responseData.data.GetAmount.Value + (float)responseData.data.CompensateAmount.Value);
             UIManager.Instance.ShowBomb(parent, EffectFinishEvent);
         }
-        
+
 
 
     }

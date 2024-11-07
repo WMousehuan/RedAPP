@@ -9,7 +9,7 @@ namespace Fishtail.PlayTheBall.Vibration
     {
         public static VibrationController instance { get; private set; }
 
-        public bool vibrate { get; set; }
+        public bool vibrate;
 
         private void Awake()
         {
@@ -37,6 +37,22 @@ namespace Fishtail.PlayTheBall.Vibration
         {
             if (!vibrate) { return; }
             MMVibrationManager.Haptic(HapticTypes.MediumImpact);
+        }
+        public void ImpactFailure()
+        {
+            if (!vibrate) { return; }
+            print("Shake");
+            MMVibrationManager.Haptic(HapticTypes.Failure);
+        }
+        public void ImpactSuccess()
+        {
+            if (!vibrate) { return; }
+            MMVibrationManager.Haptic(HapticTypes.Success);
+        }
+        public void ImpactWarning()
+        {
+            if (!vibrate) { return; }
+            MMVibrationManager.Haptic(HapticTypes.Warning);
         }
     }
 }
