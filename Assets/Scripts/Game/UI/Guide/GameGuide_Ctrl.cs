@@ -20,7 +20,7 @@ public class GameGuide_Ctrl : Singleton_Base<GameGuide_Ctrl>
         });
     }
     public void ShowGuide(string guideName, GuidePoint_Ctrl target, System.Action action)
-    {
+    { 
         if (guide_Group.ContainsKey(guideName))
         {
             guide_Group[guideName].Open(target, action);
