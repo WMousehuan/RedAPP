@@ -51,8 +51,7 @@ public class GuidePoint_Ctrl : MonoBehaviour
     public void Start()
     {
         int currentValue = PlayerPrefs.GetInt(sign);
-        print(currentValue);
-        if (GameGuide_Ctrl.instance != null && currentValue <= sourceValue)
+        if (GameGuide_Ctrl.instance != null && currentValue == sourceValue)
         {
             GameGuide_Ctrl.instance?.ShowGuide("", this, () =>
             {
