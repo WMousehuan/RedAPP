@@ -803,7 +803,7 @@ PlayerSettings:
   webGLMemoryGeometricGrowthCap: 96
   webGLPowerPreference: 2
   scriptingDefineSymbols:
-    Android: ENABLE_ANTI_CHEAT;GLEY_IAP_GOOGLEPLAY;GLEY_ADMOB;GLEY_PATCH_ADMOB;GLEY_DAILY_REWARDS
+    Android: ENABLE_ANTI_CHEAT;GLEY_IAP_GOOGLEPLAY;GLEY_ADMOB;GLEY_PATCH_ADMOB;GLEY_DAILY_REWARDS;VUPLEX_CCU;VUPLEX_STANDALONE
     Standalone: 
     Windows Store Apps: 
     iPhone: ENABLE_ANTI_CHEAT
