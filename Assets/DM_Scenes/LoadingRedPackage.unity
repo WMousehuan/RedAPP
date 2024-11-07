@@ -574,10 +574,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccb3198b447639b4da0e0f006b8671b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  beginnerGuideManager: {fileID: 0}
+  mainCamera: {fileID: 2054992932}
+  beginnerGuideManager: {fileID: 1023735644}
   guide_Group:
-    objects: []
+    objects:
+    - key: 
+      target: {fileID: 879913307}
 --- !u!1001 &1147689532
 PrefabInstance:
   m_ObjectHideFlags: 0
