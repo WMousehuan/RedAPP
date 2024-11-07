@@ -120,4 +120,6 @@ public enum PopupType
 	PopupChannelInformation,
     CommonUserInformation,
 	PopupAvatarSelect,
+    PopupLoginByPhoneNumber,
+	PopupMyUser,
 }

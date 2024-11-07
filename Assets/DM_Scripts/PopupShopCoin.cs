@@ -58,6 +58,9 @@ public class PopupShopCoin : Popup
     public GridLoopScroll_Ctrl loopScroll_Ctrl;
 
     public List<CoinShopDataVO> coinShopDataVOs=new List<CoinShopDataVO>();
+
+    public GuidePoint_Ctrl guidePoint;
+
     private void Awake()
     {
       //  Debug.Log("INIT :" + API.IsInitialized());
@@ -75,6 +78,8 @@ public class PopupShopCoin : Popup
 
     public override void Start()
 	{
+
+      
         //if ((bool)ImageBackBlocking)
         //{
         //	ImageBackBlocking.gameObject.SetActive(value: true);
@@ -85,13 +90,12 @@ public class PopupShopCoin : Popup
 
         loopScroll_Ctrl.scrollEnterEvent = (realIndex, rowIndex, columnIndex, target) => {
             CoinShopDataVO coinShopData = coinShopDataVOs[realIndex];
-            GameObject goods_Case = target.gameObject;// Instantiate(goods_Prefab, goods_Prefab.transform.parent);
 
-            goods_Case.gameObject.SetActive(true);
+            target.gameObject.SetActive(true);
             Sprite frame_Sprite = sprite_Group["Frame_Default"];
             Sprite banner_Sprite = null;
             string banner_Text = "";
-            Image banner_Image = goods_Case.transform.GetChild<Image>("Banner_Image");
+            Image banner_Image = target.transform.GetChild<Image>("Banner_Image");
             if (realIndex == 1)
             {
                 frame_Sprite = sprite_Group["Frame_Blue"];
@@ -110,14 +114,11 @@ public class PopupShopCoin : Popup
             {
                 banner_Image.gameObject.SetActive(false);
             }
-            goods_Case.GetComponent<Image>().sprite = frame_Sprite;
+            target.GetComponent<Image>().sprite = frame_Sprite;
             banner_Image.sprite = banner_Sprite;
-            goods_Case.transform.GetChild<Text>("Banner_Text").text = banner_Text;
-            goods_Case.transform.GetChild<Button>("Buy_Button").onClick.AddListener(() => {
-                uipopupTreasureShopApi.MakeBuyProductThrillGame(coinShopData.rechargeAmount, coinShopData.awardAmount);
-            });
-            goods_Case.transform.GetChild<Text>("Buy_Button/Text").text = "$" + coinShopData.rechargeAmount.ToString();
-            goods_Case.transform.GetChild<Text>("Price_Text").text = coinShopData.rechargeAmount.ToString() + "+" + coinShopData.awardAmount.ToString();
+            target.transform.GetChild<Text>("Banner_Text").text = banner_Text;
+            target.transform.GetChild<Text>("Buy_Button/Text").text = "$" + coinShopData.rechargeAmount.ToString();
+            target.transform.GetChild<Text>("Price_Text").text = coinShopData.rechargeAmount.ToString() + "+" + coinShopData.awardAmount.ToString();
             Button button = target.transform.GetChild<Button>("Buy_Button");
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => {
@@ -132,7 +133,15 @@ public class PopupShopCoin : Popup
             coinShopDataVOs.Clear();
             coinShopDataVOs.AddRange(result.data.list);
             loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
-        }, () =>
+
+            IEPool_Manager.instance.WaitTimeToDo("", 0.5f, null, () => {
+                if (guidePoint != null)
+                {
+                    guidePoint.enabled = true;
+                }
+            });
+            
+        }, (code, msg) =>
         {
             coinShopDataVOs.Clear();
             loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
@@ -298,7 +307,10 @@ public class PopupShopCoin : Popup
         }
     }
 
-
+    public void OnClickCoinShopButton(int index)
+    {
+        loopScroll_Ctrl.items[index].GetComponentInChildren<Button>().onClick?.Invoke();
+    }
 
     public void OnClickWatchAds()
     {

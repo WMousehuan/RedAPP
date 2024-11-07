@@ -91,8 +91,9 @@ public abstract class Singleton_Base<T> : Singleton_Base where T: Singleton_Base
         }
         else
         {
+#if UNITY_EDITOR
             print("-" + this.gameObject);
-
+#endif
             _instance = null;
             if (isDontDestroy)
             {

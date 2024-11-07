@@ -39,9 +39,25 @@ public class GeneralTool_Ctrl : Singleton_Base<GeneralTool_Ctrl>
     /// 获得当前时间戳
     /// </summary>
     /// <returns></returns>
-    public static long GetTimeStemp()
+    public static long GetTimeStamp()
     {
         return DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+    }
+    public static DateTime GetDateTimeByStamp(string createTimeContent)
+    {
+        //long createTime = 0;
+        if (long.TryParse(createTimeContent, out long createTime))
+        {
+            return GetDateTimeByStamp(createTime);
+        }
+        return default;
+    }
+    public static DateTime GetDateTimeByStamp(long createTime)
+    {
+        DateTime utcTime = DateTimeOffset.FromUnixTimeMilliseconds((long)createTime).UtcDateTime;
+        TimeZoneInfo localTimeZone = TimeZoneInfo.Local;
+        DateTime localTime = TimeZoneInfo.ConvertTimeFromUtc(utcTime, localTimeZone);
+        return localTime;
     }
     public static int CheckBit(int number,int index)
     {

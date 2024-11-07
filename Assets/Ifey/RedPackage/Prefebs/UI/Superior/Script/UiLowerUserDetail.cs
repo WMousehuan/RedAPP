@@ -59,7 +59,7 @@ public class UiLowerUserDetail : Popup
                 //{
                 //    ((UiCommonUserInformation)PopupManager.Instance.Open(PopupType.CommonUserInformation)).RefreshUserInformation(lowerAgentAmountData);
                 //});
-                target.GetChild<Text>("Amount_Text").text = lowerAgentAmountData.lowerPacketAmount.ToString("F2");
+                target.GetChild<Text>("Amount_Text").text = lowerAgentAmountData.brokerage.ToString("F2");
                 target.GetChild<Text>("CreateTime_Text").text = dotmob.ConvertFormat.TimeStampToDataTime(lowerAgentAmountData.createTime).ToString();
                 //target.GetChild<TMPro.TextMeshProUGUI>("CreateTime_Text").text = dotmob.ConvertFormat.TimeStampToDataTime(long.Parse(lowerAgentAmountData.createTime)).ToString();
             }
@@ -90,7 +90,7 @@ public class UiLowerUserDetail : Popup
                 currentPage++;
                 isLoadingList = false;
                 loading_Image?.gameObject.SetActive(false);
-            }, () =>
+            }, (code, msg) =>
             {
                 isLoadingList = false;
                 loading_Image?.gameObject.SetActive(false);
@@ -107,7 +107,8 @@ public class UiLowerUserDetail : Popup
     public class LowerAgentAmountVO
     {
         public int id;//
-        public int lowerPacketAmount;
+        public float lowerPacketAmount;
+        public float brokerage;
         public long createTime;
     }
 

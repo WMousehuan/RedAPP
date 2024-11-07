@@ -805,6 +805,7 @@ PlayerSettings:
   scriptingDefineSymbols:
     Android: ENABLE_ANTI_CHEAT;GLEY_IAP_GOOGLEPLAY;GLEY_ADMOB;GLEY_PATCH_ADMOB;GLEY_DAILY_REWARDS
     Standalone: 
+    WebGL: VUPLEX_CCU;VUPLEX_STANDALONE
     Windows Store Apps: 
     iPhone: ENABLE_ANTI_CHEAT
   additionalCompilerArguments:

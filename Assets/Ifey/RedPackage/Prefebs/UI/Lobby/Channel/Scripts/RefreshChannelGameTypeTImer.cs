@@ -36,19 +36,17 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
         }
         private void Start()
         {
-            EventManager.Instance.Regist(typeof(UserManager).ToString(), this.GetInstanceID(), (objects) => {
-                string sign = (string)objects[0];
-                switch (sign)
-                {
-                    case "LoginIn":
-                        refreshFromRequest();
-                        break;
-                }
+            EventManager.Instance.Regist(GameEventType.Login.ToString(), this.GetInstanceID(), (objects) => {
+                RefreshFromRequest();
+            });
+            EventManager.Instance.Regist(GameEventType.Logout.ToString(), this.GetInstanceID(), (objects) => {
+                loopScroll.Init(0, 0);
             });
         }
         private void OnDestroy()
         {
-            EventManager.Instance.UnRegist(typeof(UserManager).ToString(), this.GetInstanceID());
+            EventManager.Instance?.UnRegist(GameEventType.Login.ToString(), this.GetInstanceID());
+            EventManager.Instance?.UnRegist(GameEventType.Logout.ToString(), this.GetInstanceID());
         }
         void OnEnable()
         {
@@ -102,10 +100,10 @@ namespace Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Scripts
             refreshTime -= Time.deltaTime;
             if (refreshTime<=0)
             {
-                refreshFromRequest();
+                RefreshFromRequest();
             }
         }
-        public void refreshFromRequest()
+        public void RefreshFromRequest()
         {
             //Debug.Log("RefreshChannelGameTypeTImer定时器任务执行");
             refreshTime = refreshIntervalTime;

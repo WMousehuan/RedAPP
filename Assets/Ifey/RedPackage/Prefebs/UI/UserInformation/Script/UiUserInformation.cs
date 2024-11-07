@@ -13,7 +13,6 @@ using UnityEngine.Networking;
 using System.Text;
 using System.Runtime.InteropServices;
 using System;
-using TMPro;
 public class Ui_UserInformation : Popup
 {
     public enum UserInfoType
@@ -27,6 +26,7 @@ public class Ui_UserInformation : Popup
     public Texture2D defaultAvatar_Texture;
     //public InputField userName_InputField;
     public TMP_InputField userName_InputField;
+    public TMP_InputField phoneNumber_InputField;
     public Button setName_Button;
     public Transform setNameEidit_Case;
     public Transform statisticDetail_Case;
@@ -40,7 +40,7 @@ public class Ui_UserInformation : Popup
     private string receiveWebFileBase64Data;
     private string receiveWebFileName;
     public Popup uiAvatarSelectCase_Prefab;
-
+    public Popup uiChangePhoneNumber_Prefab;
     public Transform followerCommissionItem;
 
 #if UNITY_WEBGL            
@@ -54,11 +54,11 @@ public class Ui_UserInformation : Popup
         
         RefreshUserInformation();
         OnEventSwitchSetNameState(false);
-        EventManager.Instance.Regist(GameType.GetUserData.ToString(), this.GetInstanceID(), (objects) =>
+        EventManager.Instance.Regist(GameEventType.GetUserData.ToString(), this.GetInstanceID(), (objects) =>
         {
             RefreshUserInformation();
         });
-        EventManager.Instance.Regist(GameType.GetUserAvatar.ToString(), this.GetInstanceID(), (objects) =>
+        EventManager.Instance.Regist(GameEventType.GetUserAvatar.ToString(), this.GetInstanceID(), (objects) =>
         {
             RefreshUserInformation();
         });
@@ -68,8 +68,6 @@ public class Ui_UserInformation : Popup
             amountStateItem_Group[i].target.GetChild<Text>("State_Text").text = (amountStateContents.ContainsKey(amountStateItem_Group[i].key) ? amountStateContents[amountStateItem_Group[i].key].ToString() : "").ToString();
             amountStateItem_Group[i].target.GetComponent<Button>().onClick.AddListener(() => {
                 ((UiUserAmountDetails)PopupManager.Instance.Open(PopupType.PopupUserAmountDetial)).OnAmountStateGroup_DropdownValueChange((int)amountStateItem_Group[index].key,true);
-                //UiUserAmountDetails uiUserAmountDetails = ((UiUserAmountDetails)PopupManager.Instance.Open(PopupType.PopupUserAmountDetial));
-                //uiUserAmountDetails.SetState((int)amountStateItem_Group[index].key);
             });
         }
         //return;
@@ -98,8 +96,8 @@ public class Ui_UserInformation : Popup
     }
     private void OnDestroy()
     {
-        EventManager.Instance?.UnRegist(GameType.GetUserData.ToString(), this.GetInstanceID());
-        EventManager.Instance?.UnRegist(GameType.GetUserAvatar.ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameEventType.GetUserData.ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameEventType.GetUserAvatar.ToString(), this.GetInstanceID());
     }
     public void RefreshUserInformation()
     {
@@ -109,6 +107,7 @@ public class Ui_UserInformation : Popup
             return;
         }
         userName_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.nickname;
+        phoneNumber_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.mobile;
         if (UserManager.Instance.currentAvatar_Texture!=null)
         {
             avatar_RawImage.texture = UserManager.Instance.currentAvatar_Texture;
@@ -117,11 +116,12 @@ public class Ui_UserInformation : Popup
         {
             avatar_RawImage.texture = defaultAvatar_Texture;
         }
-
+    
     }
-    //public void 
+
     public void OnEventSetAvatar()
     {
+        
         PopupManager.Instance.Open(uiAvatarSelectCase_Prefab);
         return;
 #if UNITY_EDITOR||PLATFORM_ANDROID
@@ -133,45 +133,7 @@ public class Ui_UserInformation : Popup
 #endif
     }
 
-    public void OnEventUploadUserName()
-    {
-        if (userName_InputField.text == UserManager.Instance.appMemberUserInfoRespVO.nickname)
-        {
-            return;
-        }
-        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
-        UtilJsonHttp.Instance.PutContentWithParamAuthorizationToken(uploadUserDataUrl, GetUploadDataString((UserInfoType.nickname, userName_InputField.text)), new PostAvatarFileInterface(this), (requestData) =>
-        {
-            UserManager.Instance.appMemberUserInfoRespVO.nickname = userName_InputField.text;
-            OnEventSwitchSetNameState(false);
-            waitMask_Ui?.ShowResultCase("Success", 0);
-        }, () =>
-        {
-            OnEventSwitchSetNameState(false);
-            waitMask_Ui?.ShowResultCase("Fail", 1);
-        });
-    }
-    /// <summary>
-    /// 设置名称可编辑状态
-    /// </summary>
-    /// <param name="isSwitch"></param>
-    public void OnEventSwitchSetNameState(bool isSwitch)
-    {
-        userName_InputField.interactable = isSwitch;
-#if UNITY_EDITOR||PLATFORM_ANDROID
-        if (isSwitch)
-        {
-            userName_InputField.ActivateInputField();
-        }
-#endif
-        setName_Button.gameObject.SetActive(!isSwitch);
-        setNameEidit_Case.gameObject.SetActive(isSwitch);
-        if (UserManager.Instance.appMemberUserInfoRespVO != null)
-        {
-            userName_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.nickname;
-        }
 
-    }
 
     /// <summary>
     /// 上传用户信息(不传的参 信息不会被覆盖)
@@ -242,19 +204,19 @@ public class Ui_UserInformation : Popup
 
                 avatar_RawImage.texture = texture;
                 waitMask_Ui?.ShowResultCase("Success", 0);
-            }, () =>
+            }, (code, msg) =>
             {
                 waitMask_Ui?.ShowResultCase("Fail", 1);
             });
-        }, () =>
+        }, (code, msg) =>
         {
             avatar_RawImage.texture = defaultAvatar_Texture;
         });
     }
-
-
-
 #if UNITY_WEBGL
+
+
+
     public void WebSelectFileStage(string fileBase64DataStage)
     {
 
@@ -280,9 +242,56 @@ public class Ui_UserInformation : Popup
             receiveWebFileBase64Data = "";
         }
     }
-
-
 #endif
+    public void OnEventUploadUserName()
+    {
+        if (userName_InputField.text == UserManager.Instance.appMemberUserInfoRespVO.nickname)
+        {
+            return;
+        }
+        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+        UtilJsonHttp.Instance.PutContentWithParamAuthorizationToken(uploadUserDataUrl, GetUploadDataString((UserInfoType.nickname, userName_InputField.text)), new PostAvatarFileInterface(this), (requestData) =>
+        {
+            UserManager.Instance.appMemberUserInfoRespVO.nickname = userName_InputField.text;
+            OnEventSwitchSetNameState(false);
+            waitMask_Ui?.ShowResultCase("Success", 0);
+        }, (code, msg) =>
+        {
+            OnEventSwitchSetNameState(false);
+            waitMask_Ui?.ShowResultCase("Fail", 1);
+        });
+    }
+
+    /// <summary>
+    /// 设置名称可编辑状态
+    /// </summary>
+    /// <param name="isSwitch"></param>
+    public void OnEventSwitchSetNameState(bool isSwitch)
+    {
+        userName_InputField.interactable = isSwitch;
+#if UNITY_EDITOR||PLATFORM_ANDROID
+        if (isSwitch)
+        {
+            userName_InputField.ActivateInputField();
+        }
+#endif
+        setName_Button.gameObject.SetActive(!isSwitch);
+        setNameEidit_Case.gameObject.SetActive(isSwitch);
+        if (UserManager.Instance.appMemberUserInfoRespVO != null)
+        {
+            userName_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.nickname;
+            phoneNumber_InputField.text = UserManager.Instance.appMemberUserInfoRespVO.mobile;
+        }
+
+    }
+    public void OnEventChangePhoneNumber()
+    {
+        UiChangePhoneNumber uiChangePhoneNumber= PopupManager.Instance.Open(uiChangePhoneNumber_Prefab).GetComponent<UiChangePhoneNumber>();
+        uiChangePhoneNumber.numberChangeAction = (phoneNumber) => {
+            phoneNumber_InputField.text = phoneNumber;
+        };
+    }
+
 }
 public class StatisticDetailData
 {

@@ -288,6 +288,20 @@ function receiveMessageFromUnity(s) {
             case "clipbord":
                 ClipboardJS.copy(receiveMessageStages[1]);
                 break;
+            case "openUrl":
+                window.open(receiveMessageStages[1], '_blank');
+                break;
+            case "setIframeUrl":
+                setIframeUrl(receiveMessageStages[1]);
+                break;
+            case "updateIframe":
+                var viewPos = receiveMessageStages[1];
+                var viewPosVector = viewPos.split(',');
+                var size = receiveMessageStages[2];
+                var sizeVector = size.split(',');
+                updateIframeCase(parseInt(viewPosVector[0]) / 100, parseInt(viewPosVector[1]) / 100, parseInt(sizeVector[0])/100, parseInt(sizeVector[1])/100);
+                break;
+            
         }
     }
     else {
@@ -296,6 +310,9 @@ function receiveMessageFromUnity(s) {
                 break;
             case "Refresh":
                 window.location.reload();
+                break;
+            case "closeIframe":
+                closeIframeCase();
                 break;
         }
     }
@@ -436,6 +453,30 @@ function resetSize() {
         }
     }
 }
+
+function setIframeUrl(url)
+{
+    if (iframeCase != null ) 
+    {
+        iframeCase.src=url;
+    }
+}
+function updateIframeCase(viewPosX, viewPosY, sizeX, sizeY) {
+    if (iframeCase != null ) 
+    {
+        iframeCase.style.display="flex";
+        iframeCase.style.left = viewPosX + "%";
+        iframeCase.style.top = viewPosY + "%";
+        iframeCase.style.width = sizeX + "%";
+        iframeCase.style.height = sizeY + "%";
+    }
+}
+function closeIframeCase()
+{
+    iframeCase.src = '';
+    iframeCase.style.display="none";
+}
+
 // 监听窗口大小变化事件
 window.addEventListener('resize', () => {
     // 在窗口大小变化时更新输出

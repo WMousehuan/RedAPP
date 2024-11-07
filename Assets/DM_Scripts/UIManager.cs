@@ -1,3 +1,4 @@
+using Fishtail.PlayTheBall.Vibration;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -65,7 +66,9 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public event EventCancelBooster eventCancelBooster;
 
-	public override void Awake()
+	public Button recharge_Button;
+    public GuidePoint_Ctrl recharge_GuidePoint;
+    public override void Awake()
 	{
 		base.Awake();
 
@@ -153,12 +156,12 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public void Update()
 	{
-        //if (Input.GetKeyDown(KeyCode.A))
-        //{
-        //    ShowBomb(PopupManager.Instance.ParentPopupGroup);
+		//if (Input.GetKeyDown(KeyCode.B))
+		//{
+		//	ShowBomb(PopupManager.Instance.ParentPopupGroup);
 
-        //}
-        if (Application.platform != RuntimePlatform.Android || !Input.GetKeyUp(KeyCode.Escape) || IsModalLoading)
+		//}
+		if (Application.platform != RuntimePlatform.Android || !Input.GetKeyUp(KeyCode.Escape) || IsModalLoading)
 		{
 			return;
 		}
@@ -429,6 +432,10 @@ public class UIManager : MonoSingleton<UIManager>
             return true;
         }, () =>
         {
+#if UNITY_WEBGL
+#elif UNITY_EDITOR || PLATFORM_ANDROID
+            VibrationController.instance.ImpactFailure();
+#endif
             bombEffect_Image.enabled = false;
             particle.gameObject.SetActive(true); 
             IEPool_Manager.instance.WaitTimeToDo("", 1, null, () =>

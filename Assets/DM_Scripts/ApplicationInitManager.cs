@@ -18,40 +18,37 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
     }
     private void Start()
     {
-        EventManager.Instance.Regist(typeof(UserManager).ToString(), this.GetInstanceID(), (objects) => {
-            string sign = (string)objects[0];
-            switch (sign)
-            {
-                case "LoginIn":
-                    TurnToChannel();
-                    break;
-            }
+        EventManager.Instance.Regist(GameEventType.Login.ToString(), this.GetInstanceID(), (objects) => {
+            TurnToChannel();
         });
     }
     private void OnDestroy()
     {
-        EventManager.Instance.UnRegist(typeof(UserManager).ToString(), this.GetInstanceID());
+        EventManager.Instance?.UnRegist(GameEventType.Login.ToString(), this.GetInstanceID());
     }
     public void TurnToChannel()
     {
-        if (!string.IsNullOrEmpty(SceneLobby.autoEnterChannelId))
+        if (!string.IsNullOrEmpty(SceneMenu.autoEnterChannelId))
         {
             if (UserManager.Instance && UserManager.Instance.appMemberUserInfoRespVO != null)
             {
 
 
-                SceneLobby.autoEnterChannelId = SceneLobby.autoEnterChannelId.Remove(SceneLobby.autoEnterChannelId.Length - 3);
+               
                 var dataObject = new
                 {
-                    channelId = SceneLobby.autoEnterChannelId,
+                    channelId = SceneMenu.autoEnterChannelId,
                 };
                 UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sharedChannelUrl, dataObject, new CommonHttpInterface(), (resultData) =>
                 {
+                    SceneMenu.autoEnterChannelId = SceneMenu.autoEnterChannelId.Remove(SceneMenu.autoEnterChannelId.Length - 3);
                     MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Lobby, SceneChangeEffect.Color);
-                    PlayerTreasureGameData.Instance.entranceChannelId = SceneLobby.autoEnterChannelId;
+                    PlayerTreasureGameData.Instance.entranceChannelId = SceneMenu.autoEnterChannelId;
                     //Get playList info »ñÈ¡Íæ·¨
-                    MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(SceneLobby.autoEnterChannelId);
-                    SceneLobby.autoEnterChannelId = "";
+                    MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(SceneMenu.autoEnterChannelId);
+                    SceneMenu.autoEnterChannelId = "";
+                }, (code,msg) => {
+                    UiHintCase.instance.Show("Channel Non-existent");
                 });
             }
         }
@@ -63,7 +60,7 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
         {
             case "WebInitData":
                 UserManager.encryptSuperiorId = msgStages[1];
-                SceneLobby.autoEnterChannelId = msgStages[2];
+                SceneMenu.autoEnterChannelId = msgStages[2];
                 TurnToChannel();
                 break;
         }

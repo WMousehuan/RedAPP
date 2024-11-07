@@ -287,9 +287,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 59741538}
-  - component: {fileID: 59741537}
   - component: {fileID: 59741539}
   - component: {fileID: 59741540}
+  - component: {fileID: 59741541}
   m_Layer: 0
   m_Name: SceneLobby
   m_TagString: 
@@ -297,24 +297,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &59741537
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 59741536}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 53a37705ae6b9265c780ff39d8003a66, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DontDestroyAtSceneChange: 0
-  LevelBallScrollRect: {fileID: 1266938418}
-  BaseEpisodeListItem: {fileID: 357440365}
-  ObjNoAdsButton: {fileID: 0}
-  RTLevelBallScrollPanel: {fileID: 1010037330}
-  refreshChannelGameTypeTImers: []
 --- !u!4 &59741538
 Transform:
   m_ObjectHideFlags: 0
@@ -357,6 +339,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 61162b2ae0859974f88370fd838f2033, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &59741541
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59741536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 172b997ef15eb464caa0a8705e89b890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  putRedpack_GuidePoint: {fileID: 1488044397}
 --- !u!1 &70634863
 GameObject:
   m_ObjectHideFlags: 0
@@ -507,12 +502,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 232121746}
   m_CullTransparentMesh: 1
---- !u!1 &357440365 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7813700155698811708, guid: 18088f4cac346ab44bad02b39966f275,
-    type: 3}
-  m_PrefabInstance: {fileID: 19258235979865530}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &357440366 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3632975770073030284, guid: 18088f4cac346ab44bad02b39966f275,
@@ -812,6 +801,7 @@ RectTransform:
   - {fileID: 1010037330}
   - {fileID: 1740092413}
   - {fileID: 7296066309256470015}
+  - {fileID: 1488044396}
   m_Father: {fileID: 59741538}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1349,7 +1339,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 22.725037, y: -3}
+  m_AnchoredPosition: {x: 22.725098, y: -3}
   m_SizeDelta: {x: 186.8, y: 85.1}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1110749199
@@ -1665,6 +1655,71 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SupportOrientation: 1
   yPosition: 90
+--- !u!1 &1488044395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1488044396}
+  - component: {fileID: 1488044397}
+  m_Layer: 5
+  m_Name: GuidePoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1488044396
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488044395}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 413130876}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -81, y: 54}
+  m_SizeDelta: {x: 158.54999, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1488044397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488044395}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6210ae2b924d2054a9394b7d7b415305, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sourceValue: 0
+  sign: PutRedpack
+  clickEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1996561851}
+        m_TargetAssemblyTypeName: PutGoldButton, Assembly-CSharp
+        m_MethodName: OnPressPutGoldButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PopupChannelInformation
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1488796638
 GameObject:
   m_ObjectHideFlags: 0
@@ -1975,7 +2030,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 59741537}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: 
         m_MethodName: OnPressDailySpin
         m_Mode: 1
@@ -2314,6 +2369,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ListEpisodeItemPkg
+      objectReference: {fileID: 0}
+    - target: {fileID: 7813700155698811708, guid: 18088f4cac346ab44bad02b39966f275,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
