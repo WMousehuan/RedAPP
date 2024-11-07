@@ -1,9 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Policy;
+
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_WEBGL
+#elif UNITY_EDITOR || PLATFORM_ANDROID
 using Vuplex.WebView;
+using System.Security.Policy;
+#endif
 public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
 {
     public override bool isDontDestroy => false;
