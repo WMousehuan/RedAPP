@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Cheasure.Scripts.Bean;
-using System.Drawing;
 
 /// <summary>
 /// ÇÀºì°ü
@@ -100,7 +99,7 @@ public class TreasureGrabRespond : HttpInterface
             AmountOffset += ((float)responseData.data.GetAmount.Value + (float)responseData.data.CompensateAmount.Value);
             UIManager.Instance.ShowBomb(parent, EffectFinishEvent);
         }
-        
+
 
 
     }
