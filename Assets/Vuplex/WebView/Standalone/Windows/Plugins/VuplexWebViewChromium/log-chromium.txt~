@@ -3,3 +3,5 @@
 [1107/103236.696:ERROR:gpu_init.cc(446)] Passthrough is not supported, GL is disabled, ANGLE is 
 [1107/103517.555:WARNING:task_impl.cc(32)] No task runner for threadId 0
 [1107/103718.021:WARNING:task_impl.cc(32)] No task runner for threadId 0
+[1107/114803.624:WARNING:task_impl.cc(32)] No task runner for threadId 0
+[1107/114837.575:WARNING:task_impl.cc(32)] No task runner for threadId 0

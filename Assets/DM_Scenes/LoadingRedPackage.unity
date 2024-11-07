@@ -1012,6 +1012,16 @@ PrefabInstance:
       propertyPath: InitialUrl
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3997704777099860012, guid: 55b2ad416f0ed5b45ad9d65a3a07e266,
+        type: 3}
+      propertyPath: mobile_Case
+      value: 
+      objectReference: {fileID: 1910610567}
+    - target: {fileID: 3997704777099860012, guid: 55b2ad416f0ed5b45ad9d65a3a07e266,
+        type: 3}
+      propertyPath: webViewPrefab
+      value: 
+      objectReference: {fileID: 1910610568}
     - target: {fileID: 5442134562996148234, guid: 55b2ad416f0ed5b45ad9d65a3a07e266,
         type: 3}
       propertyPath: m_Name
@@ -1523,6 +1533,24 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1800783675}
   m_CullTransparentMesh: 1
+--- !u!224 &1910610567 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2458282532825270376, guid: 55b2ad416f0ed5b45ad9d65a3a07e266,
+    type: 3}
+  m_PrefabInstance: {fileID: 1147689532}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1910610568 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2349052304836224094, guid: 55b2ad416f0ed5b45ad9d65a3a07e266,
+    type: 3}
+  m_PrefabInstance: {fileID: 1147689532}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 879d31ebe92b040cbb3ef97e98278140, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1918783261
 GameObject:
   m_ObjectHideFlags: 0
