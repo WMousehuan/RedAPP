@@ -452,7 +452,6 @@ GameObject:
   - component: {fileID: 1023735641}
   - component: {fileID: 1023735640}
   - component: {fileID: 1023735644}
-  - component: {fileID: 1023735645}
   m_Layer: 5
   m_Name: Guide_Canvas
   m_TagString: Untagged
@@ -556,24 +555,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPreviewing: 0
---- !u!114 &1023735645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1023735639}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccb3198b447639b4da0e0f006b8671b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainCamera: {fileID: 2054992932}
-  beginnerGuideManager: {fileID: 1023735644}
-  guide_Group:
-    objects:
-    - key: 
-      target: {fileID: 879913307}
 --- !u!1001 &1147689532
 PrefabInstance:
   m_ObjectHideFlags: 0
