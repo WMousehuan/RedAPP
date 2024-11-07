@@ -15,7 +15,11 @@ public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
     public Text countDown_Text;
     public long targetStampTime;
     public Transform webgl_Case;
-    public CanvasWebViewPrefab mobile_Case;
+    public Transform mobile_Case;
+#if UNITY_WEBGL
+#elif UNITY_EDITOR || PLATFORM_ANDROID
+    public CanvasWebViewPrefab webViewPrefab;
+#endif
     public string targetUrl = "";
     private async void Start()
     {
@@ -26,10 +30,10 @@ public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
 #elif UNITY_EDITOR || PLATFORM_ANDROID
         webgl_Case.gameObject.SetActive(false);
         mobile_Case.gameObject.SetActive(true);
-        await mobile_Case.WaitUntilInitialized();
-        if(targetUrl!= mobile_Case.WebView.Url)
+        await webViewPrefab.WaitUntilInitialized();
+        if(targetUrl!= webViewPrefab.WebView.Url)
         {
-            mobile_Case.WebView.LoadUrl(targetUrl);
+            webViewPrefab.WebView.LoadUrl(targetUrl);
         }
 #endif
     }
@@ -61,7 +65,7 @@ public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
 #if UNITY_WEBGL
         webIframe_Ctrl.SetUrl(url);
 #elif UNITY_EDITOR || PLATFORM_ANDROID
-        mobile_Case?.WebView?.LoadUrl(url);
+        webViewPrefab?.WebView?.LoadUrl(url);
 #endif
     }
     public void Close()
@@ -70,8 +74,7 @@ public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
 
 #if UNITY_WEBGL
 #elif UNITY_EDITOR || PLATFORM_ANDROID
-        mobile_Case?.WebView?.LoadUrl("about:blank");
-        //mobile_Case?.WebView?.Dispose();  // Çå³ý»º´æ
+        webViewPrefab?.WebView?.LoadUrl("about:blank");
 #endif
 
         closeAction?.Invoke();
@@ -83,8 +86,8 @@ public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
 
 #if UNITY_WEBGL
 #elif UNITY_EDITOR || PLATFORM_ANDROID
-        mobile_Case?.WebView?.LoadUrl("about:blank");
-        mobile_Case?.WebView?.Dispose();  // Çå³ý»º´æ
+        webViewPrefab?.WebView?.LoadUrl("about:blank");
+        webViewPrefab?.WebView?.Dispose();  // Çå³ý»º´æ
 #endif
 
         closeAction?.Invoke();
