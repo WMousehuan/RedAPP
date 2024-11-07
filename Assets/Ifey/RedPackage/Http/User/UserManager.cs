@@ -386,6 +386,7 @@ public class GetUserInfoInterface : HttpInterface
         source_Ctrl.appMemberUserInfoRespVO = responseData.data;
         // 实现 Success 方法的逻辑
         RedPackageAuthor.Instance.userBalance = responseData.data.balance;
+        RedPackageAuthor.Instance.userCommissionBalance = responseData.data.commission;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;
         EventManager.Instance.DispatchEvent(GameEventType.GetUserData.ToString());
 #if UNITY_EDITOR

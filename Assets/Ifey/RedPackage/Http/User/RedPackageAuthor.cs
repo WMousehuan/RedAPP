@@ -15,6 +15,8 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
 
     [HideInInspector]
     string userBalanceKey = "userBalanceKey";
+    [HideInInspector]
+    string userCommissionBalanceKey = "userCommissionBalanceKey";
     public string authorizationValue
     {
         get
@@ -48,12 +50,26 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
         }
         set
         {
-
+            
             PlayerPrefs.SetFloat(userBalanceKey, value);
+            UserManager.Instance.appMemberUserInfoRespVO.balance = value;
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
     }
+    public float userCommissionBalance
+    {
+        get
+        {
+            return PlayerPrefs.GetFloat(userCommissionBalanceKey, 0);
+        }
+        set
+        {
 
+            PlayerPrefs.SetFloat(userCommissionBalanceKey, value);
+            UserManager.Instance.appMemberUserInfoRespVO.commission = value;
+            EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
+        }
+    }
     public string userNickName { get; set; }
     // Start is called before the first frame update
     // 调用SendRequestWithParamAuthorizationToken方法，将refreshToken作为参数传递

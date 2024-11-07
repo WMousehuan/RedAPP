@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 59741537}
   - component: {fileID: 59741539}
   m_Layer: 0
-  m_Name: SceneLobby
+  m_Name: SceneMenu
   m_TagString: 
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

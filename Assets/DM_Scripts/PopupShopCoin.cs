@@ -58,6 +58,9 @@ public class PopupShopCoin : Popup
     public GridLoopScroll_Ctrl loopScroll_Ctrl;
 
     public List<CoinShopDataVO> coinShopDataVOs=new List<CoinShopDataVO>();
+
+    public GuidePoint_Ctrl guidePoint;
+
     private void Awake()
     {
       //  Debug.Log("INIT :" + API.IsInitialized());
@@ -75,6 +78,8 @@ public class PopupShopCoin : Popup
 
     public override void Start()
 	{
+
+      
         //if ((bool)ImageBackBlocking)
         //{
         //	ImageBackBlocking.gameObject.SetActive(value: true);
@@ -128,6 +133,14 @@ public class PopupShopCoin : Popup
             coinShopDataVOs.Clear();
             coinShopDataVOs.AddRange(result.data.list);
             loopScroll_Ctrl?.Refresh(coinShopDataVOs.Count);
+
+            IEPool_Manager.instance.WaitTimeToDo("", 0.5f, null, () => {
+                if (guidePoint != null)
+                {
+                    guidePoint.enabled = true;
+                }
+            });
+            
         }, (code, msg) =>
         {
             coinShopDataVOs.Clear();
@@ -294,7 +307,10 @@ public class PopupShopCoin : Popup
         }
     }
 
-
+    public void OnClickCoinShopButton(int index)
+    {
+        loopScroll_Ctrl.items[index].GetComponentInChildren<Button>().onClick?.Invoke();
+    }
 
     public void OnClickWatchAds()
     {

@@ -29,7 +29,8 @@ public class UiUserBalance : Popup
     {
         base.Start();
         EventManager.Instance.Regist(GameEventType.CoinUpdate.ToString(), this.GetInstanceID(), (objects) => {
-            amount_Text.text = RedPackageAuthor.Instance.userBalance.ToString("F2");
+            //amount_Text.text = RedPackageAuthor.Instance.userBalance.ToString("F2");
+            Init(balanceType);
         });
     }
     private void OnDestroy()
@@ -43,7 +44,7 @@ public class UiUserBalance : Popup
         {
             case BalanceType.Default:
                 title_Text.text = "Balance";
-                amount = UserManager.Instance.appMemberUserInfoRespVO.balance - UserManager.Instance.appMemberUserInfoRespVO.commission;
+                amount = RedPackageAuthor.Instance.userBalance - RedPackageAuthor.Instance.userCommissionBalance;
                 break;
             case BalanceType.Commission:
                 title_Text.text = "Commission Balance";
