@@ -135,7 +135,7 @@ public class UiWithdrawalCase : Popup
         }
         var dataPack = new
         {
-            optCase = this._value,
+            optCash = this._value,
             optType = (int)balanceType,
             payeeUserAccount = this.payeeUserAccount_InputField.text,
             payeeBranchCode = this.ifscCode_InputField.text,
@@ -189,10 +189,28 @@ public class UiWithdrawalCase : Popup
                                 }
                                 break;
                             case 2://提现失败
-                                waitMask_Ui?.ShowResultCase("Withdrawal Failed", 1);
+                                switch (returnData.code)
+                                {
+                                    case 1022004001:
+                                        MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Withdrawals have exceeded 2 times, please try again tomorrow");
+                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                                        break;
+                                    case 1004001004:
+                                        MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient account balance");
+                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                                        break;
+                                    case 1004001006:
+                                        MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient commission");
+                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                                        break;
+                                    default:
+                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
+                                        break;
+                                }
+                                waitMask_Ui?.ShowResultCase("Withdrawal Failed", 0);
                                 break;
                             case 3://提现取消
-                                waitMask_Ui?.ShowResultCase("Withdrawal recharge", 1);
+                                waitMask_Ui?.ShowResultCase("Withdrawal Cancle", 1);
                                 break;
                         }
                     }, (code, msg) => {
@@ -201,8 +219,27 @@ public class UiWithdrawalCase : Popup
                 });
             };
             loopAction?.Invoke();
-        }, (code,msg) => {
-            waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
+        }, (code,msg) => 
+        {
+            switch (code)
+            {
+                case 1022004001:
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Withdrawals have exceeded 2 times, please try again tomorrow");
+                    waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                    break;
+                case 1004001004:
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient account balance");
+                    waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                    break;
+                case 1004001006:
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient commission");
+                    waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                    break;
+                default:
+                    waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
+                    break;
+            }
+           
         });
     }
 }

@@ -114,7 +114,6 @@ public class UiRechargeDetail : Popup
                         button.image.color = Color.white;
                         button.interactable = true;
                         button.onClick.AddListener(() => {
-#if UNITY_WEBGL
                             UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
                             
                             UiPurchaseCase.instance.closeAction = () => {
@@ -195,9 +194,6 @@ public class UiRechargeDetail : Popup
                                 });
                             };
                             loopAction?.Invoke();
-#elif UNITY_EDITOR || PLATFORM_ANDROID
-                    Application.OpenURL(returnData.data.payUrl);
-#endif
                         });
                         break;
                     default:

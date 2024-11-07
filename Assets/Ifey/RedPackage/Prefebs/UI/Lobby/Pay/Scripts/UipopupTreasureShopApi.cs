@@ -46,7 +46,6 @@ public class UipopupTreasureShopApi : MonoBehaviour
                 ReturnData<PurchaseOrderDataVO> returnData = JsonConvert.DeserializeObject<ReturnData<PurchaseOrderDataVO>>(resultData);
                 if (!string.IsNullOrEmpty(returnData.data.payUrl))
                 {
-#if UNITY_WEBGL
                     UiPurchaseCase.instance.closeAction = () => {
                         waitMask_Ui?.ShowResultCase("Cancle recharge", 0);
                     }; 
@@ -124,9 +123,6 @@ public class UipopupTreasureShopApi : MonoBehaviour
                         });
                     };
                     loopAction?.Invoke();
-#elif UNITY_EDITOR || PLATFORM_ANDROID
-                    Application.OpenURL(returnData.data.payUrl);
-#endif
                 }
 
             }));
