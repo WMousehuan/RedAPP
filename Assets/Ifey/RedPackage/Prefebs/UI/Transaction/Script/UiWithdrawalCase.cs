@@ -6,6 +6,7 @@ using TMPro;
 using System;
 using Newtonsoft.Json;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
+using static UiRechargeDetail;
 public class UiWithdrawalCase : Popup
 {
     //public enum AmountType
@@ -13,10 +14,13 @@ public class UiWithdrawalCase : Popup
     //    Default,
     //    Commission,//佣金
     //}
-    public BalanceType balanceType;
+    //public BalanceType balanceType;
+
+    public UiUserBalance uiUserBalance;
 
     public string withdrawalUrl = "/app-api/red/order/toWithdraw";
     public string catchWithdrawalUrl = "/app-api/red/cash-withdraw/page";
+    public string withdrawalRuleUrl = "";
 
     public TMP_InputField value_InputField;
     public float _value
@@ -79,7 +83,7 @@ public class UiWithdrawalCase : Popup
                 paycode_DropDown.options.Add(new Dropdown.OptionData( type.ToString()));
             }
         }
-        paycode_DropDown.value = 1;
+        paycode_DropDown.value = 0;
         bizCode_DropDown.options.Clear();
         foreach (string type in Enum.GetNames(typeof(BizCodeType)))
         {
@@ -88,7 +92,7 @@ public class UiWithdrawalCase : Popup
                 bizCode_DropDown.options.Add(new Dropdown.OptionData(type.ToString()));
             }
         }
-        bizCode_DropDown.value = 6;
+        bizCode_DropDown.value = 3;
         currency_DropDown.options.Clear();
         foreach (string type in Enum.GetNames(typeof(CurrencyType)))
         {
@@ -99,9 +103,9 @@ public class UiWithdrawalCase : Popup
         }
         currency_DropDown.value = 3;
     }
-    public void Init(BalanceType balanceType, float limitValue)
+    public void Init(UiUserBalance uiUserBalance, float limitValue)
     {
-        this.balanceType = balanceType;
+        this.uiUserBalance = uiUserBalance;
         this.limitValue = limitValue;
         valueLimit_Text.text = "The withdrawable amount is " + limitValue;
     }
@@ -141,7 +145,7 @@ public class UiWithdrawalCase : Popup
         var dataPack = new
         {
             optCash = this._value,
-            optType = (int)balanceType,
+            optType = (int)this.uiUserBalance.balanceType,
             payeeUserAccount = this.payeeUserAccount_InputField.text,
             payeeBranchCode = this.ifscCode_InputField.text,
             payeeUsername = this.userName_InputField.text,
@@ -155,82 +159,96 @@ public class UiWithdrawalCase : Popup
             ReturnData<string> returnData = JsonConvert.DeserializeObject<ReturnData<string>>(resultData);
             if (string.IsNullOrEmpty(returnData.data))
             {
+                print(returnData.code);
                 waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
                 return;
             }
-            waitMask_Ui.Init("Withdrawing is in progress");
-            OnEventClose();
-            System.Action loopAction = null;
-            int stateIndex = 0;
-            float catchTime = 20;
-            loopAction = () => {
-                switch (stateIndex)
-                {
-                    default:
-                        catchTime = 5;
-                        break;
-                }
-                stateIndex++;
-                IEPool_Manager.instance.WaitTimeToDo("WithdrawalCatch" + returnData.data, catchTime, null, () => {
-                    string catchWithdrawalUrl = this.catchWithdrawalUrl + "?orderNo=" + returnData.data;
-                    UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(catchWithdrawalUrl, null, (resultData) => {
-                        //查询订单状态 未完成
-                        ReturnData<PageResultPacketSendRespVO<PurchaseOrderDataVO>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PurchaseOrderDataVO>>>(resultData);
-                        PurchaseOrderDataVO purchaseOrderDataVO = returnData.data.list[0];
-                        switch (purchaseOrderDataVO.optCashStatus)
-                        {
-                            case 0://正在提现
-                                loopAction?.Invoke();
-                                break;
-                            case 1://提现成功
-                                waitMask_Ui?.ShowResultCase("Withdrawal successful", 1);
-                                switch (balanceType)
-                                {
-                                    case BalanceType.Default:
-                                        RedPackageAuthor.Instance.userBalance -= this._value;
-                                        break;
-                                    case BalanceType.Commission:
-                                        RedPackageAuthor.Instance.userCommissionBalance -= this._value;
-                                        break;
-                                }
-                                break;
-                            case 2://提现失败
-                                switch (returnData.code)
-                                {
-                                    case 1022004001:
-                                        MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Withdrawals have exceeded 2 times, please try again tomorrow");
-                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
-                                        break;
-                                    case 1004001004:
-                                        MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient account balance");
-                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
-                                        break;
-                                    case 1004001006:
-                                        MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient commission");
-                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
-                                        break;
-                                    default:
-                                        waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
-                                        break;
-                                }
-                                waitMask_Ui?.ShowResultCase("Withdrawal Failed", 0);
-                                break;
-                            case 3://提现取消
-                                waitMask_Ui?.ShowResultCase("Withdrawal Cancle", 1);
-                                break;
-                        }
-                    }, (code, msg) => {
-                        loopAction?.Invoke();
-                    });
-                });
-            };
-            loopAction?.Invoke();
+            waitMask_Ui?.ShowResultCase("Withdrawing is in progress", 1);
+            //waitMask_Ui.Init("Withdrawing is in progress");
+
+            switch (uiUserBalance.balanceType)
+            {
+                case  BalanceType.Commission:
+                    RedPackageAuthor.Instance.withdrawalCommissionBalanceAmount += this._value;
+                    break;
+                case BalanceType.Default:
+                    RedPackageAuthor.Instance.withdrawalBalanceAmount += this._value;
+                    break;
+            }
+            PopupManager.Instance.Close(this);
+            uiUserBalance.OnEnable();
+            //System.Action loopAction = null;
+            //int stateIndex = 0;
+            //float catchTime = 20;
+            //loopAction = () => {
+            //    switch (stateIndex)
+            //    {
+            //        default:
+            //            catchTime = 5;
+            //            break;
+            //    }
+            //    stateIndex++;
+            //    IEPool_Manager.instance.WaitTimeToDo("WithdrawalCatch" + returnData.data, catchTime, null, () => {
+            //        string catchWithdrawalUrl = this.catchWithdrawalUrl + "?orderNo=" + returnData.data;
+            //        UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(catchWithdrawalUrl, null, (resultData) => {
+            //            //查询订单状态 未完成
+            //            ReturnData<PageResultPacketSendRespVO<PurchaseOrderDataVO>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PurchaseOrderDataVO>>>(resultData);
+            //            PurchaseOrderDataVO purchaseOrderDataVO = returnData.data.list[0];
+            //            switch (purchaseOrderDataVO.optCashStatus)
+            //            {
+            //                case 0://正在提现
+            //                    loopAction?.Invoke();
+            //                    break;
+            //                case 1://提现成功
+            //                    waitMask_Ui?.ShowResultCase("Withdrawal successful", 1);
+            //                    switch (this.uiUserBalance.balanceType)
+            //                    {
+            //                        case BalanceType.Default:
+            //                            RedPackageAuthor.Instance.realUserBalance -= this._value;
+            //                            //RedPackageAuthor.Instance.withdrawalBalanceAmount-= this._value;
+            //                            break;
+            //                        case BalanceType.Commission:
+            //                            RedPackageAuthor.Instance.realUserCommissionBalance -= this._value;
+            //                            break;
+            //                    }
+            //                    break;
+            //                case 2://提现失败
+            //                    switch (returnData.code)
+            //                    {
+            //                        case 1022004001:
+            //                            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Withdrawals have exceeded 2 times, please try again tomorrow");
+            //                            waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+            //                            break;
+            //                        case 1004001004:
+            //                            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient account balance");
+            //                            waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+            //                            break;
+            //                        case 1004001006:
+            //                            MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Insufficient commission");
+            //                            waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+            //                            break;
+            //                        default:
+            //                            waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
+            //                            break;
+            //                    }
+            //                    waitMask_Ui?.ShowResultCase("Withdrawal Failed", 0);
+            //                    break;
+            //                case 3://提现取消
+            //                    waitMask_Ui?.ShowResultCase("Withdrawal Cancle", 1);
+            //                    break;
+            //            }
+            //        }, (code, msg) => {
+            //            loopAction?.Invoke();
+            //        });
+            //    });
+            //};
+            //loopAction?.Invoke();
         }, (code,msg) => 
         {
             switch (code)
             {
                 case 1022004001:
-                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Withdrawals have exceeded 2 times, please try again tomorrow");
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Today's withdrawal frequency exceeded the limit, please try again tomorrow");
                     waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
                     break;
                 case 1004001004:
@@ -245,7 +263,7 @@ public class UiWithdrawalCase : Popup
                     waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
                     break;
             }
-           
+            print(code+"||"+msg);
         });
     }
 }

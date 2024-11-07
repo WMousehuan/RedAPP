@@ -107,7 +107,7 @@ public class TreasureGrabRespond : HttpInterface
     {
         PopupManager.Instance.CloseAllPopup();
         source_Ctrl.packageItem.OpenPackageDetailResultClick();
-        RedPackageAuthor.Instance.userBalance += (AmountOffset);
+        RedPackageAuthor.Instance.realUserBalance += (AmountOffset);
         //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
     }
     public void Fail(JObject json)

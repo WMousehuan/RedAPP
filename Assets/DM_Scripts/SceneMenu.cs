@@ -97,7 +97,7 @@ public class SceneMenu : SceneClass
 		{
             PlayerPrefs.SetInt("Guide_Recharge", 0);
         }
-        if (UserManager.Instance.appMemberUserInfoRespVO != null && UserManager.Instance.appMemberUserInfoRespVO.balance == 0 && UIManager.Instance.recharge_GuidePoint)
+        if (UserManager.Instance.appMemberUserInfoRespVO != null && RedPackageAuthor.Instance.realUserBalance == 0 && UIManager.Instance.recharge_GuidePoint)
         {
 			UIManager.Instance.recharge_GuidePoint.enabled = true;
         }

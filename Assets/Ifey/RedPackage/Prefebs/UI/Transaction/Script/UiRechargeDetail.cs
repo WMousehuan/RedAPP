@@ -51,9 +51,10 @@ public class UiRechargeDetail : Popup
     }
     public override void OnEnable()
     {
+        base.OnEnable();
         //UserManager.Instance.GetUserMainInfo();
         loading_Image.gameObject.SetActive(false);
-        base.OnEnable();
+        
         loadedPageIndex_HashSet.Clear();
         rechargeDetail_List.Clear();
         isLoadingList = false;
@@ -176,7 +177,7 @@ public class UiRechargeDetail : Popup
                                                 UiPurchaseCase.instance.Close();
                                                 waitMask_Ui?.ShowResultCase("Recharge successful", 1);
                                                 UIManager.Instance.ShowGetCoinEffect(base.transform, new Vector2(0, 100), () => {
-                                                    RedPackageAuthor.Instance.userBalance += returnData.data.optCash + returnData.data.awardCash;
+                                                    RedPackageAuthor.Instance.realUserBalance += returnData.data.optCash + returnData.data.awardCash;
                                                 }, 10);
                                                 break;
                                             case 2://≥‰÷µ ß∞‹

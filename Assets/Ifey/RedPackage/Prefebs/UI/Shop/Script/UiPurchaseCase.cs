@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 #if UNITY_WEBGL
@@ -31,6 +31,7 @@ public class UiPurchaseCase : Singleton_Base<UiPurchaseCase>
 #if UNITY_WEBGL
         webgl_Case.gameObject.SetActive(true);
         mobile_Case.gameObject.SetActive(false);
+        await Task.Delay(0);
 #elif UNITY_EDITOR || PLATFORM_ANDROID
         webgl_Case.gameObject.SetActive(false);
         mobile_Case.gameObject.SetActive(true);

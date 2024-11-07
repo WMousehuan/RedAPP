@@ -100,7 +100,7 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
     {
         Debug.Log("submitPutCoinInItHttpCallBack Success");
         MonoSingleton<PopupManager>.Instance.CloseAllPopup();
-        RedPackageAuthor.Instance.userBalance -= (float)payAmount;
+        RedPackageAuthor.Instance.realUserBalance -= (float)payAmount;
         //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
         MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Lobby, SceneChangeEffect.Color);
         SoundSFX.Play(SFXIndex.DailyBonusGet);

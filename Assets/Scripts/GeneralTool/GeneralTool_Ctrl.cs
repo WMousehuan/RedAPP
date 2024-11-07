@@ -90,6 +90,12 @@ public class GeneralTool_Ctrl : Singleton_Base<GeneralTool_Ctrl>
             successAction?.Invoke(texture);
         }
     }
+    public static void CopyToClipbord(string content,string hint="")
+    {
+        GUIUtility.systemCopyBuffer = content;
+        WebMessage_Ctrl.SendMessageToWeb("clipbord^" + content);
+        UiHintCase.instance.Show(string.IsNullOrEmpty(hint)? "Copied": hint);
+    }
 }
 public static class GeneralToolExtensionMethods//∑Ω∑®Õÿ’π
 {
