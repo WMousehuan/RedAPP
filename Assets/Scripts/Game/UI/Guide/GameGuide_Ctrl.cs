@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class GameGuide_Ctrl : MonoBehaviour
+public class GameGuide_Ctrl : Singleton_Base<GameGuide_Ctrl>
 {
+    public override bool isDontDestroy => false;
+    public Camera mainCamera;
     public UIBeginnerGuideManager beginnerGuideManager;
-    public ObjectGroup<string, UIBeginnerGuideDataList> guide_Group;
+    public ObjectGroup<string, GuideEvent_Ctrl> guide_Group;
 
     public void Start()
     {
@@ -13,13 +15,24 @@ public class GameGuide_Ctrl : MonoBehaviour
             string guideName = (string)objects[0];
             if (guide_Group.ContainsKey(guideName))
             {
-                beginnerGuideManager.AddGuideList(guide_Group[guideName]);
-                UIBeginnerGuideManager.Instance.ShowGuideList();
+                guide_Group[guideName].Open();
             }
         });
     }
-    private void OnDestroy()
+    public void ShowGuide(string guideName, GuidePoint_Ctrl target, System.Action action)
     {
-        EventManager.Instance.UnRegist(GameEventType.GameGuide.ToString(), this.GetInstanceID());
+        if (guide_Group.ContainsKey(guideName))
+        {
+            guide_Group[guideName].Open(target, action);
+        }
+    }
+    public Vector3 viewPosToWorldPos(Vector3 viewPos)
+    {
+        return mainCamera.ViewportToWorldPoint(viewPos);
+    }
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        EventManager.Instance?.UnRegist(GameEventType.GameGuide.ToString(), this.GetInstanceID());
     }
 }

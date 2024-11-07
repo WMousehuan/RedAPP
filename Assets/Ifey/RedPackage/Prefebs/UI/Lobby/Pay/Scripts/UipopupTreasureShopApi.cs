@@ -95,8 +95,9 @@ public class UipopupTreasureShopApi : MonoBehaviour
                             string catchRechargeUrl = this.catchRechargeUrl + "?orderNo=" + returnData.data.orderNo;
                             UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(catchRechargeUrl, null, (resultData) => {
                                 //查询订单状态 未完成
-                                ReturnData<PurchaseOrderDataVO> returnData = JsonConvert.DeserializeObject<ReturnData<PurchaseOrderDataVO>>(resultData);
-                                switch (returnData.data.rechargeStatus)
+                                 ReturnData<PageResultPacketSendRespVO<PurchaseOrderDataVO>> returnData = JsonConvert.DeserializeObject<ReturnData<PageResultPacketSendRespVO<PurchaseOrderDataVO>>>(resultData);
+                                PurchaseOrderDataVO purchaseOrderDataVO = returnData.data.list[0];
+                                switch (purchaseOrderDataVO.rechargeStatus)
                                 {
                                     case 0://正在充值
                                         loopAction?.Invoke();
@@ -105,7 +106,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
                                         UiPurchaseCase.instance.Close();
                                         waitMask_Ui?.ShowResultCase("Recharge successful", 1);
                                         UIManager.Instance.ShowGetCoinEffect(base.transform, new Vector2(0, 100), () => {
-                                            RedPackageAuthor.Instance.userBalance += returnData.data.optCash + returnData.data.awardCash;
+                                            RedPackageAuthor.Instance.userBalance += (purchaseOrderDataVO.optCash + purchaseOrderDataVO.awardCash);
                                         }, 10);
                                         break;
                                     case 2://充值失败
@@ -223,6 +224,7 @@ public class PurchaseOrderDataVO
     public float optCash;
     public float awardCash;
     public int rechargeStatus;
+    public int optCashStatus;
     public string createTime;
     public string expirationTime;
 }

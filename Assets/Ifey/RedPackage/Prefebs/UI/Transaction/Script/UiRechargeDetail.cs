@@ -40,7 +40,7 @@ public class UiRechargeDetail : Popup
         rechargeStateGroup_Dropdown.options.Clear();
         foreach (string amountStateType in Enum.GetNames(typeof(RechargeStateType)))
         {
-            if ((int)Enum.Parse<RechargeStateType>(amountStateType) >= -1)
+            if ((int)Enum.Parse<RechargeStateType>(amountStateType) >= 0)
             {
                 rechargeStateGroup_Dropdown.options.Add(new Dropdown.OptionData((rechargeStateContents.ContainsKey(Enum.Parse<RechargeStateType>(amountStateType)) ? rechargeStateContents[Enum.Parse<RechargeStateType>(amountStateType)].ToString() : amountStateType.ToString())));
             }
@@ -51,7 +51,7 @@ public class UiRechargeDetail : Popup
     }
     public override void OnEnable()
     {
-        UserManager.Instance.GetUserMainInfo();
+        //UserManager.Instance.GetUserMainInfo();
         loading_Image.gameObject.SetActive(false);
         base.OnEnable();
         loadedPageIndex_HashSet.Clear();
@@ -88,10 +88,17 @@ public class UiRechargeDetail : Popup
                     UiAgreeCase uiAgreeCase = PopupManager.Instance.Open(PopupType.PopupAgreeCase).GetComponent<UiAgreeCase>();
                     uiAgreeCase.content_Text.text = "Is cancle this purchase?";
                     uiAgreeCase.Init(() => {
+                        //rechargeDetail_LoopScroll.Init(0,0);
                         string cancleRechargeUrl = string.Format(this.cancleRechargeUrl, purchaseOrderDataVO.orderNo);
                         UtilJsonHttp.Instance.PutContentWithParamAuthorizationToken(cancleRechargeUrl, "", null, (resultData) =>
                         {
-                            OnRechargeStateGroup_DropdownValueChange(currentRechargeStateType, true);
+                            purchaseOrderDataVO.rechargeStatus = 3;
+                            if (this.currentRechargeStateType!= RechargeStateType.All&& purchaseOrderDataVO.rechargeStatus != (int)this.currentRechargeStateType)
+                            {
+                                rechargeDetail_List.Remove(purchaseOrderDataVO);
+                            }
+                            rechargeDetail_LoopScroll.Refresh(rechargeDetail_List.Count);
+                            //OnRechargeStateGroup_DropdownValueChange(currentRechargeStateType, true);
                             IEPool_Manager.instance.StopIE(catchRechargeIE);
                         });
                     });
@@ -200,7 +207,7 @@ public class UiRechargeDetail : Popup
                 }
 
                 target.transform.GetChild<Text>("DealAmount_Text").text = (currentRechargeStateType == RechargeStateType.Pail ? "+" : "") + purchaseOrderDataVO.optCash.ToString();
-                target.transform.GetChild<TMP_Text>("DealID_Text").text = "No." + purchaseOrderDataVO.id.ToString();
+                target.transform.GetChild<TMP_Text>("DealID_Text").text = "OrderNo." + purchaseOrderDataVO.orderNo.ToString();
                 target.transform.GetChild<TMP_Text>("DealState_Text").text = rechargeStateContents.ContainsKey(currentRechargeStateType) ? rechargeStateContents[currentRechargeStateType].ToString() : currentRechargeStateType.ToString();
                 target.transform.GetChild<TMP_Text>("CreateTime_Text").text = GeneralTool_Ctrl.GetDateTimeByStamp(purchaseOrderDataVO.createTime).ToString();
             }

@@ -28,7 +28,7 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
     }
     public void TurnToChannel()
     {
-        if (!string.IsNullOrEmpty(SceneLobby.autoEnterChannelId))
+        if (!string.IsNullOrEmpty(SceneMenu.autoEnterChannelId))
         {
             if (UserManager.Instance && UserManager.Instance.appMemberUserInfoRespVO != null)
             {
@@ -37,16 +37,16 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
                
                 var dataObject = new
                 {
-                    channelId = SceneLobby.autoEnterChannelId,
+                    channelId = SceneMenu.autoEnterChannelId,
                 };
                 UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(sharedChannelUrl, dataObject, new CommonHttpInterface(), (resultData) =>
                 {
-                    SceneLobby.autoEnterChannelId = SceneLobby.autoEnterChannelId.Remove(SceneLobby.autoEnterChannelId.Length - 3);
+                    SceneMenu.autoEnterChannelId = SceneMenu.autoEnterChannelId.Remove(SceneMenu.autoEnterChannelId.Length - 3);
                     MonoSingleton<SceneControlManager>.Instance.LoadScene(SceneType.Lobby, SceneChangeEffect.Color);
-                    PlayerTreasureGameData.Instance.entranceChannelId = SceneLobby.autoEnterChannelId;
+                    PlayerTreasureGameData.Instance.entranceChannelId = SceneMenu.autoEnterChannelId;
                     //Get playList info »ñÈ¡Íæ·¨
-                    MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(SceneLobby.autoEnterChannelId);
-                    SceneLobby.autoEnterChannelId = "";
+                    MonoSingleton<GetChannelPlayInfo>.Instance.getChannelPlayInfo(SceneMenu.autoEnterChannelId);
+                    SceneMenu.autoEnterChannelId = "";
                 }, (code,msg) => {
                     UiHintCase.instance.Show("Channel Non-existent");
                 });
@@ -60,7 +60,7 @@ public class ApplicationInitManager : MonoBehaviour, WebReviceMessage
         {
             case "WebInitData":
                 UserManager.encryptSuperiorId = msgStages[1];
-                SceneLobby.autoEnterChannelId = msgStages[2];
+                SceneMenu.autoEnterChannelId = msgStages[2];
                 TurnToChannel();
                 break;
         }

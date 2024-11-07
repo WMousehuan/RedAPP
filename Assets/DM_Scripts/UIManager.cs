@@ -65,7 +65,9 @@ public class UIManager : MonoSingleton<UIManager>
 
 	public event EventCancelBooster eventCancelBooster;
 
-	public override void Awake()
+	public Button recharge_Button;
+    public GuidePoint_Ctrl recharge_GuidePoint;
+    public override void Awake()
 	{
 		base.Awake();
 
