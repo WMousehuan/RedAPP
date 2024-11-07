@@ -201,6 +201,9 @@ public class UserManager : MonoSingleton<UserManager>
                     case 1002014000:
                         content = "Verification code does not exist!";
                         break;
+                    case 1002014005:
+                        content = "Sending text messages too frequently!";
+                        break;
                 }
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", content);
             });
