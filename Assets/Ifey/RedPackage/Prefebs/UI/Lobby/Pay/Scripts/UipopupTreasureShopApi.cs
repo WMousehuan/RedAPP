@@ -105,7 +105,7 @@ public class UipopupTreasureShopApi : MonoBehaviour
                                         UiPurchaseCase.instance.Close();
                                         waitMask_Ui?.ShowResultCase("Recharge successful", 1);
                                         UIManager.Instance.ShowGetCoinEffect(base.transform, new Vector2(0, 100), () => {
-                                            RedPackageAuthor.Instance.userBalance += (purchaseOrderDataVO.optCash + purchaseOrderDataVO.awardCash);
+                                            RedPackageAuthor.Instance.realUserBalance += (purchaseOrderDataVO.optCash + purchaseOrderDataVO.awardCash);
                                         }, 10);
                                         break;
                                     case 2://≥‰÷µ ß∞‹
@@ -172,7 +172,7 @@ public class UipopupTreasureShopApiRespond : HttpInterface
     }
     void Coins()
     {
-        RedPackageAuthor.Instance.userBalance += (float)value;
+        RedPackageAuthor.Instance.realUserBalance += (float)value;
         //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
     }
 
@@ -219,6 +219,7 @@ public class PurchaseOrderDataVO
     public string payUrl;
     public float optCash;
     public float awardCash;
+    public int balanceType;
     public int rechargeStatus;
     public int optCashStatus;
     public string createTime;

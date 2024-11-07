@@ -42,7 +42,7 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
     }
 
 
-    public float userBalance
+    public float realUserBalance//当前总余额
     {
         get
         {
@@ -56,7 +56,29 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
     }
-    public float userCommissionBalance
+    
+    public float withdrawalBalanceAmount//提现金额
+    {
+        get
+        {
+            return PlayerPrefs.GetFloat("userWithdrawalAmount", 0);
+        }
+        set
+        {
+
+            PlayerPrefs.SetFloat("userWithdrawalAmount", value);
+            UserManager.Instance.appMemberUserInfoRespVO.withdrawingBalance = value;
+            EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
+        }
+    }
+    public float currentUserBalance//当前可使用余额
+    {
+        get
+        {
+            return realUserBalance - withdrawalBalanceAmount;
+        }
+    }
+    public float realUserCommissionBalance//当前佣金
     {
         get
         {
@@ -68,6 +90,34 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
             PlayerPrefs.SetFloat(userCommissionBalanceKey, value);
             UserManager.Instance.appMemberUserInfoRespVO.commission = value;
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
+        }
+    }
+    public float withdrawalCommissionBalanceAmount//当前正提现佣金
+    {
+        get
+        {
+            return PlayerPrefs.GetFloat("userCommissionWithdrawalAmount", 0);
+        }
+        set
+        {
+
+            PlayerPrefs.SetFloat("userCommissionWithdrawalAmount", value);
+            UserManager.Instance.appMemberUserInfoRespVO.withdrawingBrokerage = value;
+            EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
+        }
+    }
+    public float currentUserCommissionBalance//当前可使用佣金
+    {
+        get
+        {
+            return realUserCommissionBalance - withdrawalCommissionBalanceAmount;
+        }
+    }
+    public float currentUserBalanceWithoutCommission//当前可使用金额除了佣金
+    {
+        get
+        {
+            return currentUserBalance - currentUserCommissionBalance;
         }
     }
     public string userNickName { get; set; }

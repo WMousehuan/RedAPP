@@ -9,7 +9,7 @@ public class UpdateCoin : MonoBehaviour
 	{
 		text = GetComponent<Text>();
 		EventManager.Instance.Regist(GameEventType.CoinUpdate.ToString(), this.GetInstanceID(), (objects) => {
-            text.text = RedPackageAuthor.Instance.userBalance.ToString();
+            text.text = RedPackageAuthor.Instance.currentUserBalance.ToString();
         });
         EventManager.Instance.Regist(GameEventType.Logout.ToString(), this.GetInstanceID(), (objects) => {
 			text.text = 0+"";

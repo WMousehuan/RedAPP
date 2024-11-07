@@ -7,10 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Assets.Ifey.RedPackage.Prefebs.UI.Lobby.Channel.Cheasure.Scripts.Bean;
-using System.Drawing;
-using System.Security.Policy;
-using Vuplex.WebView;
-using Fishtail.PlayTheBall.Vibration;
 
 /// <summary>
 /// ÇÀºì°ü
@@ -111,7 +107,7 @@ public class TreasureGrabRespond : HttpInterface
     {
         PopupManager.Instance.CloseAllPopup();
         source_Ctrl.packageItem.OpenPackageDetailResultClick();
-        RedPackageAuthor.Instance.userBalance += (AmountOffset);
+        RedPackageAuthor.Instance.realUserBalance += (AmountOffset);
         //MonoSingleton<UserManager>.Instance.GetUserMainInfo();
     }
     public void Fail(JObject json)

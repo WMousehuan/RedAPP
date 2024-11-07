@@ -388,8 +388,10 @@ public class GetUserInfoInterface : HttpInterface
         ReturnData<AppMemberUserInfoRespVO> responseData = JsonConvert.DeserializeObject<ReturnData<AppMemberUserInfoRespVO>>(result);
         source_Ctrl.appMemberUserInfoRespVO = responseData.data;
         // 实现 Success 方法的逻辑
-        RedPackageAuthor.Instance.userBalance = responseData.data.balance;
-        RedPackageAuthor.Instance.userCommissionBalance = responseData.data.commission;
+        RedPackageAuthor.Instance.realUserBalance = responseData.data.balance;
+        RedPackageAuthor.Instance.withdrawalBalanceAmount = responseData.data.withdrawingBalance;
+        RedPackageAuthor.Instance.realUserCommissionBalance = responseData.data.commission;
+        RedPackageAuthor.Instance.withdrawalCommissionBalanceAmount = responseData.data.withdrawingBrokerage;
         RedPackageAuthor.Instance.userNickName = responseData.data.nickname;
         EventManager.Instance.DispatchEvent(GameEventType.GetUserData.ToString());
 #if UNITY_EDITOR
@@ -438,7 +440,9 @@ public class AppMemberUserInfoRespVO
     public int sex { get; set; }
     public int point { get; set; }
     public float balance {  get; set; }//总余额
+    public float withdrawingBalance { get; set; }//待提现金额
     public float commission { get; set; }//佣金余额
+    public float withdrawingBrokerage { get; set; }//待提现佣金金额
     public int experience { get; set; }
     public int userType { get; set; }
     public Level level { get; set; }
