@@ -37,7 +37,7 @@ public class SceneControlManager : MonoSingleton<SceneControlManager>
     public void LoadScene(SceneType newSceneType, SceneChangeEffect sceneChangeEffect = SceneChangeEffect.None, Color fadeColor = default(Color))
     {
 #if UNITY_EDITOR
-        print(lastSceneName + "||" + newSceneType);
+        print("[Editor]:" + lastSceneName + "||" + newSceneType);
 #endif
         if (lastSceneName != null && lastSceneName != newSceneType.ToString())
         {

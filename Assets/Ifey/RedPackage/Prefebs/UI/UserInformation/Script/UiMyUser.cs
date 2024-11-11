@@ -14,6 +14,8 @@ public class UiMyUser : Popup
 
     public ObjectGroup<string, Popup> popup_Group;
 
+    
+
     public override void Start()
     {
 
@@ -68,5 +70,10 @@ public class UiMyUser : Popup
         //UiRechargeDetail.currentRechargeStateType = (UiRechargeDetail.RechargeStateType)rechargeStateValue;
         UiRechargeDetail uiRechargeDetail = PopupManager.Instance.Open(popup_Group["RechargeDetail"]).GetComponent<UiRechargeDetail>();
         uiRechargeDetail.OnRechargeStateGroup_DropdownValueChange((UiRechargeDetail.RechargeStateType)rechargeStateValue);
+    }
+
+    public void OnEventRefreshUserInfo()
+    {
+        UserManager.Instance.GetUserMainInfo(10);
     }
 }

@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
+using UnityEngineInternal;
 
 public enum BalanceType
 {
@@ -36,26 +37,43 @@ public class UiUserBalance : Popup
     [SerializeField]
     private Text withdrawal_Text;
 
+    public Button withdrawal_Button;
+    public Button toBalance_Button;
 
 
     public Popup uiWithdrawalCase_Prefab;
+    public Popup uiTrasnsferToBalanceCase_Prefab;
 
     public BalanceType balanceType;
     public override void Start()
     {
         base.Start();
         EventManager.Instance.Regist(GameEventType.CoinUpdate.ToString(), this.GetInstanceID(), (objects) => {
+            if (isLoadingList)
+            {
+                return;
+            }
             Init(balanceType);
+            RefreshPage(true);
         });
+        RefreshPage();
     }
     public override void OnEnable()
     {
         base.OnEnable();
+        
+    }
 
+    public void RefreshPage(bool isRestart=false)
+    {
+        if (isRestart)
+        {
+            withdrawalDetail_LoopScroll.Init(0, 0);
+            withdrawalDetail_List.Clear();
+        }
         loading_Image.gameObject.SetActive(false);
         loadedPageIndex_HashSet.Clear();
         withdrawalDetail_List.Clear();
-        isLoadingList = false;
         GetDetialsByPage(0, 10);
         withdrawalDetail_LoopScroll.scrollOverBottomAction = () =>
         {
@@ -71,7 +89,7 @@ public class UiUserBalance : Popup
             {
                 PurchaseOrderDataVO purchaseOrderDataVO = withdrawalDetail_List[realIndex];
                 double amount = purchaseOrderDataVO.optCash;
-                Button button= target.GetComponentInChildren<Button>();
+                Button button = target.GetComponentInChildren<Button>();
                 button.onClick.RemoveAllListeners();
                 button.onClick.AddListener(() => {
                     GeneralTool_Ctrl.CopyToClipbord(purchaseOrderDataVO.orderNo, "Copied order number");
@@ -106,20 +124,26 @@ public class UiUserBalance : Popup
         {
             case BalanceType.Default:
                 title_Text.text = "Balance";
-                amount = RedPackageAuthor.Instance.realUserBalance - RedPackageAuthor.Instance.currentUserCommissionBalance;
+                amount = RedPackageAuthor.Instance.realUserBalance - RedPackageAuthor.Instance.realUserCommissionBalance;
                 withdrawalAmount = RedPackageAuthor.Instance.withdrawalBalanceAmount;
                 currentAmount = RedPackageAuthor.Instance.currentUserBalanceWithoutCommission;
+                withdrawal_Button.image.rectTransform.anchoredPosition3D = new Vector3(0, withdrawal_Button.image.rectTransform.anchoredPosition3D.y, 0);
                 break;
             case BalanceType.Commission:
                 title_Text.text = "Commission Balance";
                 amount = RedPackageAuthor.Instance.realUserCommissionBalance;
                 withdrawalAmount = RedPackageAuthor.Instance.withdrawalCommissionBalanceAmount;
                 currentAmount = RedPackageAuthor.Instance.currentUserCommissionBalance;
+                withdrawal_Button.image.rectTransform.anchoredPosition3D = new Vector3(114, withdrawal_Button.image.rectTransform.anchoredPosition3D.y, 0);
                 break;
         }
+        toBalance_Button.gameObject.SetActive(type == BalanceType.Commission);
         amount_Text.text = amount.ToString("F2") + (withdrawalAmount > 0 ? "\r\n" : "");
         withdrawal_Text.gameObject.SetActive(withdrawalAmount > 0);
         withdrawal_Text.text = string.Format("-{0}", withdrawalAmount.ToString("F2"));
+
+
+
     }
 
     public void OnEventWithdrawal()
@@ -127,7 +151,11 @@ public class UiUserBalance : Popup
         var uiWithdrawalCase = PopupManager.Instance.Open(uiWithdrawalCase_Prefab).GetComponent<UiWithdrawalCase>();
         uiWithdrawalCase.Init(this, currentAmount);
     }
-
+    public void OnEventTransfer()
+    {
+        var uiTransferToBalanceCase = PopupManager.Instance.Open(uiTrasnsferToBalanceCase_Prefab).GetComponent<UiTransferToBalanceCase>();
+        uiTransferToBalanceCase.Init(this);
+    }
 
     public void GetDetialsByPage(int page, int size = 20, bool isReal = false)
     {
@@ -180,6 +208,14 @@ public class UiUserBalance : Popup
                 {
                     source_Ctrl?.withdrawalDetail_List?.AddRange(responseData.data.list);
                     source_Ctrl?.withdrawalDetail_LoopScroll?.Refresh(source_Ctrl.withdrawalDetail_List.Count);
+
+                    //List<string> lastwithdrawal_List = new List<string>();
+                    //for(int i=0;i< responseData.data.list.Length; i++)
+                    //{
+                    //    lastwithdrawal_List.Add(responseData.data.list[i].orderNo);
+                    //}
+                    //string jsonParam = JsonConvert.SerializeObject(lastwithdrawal_List);
+                    //PlayerPrefs.SetString("lastWithdrawal", jsonParam);
                 }
             }
             //Debug.Log("Success GetUserAmountDetail!");

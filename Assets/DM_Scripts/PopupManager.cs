@@ -247,6 +247,7 @@ public class PopupManager : MonoSingleton<PopupManager>
 		Close(CurrentPopup);
 
     }
+
     public void Close(Popup CurrentPopup)
     {
         bool flag = true;

@@ -28,15 +28,16 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
             PlayerPrefs.SetString(authorizationKey,value);
         }
     }
-
+    public string _refreshTokenAuthorizationValue;
     public string refreshTokenAuthorizationValue
     {
         get
         {
-            return PlayerPrefs.GetString(refreshTokenAuthorizationKey, "").ToString();
+            return  PlayerPrefs.GetString(refreshTokenAuthorizationKey, "").ToString();
         }
         set
         {
+            //_refreshTokenAuthorizationValue = value;
             PlayerPrefs.SetString(refreshTokenAuthorizationKey, value);
         }
     }
@@ -46,12 +47,15 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
     {
         get
         {
-            return PlayerPrefs.GetFloat(userBalanceKey, 0);
+            return UserManager.Instance.appMemberUserInfoRespVO == null ? 0 : UserManager.Instance.appMemberUserInfoRespVO.balance;// PlayerPrefs.GetFloat(userBalanceKey, 0);
         }
         set
         {
-            
-            PlayerPrefs.SetFloat(userBalanceKey, value);
+            if (UserManager.Instance.appMemberUserInfoRespVO == null)
+            {
+                return;
+            }
+            //PlayerPrefs.SetFloat(userBalanceKey, value);
             UserManager.Instance.appMemberUserInfoRespVO.balance = value;
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
@@ -61,12 +65,15 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
     {
         get
         {
-            return PlayerPrefs.GetFloat("userWithdrawalAmount", 0);
+            return UserManager.Instance.appMemberUserInfoRespVO == null ? 0 :Mathf.Max(0, UserManager.Instance.appMemberUserInfoRespVO.withdrawingBalance);// PlayerPrefs.GetFloat("userWithdrawalAmount", 0);
         }
         set
         {
-
-            PlayerPrefs.SetFloat("userWithdrawalAmount", value);
+            if (UserManager.Instance.appMemberUserInfoRespVO == null)
+            {
+                return;
+            }
+            //PlayerPrefs.SetFloat("userWithdrawalAmount", value);
             UserManager.Instance.appMemberUserInfoRespVO.withdrawingBalance = value;
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
@@ -75,19 +82,22 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
     {
         get
         {
-            return realUserBalance - withdrawalBalanceAmount;
+            return realUserBalance - withdrawalBalanceAmount - withdrawalCommissionBalanceAmount;
         }
     }
     public float realUserCommissionBalance//当前佣金
     {
         get
         {
-            return PlayerPrefs.GetFloat(userCommissionBalanceKey, 0);
+            return UserManager.Instance.appMemberUserInfoRespVO == null ? 0 : UserManager.Instance.appMemberUserInfoRespVO.commission;// PlayerPrefs.GetFloat(userCommissionBalanceKey, 0);
         }
         set
         {
-
-            PlayerPrefs.SetFloat(userCommissionBalanceKey, value);
+            if (UserManager.Instance.appMemberUserInfoRespVO == null)
+            {
+                return;
+            }
+            //PlayerPrefs.SetFloat(userCommissionBalanceKey, value);
             UserManager.Instance.appMemberUserInfoRespVO.commission = value;
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
@@ -96,12 +106,15 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
     {
         get
         {
-            return PlayerPrefs.GetFloat("userCommissionWithdrawalAmount", 0);
+            return UserManager.Instance.appMemberUserInfoRespVO == null ? 0 : Mathf.Max(0, UserManager.Instance.appMemberUserInfoRespVO.withdrawingBrokerage);// PlayerPrefs.GetFloat("userCommissionWithdrawalAmount", 0);
         }
         set
         {
-
-            PlayerPrefs.SetFloat("userCommissionWithdrawalAmount", value);
+            if (UserManager.Instance.appMemberUserInfoRespVO == null)
+            {
+                return;
+            }
+            //PlayerPrefs.SetFloat("userCommissionWithdrawalAmount", value);
             UserManager.Instance.appMemberUserInfoRespVO.withdrawingBrokerage = value;
             EventManager.Instance.DispatchEvent(GameEventType.CoinUpdate.ToString(), this.GetInstanceID());
         }
@@ -117,7 +130,7 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
     {
         get
         {
-            return currentUserBalance - currentUserCommissionBalance;
+            return realUserBalance - withdrawalBalanceAmount - realUserCommissionBalance;
         }
     }
     public string userNickName { get; set; }
@@ -130,10 +143,45 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
         //    refreshToken = refreshTokenAuthorizationValue
         //};
         // Create a new form
+
         WWWForm refreshToken = new WWWForm();
         refreshToken.AddField("refreshToken", refreshTokenAuthorizationValue);
         Debug.Log("刷新令牌，refreshTokenAuthorizationValue="+ refreshTokenAuthorizationValue);
         UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(refreshTokenUrl+"?refreshToken="+ refreshTokenAuthorizationValue, refreshToken, new RefreshTokenParamHttpInterface());
+    }
+    /// <summary>
+    /// 判断除了佣金可消费部分是否够消费
+    /// </summary>
+    /// <param name="expendAmount"></param>
+    /// <returns></returns>
+    public float CatchCurrentBalanceWithOutCommissionExpend(float expendAmount )
+    {
+        return currentUserBalanceWithoutCommission - expendAmount;
+    }
+    /// <summary>
+    /// 判断可消费部分是否够消费
+    /// </summary>
+    /// <param name="expendAmount"></param>
+    /// <returns></returns>
+    public float CatchCurrentBalanceExpend(float expendAmount)
+    {
+        return currentUserBalance - expendAmount;
+    }
+
+    public void CatchExpend(float expendAmount,System.Action action)
+    {
+        if (CatchCurrentBalanceExpend(expendAmount) < 0)
+        {
+
+        }
+        else if (CatchCurrentBalanceWithOutCommissionExpend(expendAmount)<0)
+        {
+
+        }
+        else
+        {
+            action?.Invoke();
+        }
     }
     public class RefreshTokenParamHttpInterface : HttpInterface
     {
@@ -141,9 +189,11 @@ public class RedPackageAuthor : MonoSingleton<RedPackageAuthor>
         {
             MonoSingleton<PopupManager>.Instance.CloseAllPopup();
             ReturnData<UserLoginReturnData> responseData = JsonConvert.DeserializeObject<ReturnData<UserLoginReturnData>>(result);
+            
             // 实现 Success 方法的逻辑
             RedPackageAuthor.Instance.authorizationValue = responseData.data.accessToken;
             RedPackageAuthor.Instance.refreshTokenAuthorizationValue = responseData.data.refreshToken;
+            UserManager.Instance.GetUserMainInfo();
             Debug.Log("Success User Login Success!");
         }
 

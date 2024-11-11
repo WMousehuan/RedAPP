@@ -220,12 +220,10 @@ public class SceneMenu : SceneClass
 #endif
                 if (!string.IsNullOrEmpty(PlayerPrefs.GetString("LastLoginDateTime")))
                 {
-
                     UserManager.Instance.GetUserMainInfo((isSuccess) =>
                     {
 
                     });
-
                 }
                 else
                 {

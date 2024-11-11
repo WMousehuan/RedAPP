@@ -32,6 +32,7 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
     }
     public void GetTreasureDetailResultHttpResult()
     {
+
         UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(getTreasureDetailResultHttpResultUrl + "?pageNo=" + 1+ "&pageSize=100&redPacketSendId="+ myPackageItem.packetSendRespVO.id, new UIPopupTreasureDetailResultMainCallBack(this));
     }
     // Update is called once per frame
@@ -104,12 +105,20 @@ public class UIPopupTreasureDetailResultMain : MonoBehaviour
             if (!failPubDo.failPubdo(json))
             {
                 int code = json["code"].Value<int>();
-                if (code == 1004001004)
-                {
-                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
-                    Debug.Log("Not enough coin to sent!!");
-                    return;
-                }
+            if (code == 1004001004)
+            {
+                MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupShopCoin, enableBackCloseButton: true);
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
+                Debug.Log("Not enough coin to sent!!");
+                return;           
+            }
+            else if(code == 1004001009)
+            {
+                UiTransferToBalanceCase uiTransferToBalanceCase= MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTransferToBalanceCase, enableBackCloseButton: true).GetComponent<UiTransferToBalanceCase>();
+                uiTransferToBalanceCase.Init(null);
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
+                Debug.Log("Not enough coin to sent!!");
+            }
                 else
                 {
                     MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Get Treasure grab detail fail!");

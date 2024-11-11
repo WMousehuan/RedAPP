@@ -76,6 +76,10 @@ public class UserManager : MonoSingleton<UserManager>
     public static ObjectGroup<string, (bool, Texture2D)> avatarData_Group = null;
     public System.Action<Texture2D, int> loadedAvatarAction = null;
     public bool isLoadingAvatarData = false;
+    private float refreshTime = 5 * 60;
+    int getUserInfoCount = 5;
+    int getUserInfoValue;
+    private float refreshDelayTime = 0;
     private void Start()
     {
         currentAvatar_Texture = defaultTexture;
@@ -88,7 +92,28 @@ public class UserManager : MonoSingleton<UserManager>
         //    areaCodeData_Dictionary.Add()
         //}
     }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            PlayerPrefs.DeleteAll();
+        }
+        if (refreshDelayTime > 0)
+        {
+            refreshDelayTime -= Time.deltaTime;
+        }
 
+        if (appMemberUserInfoRespVO != null)
+        {
+            refreshTime -= Time.deltaTime;
+            if (refreshTime <= 0)
+            {
+                refreshTime = 5 * 60;
+                GetUserMainInfo(null, false);
+            }
+        }
+       
+    }
     private void OnDestroy()
     {
         EventManager.Instance?.UnRegist(GameEventType.LoadedAvatarTexture.ToString(), this.GetInstanceID());
@@ -217,23 +242,28 @@ public class UserManager : MonoSingleton<UserManager>
     public void UserLogout()
     {
         UtilJsonHttp.Instance.PostRequestWithParamAuthorizationToken(logoutUrl, null, null, (resultData) => {
+            appMemberUserInfoRespVO = null;
             UiHintCase.instance.Show("Logout Success");
         }, (code, msg) => {
             Debug.Log("Logout Fail");
         });
     }
 
-    public void GetUserMainInfo(System.Action<bool> loadedAction = null)
+    public void GetUserMainInfo(System.Action<bool> loadedAction = null,bool isMask=true)
     {
 
         //RedPackageAuthor.Instance.authorizationValue = "1";
         //RedPackageAuthor.Instance.refreshTokenAuthorizationValue = "1";
         //when start the game,get the userInfo
-        UiWaitMask waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
-        waitMask_Ui.Init("Sign in");
+        UiWaitMask waitMask_Ui = null;
+        if (isMask)
+        {
+            waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+            waitMask_Ui.Init("Sign in");
+        }
         UtilJsonHttp.Instance.GetRequestWithAuthorizationToken(userMainInfoUrl, new GetUserInfoInterface(this), (resultData) =>
         {
-            waitMask_Ui.ShowResultCase("Success", 0);
+            waitMask_Ui?.ShowResultCase("Success", 0);
             loadedAction?.Invoke(true);
             EventManager.Instance.DispatchEvent(GameEventType.Login.ToString());
             if (avatarData_Group != null && avatarData_Group[appMemberUserInfoRespVO.avatar].Item2 != null)
@@ -242,19 +272,41 @@ public class UserManager : MonoSingleton<UserManager>
             }
    
         }, (code, msg) => {
-            waitMask_Ui.ShowResultCase("Fail", 0);
-            loadedAction?.Invoke(false);
-           
-            UiHintCase.instance.Show("Login Error");
-            waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
-            waitMask_Ui.Init("ReLogin");
-            IEPool_Manager.instance.WaitTimeToDo("", 3, null, () => {
-                waitMask_Ui.ShowResultCase("", 0);
-                GetUserMainInfo(loadedAction);
-            });
+            if (code == 401)
+            {
+                MonoSingleton<RedPackageAuthor>.Instance.CallRefreshTokenAPI();
+            }
+            else
+            {
+                waitMask_Ui?.ShowResultCase("Fail", 0);
+                loadedAction?.Invoke(false);
+                if (getUserInfoValue <= getUserInfoCount)
+                {
+                    UiHintCase.instance.Show("Login Error");
+                    waitMask_Ui = (UiWaitMask)PopupManager.Instance.Open(PopupType.PopupWaitMask);
+                    waitMask_Ui.Init("ReLogin");
+                    IEPool_Manager.instance.WaitTimeToDo("", 3, null, () => {
+                        waitMask_Ui.ShowResultCase("", 0);
+                        GetUserMainInfo(loadedAction);
+                    });
+                    getUserInfoValue++;
+                }
+                else
+                {
+
+                }
+            }
         });
     }
-
+    public void GetUserMainInfo(float delayTime)
+    {
+        if (refreshDelayTime > 0)
+        {
+            return;
+        }
+        refreshDelayTime = delayTime;
+        GetUserMainInfo(null, false);
+    }
     public void GetAvatarDatas()
     {
         if (avatarData_Group == null && !string.IsNullOrEmpty(getAvatarsUrl))
@@ -366,7 +418,76 @@ public class UserManager : MonoSingleton<UserManager>
             });
         }
     }
-    
+    public void SetAvatarImageByUrl(Image avatar_Image, string avatarUrl)
+    {
+        if (string.IsNullOrEmpty(avatarUrl))
+        {
+            return;
+        }
+        if (avatarData_Group.ContainsKey(avatarUrl))
+        {
+
+            if (avatarData_Group[avatarUrl].Item2 != null)
+            {
+                Texture2D texture = UserManager.avatarData_Group[avatarUrl].Item2;
+                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+                avatar_Image.sprite = sprite;
+                return;
+            }
+            int currentIndex = avatarData_Group.GetIndexByKey(avatarUrl);
+            if (UserManager.avatarData_Group[avatarUrl].Item1 == true)
+            {
+
+                System.Action<Texture2D, int> loadedAvatarAction = null;
+                loadedAvatarAction = (texture2D, index) => {
+                    if (index == currentIndex)
+                    {
+                        if (avatar_Image != null)
+                        {
+                            Texture2D texture = UserManager.avatarData_Group[avatarUrl].Item2;
+                            Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+                            avatar_Image.sprite = sprite;
+                        }
+                    }
+                };
+                this.loadedAvatarAction = loadedAvatarAction;
+                return;
+            }
+            else
+            {
+                GeneralTool_Ctrl.DownloadImage(avatarUrl, (texture2D) =>
+                {
+                    if (avatar_Image != null)
+                    {
+                        Texture2D texture = UserManager.avatarData_Group[avatarUrl].Item2;
+                        Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+                        avatar_Image.sprite = sprite;
+                    }
+                    avatarData_Group[currentIndex].target = (true, texture2D);
+                    this.loadedAvatarAction?.Invoke(texture2D, currentIndex);
+                    EventManager.Instance.DispatchEvent(GameEventType.LoadedAvatarTexture.ToString(), texture2D, currentIndex, avatarData_Group[currentIndex].key);
+                }, () =>
+                {
+                    avatarData_Group[currentIndex].target = (false, null);
+                });
+            }
+        }
+        else
+        {
+            GeneralTool_Ctrl.DownloadImage(avatarUrl, (texture2D) =>
+            {
+                if (avatar_Image != null)
+                {
+                    Texture2D texture = UserManager.avatarData_Group[avatarUrl].Item2;
+                    Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height), Vector2.one * 0.5f);
+                    avatar_Image.sprite = sprite;
+                }
+
+            }, () =>
+            {
+            });
+        }
+    }
 }
 
  
@@ -384,6 +505,8 @@ public class GetUserInfoInterface : HttpInterface
         {
             return;
         }
+
+        Debug.Log(result);
         // 实现 Success 方法的逻辑
         ReturnData<AppMemberUserInfoRespVO> responseData = JsonConvert.DeserializeObject<ReturnData<AppMemberUserInfoRespVO>>(result);
         source_Ctrl.appMemberUserInfoRespVO = responseData.data;
@@ -405,14 +528,6 @@ public class GetUserInfoInterface : HttpInterface
         // 实现 Fail 方法的逻辑
         int code = json["code"].Value<int>();
         //not login
-        if (code == 401)
-        {
-            Debug.Log("User notLogin CallRefreshTokenAPI!");
-            //MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupLogin);
-            //MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupCommonYesNo);
-            MonoSingleton<RedPackageAuthor>.Instance.CallRefreshTokenAPI();
-        }
-
     }
 
     public void UnknowError(string errorMsg)

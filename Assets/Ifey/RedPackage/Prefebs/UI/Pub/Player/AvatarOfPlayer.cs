@@ -19,11 +19,14 @@ public class AvatarOfPlayer : MonoBehaviour
     }
     public Image rawImage;
     public Sprite oriSprite;
-
+    System.Action<Texture2D, int> loadedAvatarAction;
     public void StartToGetUrlImage(string imageUrl)
     {
-        //if(UserManager.Instance.av)
-        if (!avatar_Dictionary.ContainsKey(imageUrl))
+        if (UserManager.avatarData_Group.ContainsKey(imageUrl))
+        {
+            UserManager.Instance.SetAvatarImageByUrl(rawImage, imageUrl);
+        }
+        else if (!avatar_Dictionary.ContainsKey(imageUrl))
         {
             StartCoroutine(DownloadImage(imageUrl));
             avatar_Dictionary.Add(imageUrl, null);
@@ -44,7 +47,7 @@ public class AvatarOfPlayer : MonoBehaviour
 
         if (www.result != UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.error);
+            //Debug.Log(www.error);
             rawImage.sprite = oriSprite;
             avatar_Dictionary.Remove(imageUrl);
         }
@@ -61,6 +64,13 @@ public class AvatarOfPlayer : MonoBehaviour
                 avatar_Dictionary.Add(imageUrl, sprite);
             }
             rawImage.sprite = sprite;
+        }
+    }
+    private void OnDestroy()
+    {
+        if (loadedAvatarAction != null)
+        {
+            UserManager.Instance.loadedAvatarAction -= loadedAvatarAction;
         }
     }
 }

@@ -107,7 +107,7 @@ public class UiWithdrawalCase : Popup
     {
         this.uiUserBalance = uiUserBalance;
         this.limitValue = limitValue;
-        valueLimit_Text.text = "The withdrawable amount is " + limitValue;
+        valueLimit_Text.text = "The withdrawable amount is " + limitValue.ToString("F2");
     }
 
     public void Withdarwal()
@@ -117,13 +117,13 @@ public class UiWithdrawalCase : Popup
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "The value cannot be empty");
             return;
         }
-        
-        if (this._value <= 0)
+        float value = this._value;
+        if (value <= 0)
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "The value cannot be less than or equal to 0");
             return;
         }
-        if (this._value > limitValue)
+        if (value > limitValue)
         {
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "The value cannot be greater than the balance");
             return;
@@ -144,7 +144,7 @@ public class UiWithdrawalCase : Popup
         }
         var dataPack = new
         {
-            optCash = this._value,
+            optCash = value,
             optType = (int)this.uiUserBalance.balanceType,
             payeeUserAccount = this.payeeUserAccount_InputField.text,
             payeeBranchCode = this.ifscCode_InputField.text,
@@ -159,24 +159,24 @@ public class UiWithdrawalCase : Popup
             ReturnData<string> returnData = JsonConvert.DeserializeObject<ReturnData<string>>(resultData);
             if (string.IsNullOrEmpty(returnData.data))
             {
-                print(returnData.code);
+                //print(returnData.code);
                 waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 1);
                 return;
             }
             waitMask_Ui?.ShowResultCase("Withdrawing is in progress", 1);
             //waitMask_Ui.Init("Withdrawing is in progress");
-
+            print(this._value);
             switch (uiUserBalance.balanceType)
             {
                 case  BalanceType.Commission:
-                    RedPackageAuthor.Instance.withdrawalCommissionBalanceAmount += this._value;
+                    RedPackageAuthor.Instance.withdrawalCommissionBalanceAmount += value;
                     break;
                 case BalanceType.Default:
-                    RedPackageAuthor.Instance.withdrawalBalanceAmount += this._value;
+                    RedPackageAuthor.Instance.withdrawalBalanceAmount += value;
                     break;
             }
             PopupManager.Instance.Close(this);
-            uiUserBalance.OnEnable();
+            uiUserBalance.RefreshPage(true);
             //System.Action loopAction = null;
             //int stateIndex = 0;
             //float catchTime = 20;
@@ -247,6 +247,10 @@ public class UiWithdrawalCase : Popup
         {
             switch (code)
             {
+                case 1:
+                    MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", msg);
+                    waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);
+                    break;
                 case 1022004001:
                     MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Error", "Today's withdrawal frequency exceeded the limit, please try again tomorrow");
                     waitMask_Ui?.ShowResultCase("Failed to initiate withdrawal", 0);

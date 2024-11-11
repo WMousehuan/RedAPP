@@ -122,4 +122,5 @@ public enum PopupType
 	PopupAvatarSelect,
     PopupLoginByPhoneNumber,
 	PopupMyUser,
+	PopupTransferToBalanceCase,
 }

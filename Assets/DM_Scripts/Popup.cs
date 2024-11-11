@@ -260,8 +260,16 @@ public class Popup : MonoBehaviour
 			eventClose();
 		}
 	}
-
-	public void ChangeLayout(LayoutType type)
+    public void OnEventClose(Popup CurrentPopup)
+    {
+        SoundSFX.Play(SFXIndex.PopupHideAfterClick);
+        PopupManager.Instance.Close(CurrentPopup);
+        if (eventClose != null)
+        {
+            eventClose();
+        }
+    }
+    public void ChangeLayout(LayoutType type)
 	{
 		foreach (GameObject layoutObject in layoutObjects)
 		{

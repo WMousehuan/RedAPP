@@ -60,6 +60,7 @@ public class UiPutCoinInIt : Popup
             MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Minimum 6 digits for Passward");
             return;
         }
+
         AppPacketSendSaveReqVO appPacketSendSaveReqVO = new AppPacketSendSaveReqVO();
         appPacketSendSaveReqVO.redAmount = int.Parse(inputFieldAmount.text);
         appPacketSendSaveReqVO.payPassword = inputFieldPassward.text;
@@ -120,6 +121,13 @@ public class submitPutCoinInItHttpCallBack : HttpInterface
                 MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
                 Debug.Log("Not enough coin to sent!!");
                 return;           
+            }
+            else if(code == 1004001009)
+            {
+                UiTransferToBalanceCase uiTransferToBalanceCase= MonoSingleton<PopupManager>.Instance.Open(PopupType.PopupTransferToBalanceCase,enableBackCloseButton: true).GetComponent<UiTransferToBalanceCase>();
+                uiTransferToBalanceCase.Init(null);
+                MonoSingleton<PopupManager>.Instance.OpenCommonPopup(PopupType.PopupCommonAlarm, "Info", "Not enough coin to sent!");
+                Debug.Log("Not enough coin to sent!!");
             }
             else if (code == 1022001001)
             {
